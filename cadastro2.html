@@ -57,16 +57,6 @@
             height: 100%;
             margin-top: 20px;
         }
-        .preview {
-            max-width: 50px;
-            max-width: 50px;
-        }
-
-        .form-container .preview img {
-            max-width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-        }
 
         .form-container .form-group {
             display: flex;
@@ -183,18 +173,42 @@
             max-width: 800px;
         }
 
-        /* Imagens de tipos de campo */
+        /* Imagens representativas para selecionar o esporte */
+        .sports-selection {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .sports-selection img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .sports-selection img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Carousel */
+        .carousel {
+            display: flex;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .carousel img {
+            width: 100%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
         .campo-image {
             display: none;
             width: 100%;
             height: auto;
-        }
-
-        /* Centralizando a logo */
-        .logo {
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
     </style>
 </head>
@@ -209,15 +223,13 @@
             </div>
             <h2 style="text-align: center;">Criar Conta</h2>
             <form id="registerForm" onsubmit="showLoadingScreen(event)">
-                <!-- Selecione o esporte -->
+                <!-- Selecione o esporte com imagens representativas -->
                 <div class="form-group">
-                    <label for="esporte">Tipo do Esporte</label>
-                    <select id="esporte" required onchange="updatePosicoes()">
-                        <option value="">Selecione o Esporte</option>
-                        <option value="futebol">Futebol</option>
-                        <option value="volei">Vôlei</option>
-                        <option value="basquete">Basquete</option>
-                    </select>
+                    <label for="esporte">Escolha o Esporte</label>
+                    <div class="sports-selection">
+                        <img src="https://wallpapers.com/images/hd/soccer-ball-pictures-y9ypodtboi70iqe6.jpg" alt="Futebol" onclick="selectSport('futebol')">
+                        <img src="https://s2-ge.glbimg.com/BNq-vJlrUSsqSnC9vXWjq1kjhmY=/0x0:1024x641/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2021/y/D/5zkpFAQKaGWVSoBnR8hw/gettyimages-1339644999.jpg" alt="Futsal" onclick="selectSport('futsal')">
+                    </div>
                 </div>
 
                 <!-- Selecione a posição -->
@@ -249,6 +261,7 @@
             </form>
         </div>
     </div>
+
 
     <!-- Pré-visualização da imagem do lado direito -->
     <div class="preview">
@@ -307,8 +320,7 @@
         }
 
         // Função para atualizar as posições com base no esporte selecionado
-        function updatePosicoes() {
-            const esporte = document.getElementById('esporte').value;
+        function updatePosicoes(esporte) {
             const posicaoSelect = document.getElementById('posicao');
             
             // Limpar opções anteriores
@@ -318,10 +330,8 @@
 
             if (esporte === 'futebol') {
                 opcoesPosicao = ['Atacante', 'Meio-Campo', 'Zagueiro', 'Goleiro'];
-            } else if (esporte === 'volei') {
-                opcoesPosicao = ['Levantador', 'Oposto', 'Líbero', 'Central', 'Ponteiro'];
-            } else if (esporte === 'basquete') {
-                opcoesPosicao = ['Armador', 'Ala', 'Ala-Pivô', 'Pivô'];
+            } else if (esporte === 'futsal') {
+                opcoesPosicao = ['Goleiro', 'Pivô', 'Ala', 'Fixação'];
             }
 
             // Adicionar as opções de posição ao select
@@ -331,6 +341,11 @@
                 option.textContent = posicao;
                 posicaoSelect.appendChild(option);
             });
+        }
+
+        // Função chamada ao clicar na imagem do esporte
+        function selectSport(esporte) {
+            updatePosicoes(esporte);
         }
     </script>
 
