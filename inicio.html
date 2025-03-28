@@ -1,12 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Início</title>
     <link rel="icon" href="imagens/loguinho.png" type="image/png">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho */
+        header {
+            background-color: #222;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Logo no lugar do texto de boas-vindas */
+        header img {
+            width: 150px;
+            height: auto;
+        }
+
+        /* Botão de Configuração no canto superior esquerdo */
+        .config-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #e81cff;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .config-button:hover {
+            background-color: #ba1cb0;
+        }
+
+        /* Barrinha lateral de configuração */
+        .config-bar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #222;
+            color: white;
+            padding: 20px;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .config-bar.open {
+            left: 0;
+        }
+
+        .config-bar h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .config-bar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .config-bar ul li {
+            font-size: 18px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .config-bar ul li:hover {
+            color: #e81cff;
+        }
+
+        /* Conteúdo principal */
+        .main-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .highlight-section {
+            background-color: #333;
+            padding: 50px 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .highlight-section h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .highlight-section p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: scroll;
+            padding: 10px 0;
+            gap: 20px;
+        }
+
+        .carousel-item {
+            flex: 0 0 auto;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 8px;
+            width: 250px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .carousel-item h3 {
+            font-size: 20px;
+            color: #e81cff;
+            margin: 10px 0;
+        }
+
+        .carousel-item p {
+            font-size: 16px;
+            color: #aaa;
+        }
+
+        footer {
+            background-color: #222;
+            color: #ccc;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>HILO</h1>
+
+    <!-- Cabeçalho com o logotipo -->
+    <header>
+        <img src="imagens/loguinho.png" alt="Logo">
+        <button class="config-button" onclick="toggleConfigBar()">⚙️</button>
+    </header>
+
+    <!-- Barrinha lateral de configuração -->
+    <div class="config-bar" id="configBar">
+        <h2>Configurações</h2>
+        <ul>
+            <li onclick="alert('Abrindo Amistosos')">Amistosos</li>
+            <li onclick="alert('Abrindo Perfil')">Perfil</li>
+            <li onclick="alert('Abrindo Configuração')">Configuração</li>
+            <li onclick="alert('Abrindo Amigos')">Amigos</li>
+            <li onclick="alert('Abrindo Avaliação')">Avaliação</li>
+        </ul>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+        <!-- Seção de Destaque -->
+        <div class="highlight-section">
+            <h2>Criação em Destaque</h2>
+            <p>Aqui está a criação mais recente e popular feita pelos usuários.</p>
+            <img src="imagens/destaque.jpg" alt="Criação em Destaque" style="width: 100%; height: auto; border-radius: 8px;">
+        </div>
+
+        <!-- Carrossel de Criações -->
+        <h2>Criações Recentes</h2>
+        <div class="carousel">
+            <div class="carousel-item">
+                <img src="imagens/criacao1.jpg" alt="Criação 1">
+                <h3>Criação 1</h3>
+                <p>Descrição breve da criação 1.</p>
+            </div>
+            <div class="carousel-item">
+                <img src="imagens/criacao2.jpg" alt="Criação 2">
+                <h3>Criação 2</h3>
+                <p>Descrição breve da criação 2.</p>
+            </div>
+            <div class="carousel-item">
+                <img src="imagens/criacao3.jpg" alt="Criação 3">
+                <h3>Criação 3</h3>
+                <p>Descrição breve da criação 3.</p>
+            </div>
+            <!-- Adicione mais itens ao carrossel conforme necessário -->
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2025 Sistema. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        // Função para abrir e fechar a barrinha lateral de configurações
+        function toggleConfigBar() {
+            const configBar = document.getElementById('configBar');
+            configBar.classList.toggle('open');
+        }
+    </script>
+
 </body>
 </html>

@@ -91,6 +91,27 @@
             border-color: #e81cff;
         }
 
+        /* Estilo para o campo Pix com logo dentro */
+        .form-group.pix-group {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-group.pix-group input {
+            width: 100%;
+            padding-left: 40px; /* Espaço para o logo */
+        }
+
+        .form-group.pix-group img {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: auto;
+        }
+
         .form-container .form-submit-btn {
             display: flex;
             align-items: flex-start;
@@ -240,8 +261,13 @@
                     </select>
                 </div>
 
+                <!-- Campo Pix com logo dentro -->
+                <div class="form-group pix-group">
+                    <input type="text" id="pix" placeholder="Pix (Chave Pix)" required>
+                    <img src="https://files.passeidireto.com/2889edc1-1a70-456a-a32c-e3f050102347/2889edc1-1a70-456a-a32c-e3f050102347.png" alt="Logo Pix">
+                </div>
+
                 <!-- Outros campos -->
-                <input type="text" id="pix" placeholder="Pix (Chave Pix)" required>
                 <select id="campo" required onchange="showCampoImage()">
                     <option value="">Selecione o Tipo de Campo</option>
                     <option value="quadra">Quadra</option>
@@ -261,7 +287,6 @@
             </form>
         </div>
     </div>
-
 
     <!-- Pré-visualização da imagem do lado direito -->
     <div class="preview">
