@@ -6,7 +6,6 @@
     <title>Match Score</title>
     <link rel="icon" href="imagens/loguinho.png" type="image/png">
     <style>
-        /* Garantir que o GIF ocupe toda a tela de fundo */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -16,15 +15,14 @@
             background-image: url(videos/Design\ sem\ nome.gif);
         }
 
-        /* O GIF de fundo */
         .background-gif {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Faz o GIF cobrir a tela inteira */
-            z-index: -1; /* Coloca o GIF atrás de outros elementos */
+            object-fit: cover;
+            z-index: -1;
         }
 
         .button-container {
@@ -45,10 +43,17 @@
             height: 70px;
             border-radius: 300px;
             font-size: 20px;
-            border: solid white, 3px;
+            border: solid white 3px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Tela de Carregamento */
+        /* Efeito hover para todos os botões */
+        button:hover {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+        }
+
         .loading-screen {
             position: fixed;
             top: 0;
@@ -59,23 +64,22 @@
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            background-color: black; /* Fundo semi-transparente */
+            background-color: black;
             display: none;
         }
 
         .loading-video {
-            width: 70%;  /* Ajuste o tamanho do vídeo */
+            width: 70%;
             max-width: 600px;
         }
 
-        /* Estilo dos botões */
         .form-container {
             position: relative;
-            z-index: 1; /* Garante que os botões fiquem acima da tela de loading */
+            z-index: 1;
         }
 
         #logo {
-            position: absolute; /* Posiciona a imagem no canto superior esquerdo */
+            position: absolute;
             top: -15px;
             left: 10px;
             height: 170px;
@@ -83,63 +87,46 @@
         }
 
         #nomel {
-            position: absolute; /* Posiciona a imagem no topo centralizado */
-            top: -100px; /* Ajuste a altura do topo se necessário */
-            left: 50%; /* Centraliza horizontalmente */
-            transform: translateX(-50%); /* Ajusta a posição para centralizar completamente */
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
             height: 350px;
             width: 550px;
         }
-        
-        /* Estilo do slogan */
-        
     </style>
 </head>
 <body>
     <header>
+        <!-- Botões para Criar, Entrar e Sobre -->
+        <div class="button-container">
+            <button onclick="showLoadingScreen('cadastro.html')">Criar</button>
+            <button onclick="showLoadingScreen('entrar.html')">Entrar</button>
+            <button onclick="showLoadingScreen('sobre.html')">Sobre</button>
+        </div>
 
-    
-
-    <!-- Botões para Criar e Entrar -->
-    <div class="button-container">
-        <button onclick="showLoadingScreen('cadastro.html')">Criar</button>
-        <button onclick="showLoadingScreen('entrar.html')">Entrar</button>
-    </div>
-    
-  
-
-    <!-- Imagens do Logo e Nome -->
-    <div>
-        <img src="imagens/loguinho.png" alt="" id="logo">
-    </div>
-    <div>
-        <img src="imagens/nome logo.png" alt="" id="nomel">
-    </div>
+        <!-- Imagens do Logo e Nome -->
+        <div>
+            <img src="imagens/loguinho.png" alt="" id="logo">
+        </div>
+        <div>
+            <img src="imagens/nome logo.png" alt="" id="nomel">
+        </div>
     </header>
 
-    
     <!-- Tela de Carregamento com vídeo -->
     <div id="loading" class="loading-screen">
-        <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video> <!-- Substitua com o caminho correto do seu vídeo -->
+        <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video>
     </div>
 
-      
-
     <script>
-        // Função para exibir a tela de carregamento e redirecionar
         function showLoadingScreen(page) {
-            // Exibe a tela de carregamento
             document.getElementById('loading').style.display = 'flex';
-
-            // Esconde os botões e conteúdo enquanto carrega
             document.querySelector('.button-container').style.display = 'none';
-
-            // Simula o tempo de carregamento e redireciona após o vídeo
-            setTimeout(function() {
-                window.location.href = page; // Redireciona para a página de destino
-            }, 3000); // 3 segundos de "carregamento"
+            setTimeout(function () {
+                window.location.href = page;
+            }, 3000);
         }
     </script>
-
 </body>
 </html>
