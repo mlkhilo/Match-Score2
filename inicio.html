@@ -1,223 +1,326 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Início</title>
-    <link rel="icon" href="imagens/loguinho.png" type="image/png">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Início</title>
+  <link rel="icon" href="imagens/loguinho.png" type="image/png"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
 
-        /* Cabeçalho */
-        header {
-            background-color: #222;
-            padding: 20px;
-            text-align: center;
-            position: relative;
-        }
+    header {
+      background-color: #222;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
 
-        /* Logo no lugar do texto de boas-vindas */
-        header img {
-            width: 150px;
-            height: auto;
-        }
+    header img {
+      width: 150px;
+      height: auto;
+    }
 
-        /* Botão de Configuração no canto superior esquerdo */
-        .config-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #e81cff;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 18px;
-            transition: background-color 0.3s ease;
-        }
+    .config-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #e81cff;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 18px;
+      transition: background-color 0.3s ease;
+    }
 
-        .config-button:hover {
-            background-color: #ba1cb0;
-        }
+    .config-button:hover {
+      background-color: #ba1cb0;
+    }
 
-        /* Barrinha lateral de configuração */
-        .config-bar {
-            position: fixed;
-            left: -250px;
-            top: 0;
-            height: 100%;
-            width: 250px;
-            background-color: #222;
-            color: white;
-            padding: 20px;
-            transition: left 0.3s ease;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-        }
+    .create-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: transparent;
+      border: 2px solid #e81cff;
+      color: #e81cff;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #e81cff55;
+    }
 
-        .config-bar.open {
-            left: 0;
-        }
+    .create-button:hover {
+      background-color: #e81cff;
+      color: #111;
+      box-shadow: 0 0 20px #e81cff;
+    }
 
-        .config-bar h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+    .config-bar {
+      position: fixed;
+      left: -300px;
+      top: 0;
+      height: 100%;
+      width: 270px;
+      background-color: #222;
+      color: white;
+      padding: 20px;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+      overflow-y: auto;
+      z-index: 1000;
+    }
 
-        .config-bar ul {
-            list-style: none;
-            padding: 0;
-        }
+    .config-bar.open {
+      left: 0;
+    }
 
-        .config-bar ul li {
-            font-size: 18px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
+    .config-bar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
 
-        .config-bar ul li:hover {
-            color: #e81cff;
-        }
+    .config-bar-header h2 {
+      font-size: 24px;
+      margin: 0;
+    }
 
-        /* Conteúdo principal */
-        .main-content {
-            padding: 20px;
-            text-align: center;
-        }
+    .back-icon {
+      font-size: 20px;
+      cursor: pointer;
+      color: #e81cff;
+      transition: color 0.3s;
+    }
 
-        .highlight-section {
-            background-color: #333;
-            padding: 50px 20px;
-            margin: 20px 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
+    .back-icon:hover {
+      color: #ba1cb0;
+    }
 
-        .highlight-section h2 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
+    .config-bar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-        .highlight-section p {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
+    .config-bar ul li {
+      font-size: 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
 
-        .carousel {
-            display: flex;
-            overflow-x: scroll;
-            padding: 10px 0;
-            gap: 20px;
-        }
+    .config-bar ul li:hover {
+      color: #e81cff;
+    }
 
-        .carousel-item {
-            flex: 0 0 auto;
-            background-color: #222;
-            padding: 20px;
-            border-radius: 8px;
-            width: 250px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
+    .main-content {
+      padding: 20px;
+      text-align: center;
+    }
 
-        .carousel-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+    .highlight-section {
+      background-color: #333;
+      padding: 50px 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
 
-        .carousel-item h3 {
-            font-size: 20px;
-            color: #e81cff;
-            margin: 10px 0;
-        }
+    .highlight-section h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
 
-        .carousel-item p {
-            font-size: 16px;
-            color: #aaa;
-        }
+    .highlight-section p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
 
-        footer {
-            background-color: #222;
-            color: #ccc;
-            padding: 15px;
-            text-align: center;
-            font-size: 14px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      padding: 10px 0;
+      gap: 20px;
+    }
+
+    .carousel-item {
+      flex: 0 0 auto;
+      background-color: #222;
+      padding: 20px;
+      border-radius: 8px;
+      width: 250px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .carousel-item h3 {
+      font-size: 20px;
+      color: #e81cff;
+      margin: 10px 0;
+    }
+
+    .carousel-item p {
+      font-size: 16px;
+      color: #aaa;
+    }
+
+    footer {
+      background-color: #222;
+      color: #ccc;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 0, 20, 0.85);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #1c1c1c;
+      border: 2px solid #e81cff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 30px #e81cff55;
+      max-width: 500px;
+      width: 90%;
+      color: white;
+      position: relative;
+      text-align: center;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      color: #e81cff;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      color: #e81cff;
+      transition: color 0.3s ease;
+    }
+
+    .close-modal:hover {
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Cabeçalho com o logotipo -->
-    <header>
-        <img src="imagens/loguinho.png" alt="Logo">
-        <button class="config-button" onclick="toggleConfigBar()">⚙️</button>
-    </header>
+  <!-- Cabeçalho -->
+  <header>
+    <img src="imagens/loguinho.png" alt="Logo">
+    <button class="config-button" onclick="toggleConfigBar()">⚙️</button>
+    <button class="create-button" onclick="window.location.href='criar.html'">➕ Criar</button>
+  </header>
 
-    <!-- Barrinha lateral de configuração -->
-    <div class="config-bar" id="configBar">
-        <h2>Configurações</h2>
-        <ul>
-            <li onclick="alert('Abrindo Amistosos')">Amistosos</li>
-            <li onclick="alert('Abrindo Perfil')">Perfil</li>
-            <li onclick="alert('Abrindo Configuração')">Configuração</li>
-            <li onclick="alert('Abrindo Amigos')">Amigos</li>
-            <li onclick="alert('Abrindo Avaliação')">Avaliação</li>
-        </ul>
+  <!-- Menu lateral -->
+  <div class="config-bar" id="configBar">
+    <div class="config-bar-header">
+      <h2>Configurações</h2>
+      <span class="back-icon" onclick="toggleConfigBar()">⬅️</span>
+    </div>
+    <ul>
+      <li onclick="alert('Abrindo Amistosos')">Amistosos</li>
+      <li onclick="alert('Abrindo Perfil')">Perfil</li>
+      <li onclick="openModal()">Configuração</li>
+      <li onclick="alert('Abrindo Amigos')">Amigos</li>
+      <li onclick="alert('Abrindo Avaliação')">Avaliação</li>
+    </ul>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="main-content">
+    <div class="highlight-section">
+      <h2>Criação em Destaque</h2>
+      <p>Aqui está a criação mais recente e popular feita pelos usuários.</p>
+      <img src="imagens/destaque.jpg" alt="Criação em Destaque" style="width: 100%; height: auto; border-radius: 8px;">
     </div>
 
-    <!-- Conteúdo Principal -->
-    <div class="main-content">
-        <!-- Seção de Destaque -->
-        <div class="highlight-section">
-            <h2>Criação em Destaque</h2>
-            <p>Aqui está a criação mais recente e popular feita pelos usuários.</p>
-            <img src="imagens/destaque.jpg" alt="Criação em Destaque" style="width: 100%; height: auto; border-radius: 8px;">
-        </div>
-
-        <!-- Carrossel de Criações -->
-        <h2>Criações Recentes</h2>
-        <div class="carousel">
-            <div class="carousel-item">
-                <img src="imagens/criacao1.jpg" alt="Criação 1">
-                <h3>Criação 1</h3>
-                <p>Descrição breve da criação 1.</p>
-            </div>
-            <div class="carousel-item">
-                <img src="imagens/criacao2.jpg" alt="Criação 2">
-                <h3>Criação 2</h3>
-                <p>Descrição breve da criação 2.</p>
-            </div>
-            <div class="carousel-item">
-                <img src="imagens/criacao3.jpg" alt="Criação 3">
-                <h3>Criação 3</h3>
-                <p>Descrição breve da criação 3.</p>
-            </div>
-            <!-- Adicione mais itens ao carrossel conforme necessário -->
-        </div>
+    <h2>Criações Recentes</h2>
+    <div class="carousel">
+      <div class="carousel-item">
+        <img src="imagens/criacao1.jpg" alt="Criação 1">
+        <h3>Criação 1</h3>
+        <p>Descrição breve da criação 1.</p>
+      </div>
+      <div class="carousel-item">
+        <img src="imagens/criacao2.jpg" alt="Criação 2">
+        <h3>Criação 2</h3>
+        <p>Descrição breve da criação 2.</p>
+      </div>
+      <div class="carousel-item">
+        <img src="imagens/criacao3.jpg" alt="Criação 3">
+        <h3>Criação 3</h3>
+        <p>Descrição breve da criação 3.</p>
+      </div>
     </div>
+  </div>
 
-    <!-- Rodapé -->
-    <footer>
-        <p>&copy; 2025 Sistema. Todos os direitos reservados.</p>
-    </footer>
+  <!-- Rodapé -->
+  <footer>
+    <p>&copy; 2025 Sistema. Todos os direitos reservados.</p>
+  </footer>
 
-    <script>
-        // Função para abrir e fechar a barrinha lateral de configurações
-        function toggleConfigBar() {
-            const configBar = document.getElementById('configBar');
-            configBar.classList.toggle('open');
-        }
-    </script>
+  <!-- Modal de Configuração -->
+  <div class="modal-overlay" id="configModal">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal()">✖</span>
+      <h2>Configurações</h2>
+      <p>Aqui você poderá ajustar preferências futuramente...</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function toggleConfigBar() {
+      const configBar = document.getElementById('configBar');
+      configBar.classList.toggle('open');
+    }
+
+    function openModal() {
+      document.getElementById('configModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('configModal').style.display = 'none';
+    }
+  </script>
 
 </body>
 </html>
