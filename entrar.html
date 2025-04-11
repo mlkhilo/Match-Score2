@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrar</title>
+    <title>Cadastro</title>
     <link rel="icon" href="imagens/loguinho.png" type="image/png">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-      /* Estilo da página de cadastro */
-      body {
+        /* Estilo da página de cadastro */
+        body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -226,8 +227,8 @@
 
         /* Estilo para o vídeo */
         .loading-video {
-            width: 80%;  /* Ajuste o tamanho do vídeo */
-            max-width: 800px;
+            width: 70%;  /* Ajuste o tamanho do vídeo */
+            max-width: 600px;
         }
 
         /* Botão Google personalizado */
@@ -392,8 +393,8 @@
 </head>
 <body>
 
-     <!-- Formulário de Cadastro -->
-     <div class="form-container">
+    <!-- Formulário de Cadastro -->
+    <div class="form-container">
         <!-- Logo acima do título -->
         <div class="logo">
             <img src="imagens/loguinho.png" alt="Logo" style="width: 80px; height: auto;">
@@ -401,38 +402,25 @@
 
         <h2>Entrar</h2>
         <form id="registerForm" onsubmit="showLoadingScreen(event)">
-            <input type="email" id="email" placeholder="E-mail" required>
-            <input type="password" id="senha" placeholder="Senha" required>
-            
-            
+            <input type="text" id="nome" placeholder="usuário/email" required>
+            <input type="password" id="senha" placeholder="senha" required>
             <button type="submit">Entrar</button>
-            <div class="MuiBox-root mui-vkbq7w" id="recuperarsenha">Esqueceu a senha?</div>
         </form>
+
+        <!-- Botão Google Login com imagem personalizada -->
+        <div class="google-btn">
+            <button id="google-signin" onclick="googleSignIn()"></button>
+        </div>
     </div>
 
     <!-- Tela de Carregamento com vídeo -->
     <div id="loading" class="loading-screen">
-        <video class="loading-video" src="videos/Cópia de MATCH SCORE.mp4" autoplay loop muted></video> <!-- Coloque o caminho correto do seu vídeo -->
+        <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video> <!-- Coloque o caminho correto do seu vídeo -->
     </div>
 
-    <script>
-        // Função para exibir a tela de carregamento
-        function showLoadingScreen(event) {
-            event.preventDefault(); // Impede o envio do formulário
 
-            // Exibe a tela de carregamento
-            document.getElementById('loading').style.display = 'flex';
-
-            // Simula o tempo de carregamento
-            setTimeout(function() {
-                // Esconde a tela de carregamento
-                document.getElementById('loading').style.display = 'none';
-
-                // Redireciona para a página de sucesso após o "carregamento"
-                window.location.href = 'inicio.html'; // Substitua pelo caminho da página desejada
-            }, 3000); // 3 segundos de "carregamento"
-        }
-        <div class="main">
+    <!-- From Uiverse.io by Praashoo7 --> 
+<div class="main">
     <div class="up">
         <a href="https://www.instagram.com/hilohig/" target="_blank">
             <button class="card1">
@@ -459,6 +447,52 @@
       </button>
     </div>
   </div>
+
+    <script>
+        // Função para exibir a tela de carregamento
+        function showLoadingScreen(event) {
+            event.preventDefault(); // Impede o envio do formulário
+
+            // Exibe a tela de carregamento
+            document.getElementById('loading').style.display = 'flex';
+
+            // Simula o tempo de carregamento
+            setTimeout(function() {
+                // Esconde a tela de carregamento
+                document.getElementById('loading').style.display = 'none';
+
+                // Redireciona para a página de sucesso após o "carregamento"
+                window.location.href = 'inicio.html'; // Substitua pelo caminho da página desejada
+            }, 3000); // 3 segundos de "carregamento"
+        }
+
+        // Função que será chamada quando o botão de login do Google for clicado
+        function googleSignIn() {
+            google.accounts.id.prompt();
+        }
+
+        // Google Sign-In callback
+        function handleCredentialResponse(response) {
+            const data = jwt_decode(response.credential);
+            console.log("Nome:", data.name);
+            console.log("Email:", data.email);
+            console.log("Imagem de Perfil:", data.picture);
+
+            // Aqui você pode implementar o processo de cadastro do usuário com as informações recebidas do Google
+        }
+
+        // Inicializando o Google Sign-In
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: 'SEU_CLIENT_ID', // Substitua com seu Client ID do Google
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById('google-signin'),
+                { theme: 'outline', size: 'short' }  // Estilo do botão
+            );
+            google.accounts.id.prompt(); // Exibe o prompt de login, se necessário
+        }
     </script>
 
 </body>

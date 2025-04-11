@@ -14,8 +14,8 @@
       color: white;
       display: flex;
       flex-direction: column;
-      align-items: center;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     header {
@@ -35,25 +35,34 @@
       animation: fadeIn 1s ease-out;
     }
 
+    .scroll-container {
+      overflow-x: auto;
+      width: 100%;
+    }
+
     .container {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
+      gap: 20px;
       padding: 20px;
-      max-width: 1200px;
+      min-width: 1200px;
     }
 
     .coluna {
-      flex: 1;
-      min-width: 250px;
-      max-width: 300px;
-      margin: 20px;
+      width: 280px;
       padding: 20px;
       background-color: #2a2a2a;
       border-radius: 12px;
       box-shadow: 0 0 12px #e81cff;
       text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       animation: fadeIn 1.2s ease-out;
+      flex-shrink: 0;
+    }
+
+    .coluna:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #e81cff;
     }
 
     .coluna img {
@@ -68,7 +77,7 @@
     }
 
     .btn-voltar {
-      margin: 40px 0;
+      margin: 40px auto;
       padding: 15px 30px;
       background-color: white;
       color: black;
@@ -82,15 +91,17 @@
     .btn-voltar:hover {
       background-color: #e81cff;
       color: white;
+      transform: scale(1.05);
     }
 
     footer {
       background-color: #000000;
       color: #777;
       text-align: center;
-      padding: 15px;
+      padding: 15px 20px;
       font-size: 14px;
       width: 100%;
+      margin-top: auto;
     }
 
     @keyframes fadeIn {
@@ -106,34 +117,36 @@
     <h1>Sobre o Match Score</h1>
   </header>
 
-  <div class="container">
-    <div class="coluna">
-      <img src="imagens/loguinho.png" alt="Conexão">
-      <p>
-        A Match Score conecta jogadores, times de futebol e futsal que querem marcar partidas amistosas. 
-        Crie seu perfil, encontre adversários, agende jogos e mantenha seu time em atividade.
-      </p>
-    </div>
+  <div class="scroll-container">
+    <div class="container">
+      <div class="coluna">
+        <img src="imagens/loguinho.png" alt="Conexão">
+        <p>
+          A Match Score conecta jogadores, times de futebol e futsal que querem marcar partidas amistosas. 
+          Crie seu perfil, encontre adversários, agende jogos e mantenha seu time em atividade.
+        </p>
+      </div>
 
-    <div class="coluna">
-      <img src="imagens/icon-bola.png" alt="Bola">
-      <p>
-        Crie ou entre em partidas com data, local e regras definidas. Ideal para manter o ritmo, se divertir e jogar com diferentes pessoas.
-      </p>
-    </div>
+      <div class="coluna">
+        <img src="imagens/bola.png" alt="Bola">
+        <p>
+          Crie ou entre em partidas com data, local e regras definidas. Ideal para manter o ritmo, se divertir e jogar com diferentes pessoas.
+        </p>
+      </div>
 
-    <div class="coluna">
-      <img src="imagens/icon-estrela.png" alt="Avaliações">
-      <p>
-        Após cada jogo, jogadores e times se avaliam. Crie uma comunidade justa e confiável com feedbacks e pontuações reais.
-      </p>
-    </div>
+      <div class="coluna">
+        <img src="imagens/avaliacao.png" alt="Avaliações">
+        <p>
+          Após cada jogo, jogadores e times se avaliam. Crie uma comunidade justa e confiável com feedbacks e pontuações reais.
+        </p>
+      </div>
 
-    <div class="coluna">
-      <img src="imagens/icon-user.png" alt="Perfil">
-      <p>
-        Adicione amigos, monte times, acompanhe atividades e nunca fique sem companhia para jogar. Faça parte dessa comunidade esportiva!
-      </p>
+      <div class="coluna">
+        <img src="imagens/perfil.png" alt="Perfil">
+        <p>
+          Adicione amigos, monte times, acompanhe atividades e nunca fique sem companhia para jogar. Faça parte dessa comunidade esportiva!
+        </p>
+      </div>
     </div>
   </div>
 
