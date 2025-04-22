@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Partida</title>
+  <link rel="icon" href="imagens/loguinho.png" type="image/png">
+  <link rel="stylesheet" href="estilo.css"> <!-- Se quiser separar os estilos -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    :root {
+      --primary-color: #e81cff;
+      --bg-color: #111;
+      --text-color: #fff;
+      --button-color: #e81cff;
+      --button-hover: #ba1cb0;
+      --logo: url("imagens/loguinho.png");
+    }
+
+    body.light {
+      --primary-color: #00cc66;
+      --bg-color: #f5f5f5;
+      --text-color: #111;
+      --button-color: #00cc66;
+      --button-hover: #008c44;
+      --logo: url("imagens/loguinho2.png");
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background-color: var(--bg-color);
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background-color: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: white;
+    }
+
+    input[type="submit"] {
+      margin-top: 25px;
+      background-color: var(--button-color);
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: var(--button-hover);
+    }
+
+    .mode-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="imagens/loguinho.png" alt="Logo" id="logoImg">
+    <button class="mode-toggle" onclick="toggleMode()">🌓 Modo</button>
+  </header>
+
+  <div class="container">
+    <h2>Criar Partida</h2>
+    <form action="salvar_partida.php" method="post">
+      <label for="nome">Nome da Partida:</label>
+      <input type="text" id="nome" name="nome" required>
+
+      <label for="data">Data:</label>
+      <input type="date" id="data" name="data" required>
+
+      <label for="hora">Hora:</label>
+      <input type="time" id="hora" name="hora" required>
+
+      <label for="local">Local:</label>
+      <input type="text" id="local" name="local" required>
+
+      <label for="tipo">Tipo:</label>
+      <select id="tipo" name="tipo" required>
+        <option value="amistoso">Amistoso</option>
+        <option value="campeonato">Campeonato</option>
+        <option value="treino">Treino</option>
+      </select>
+
+      <label for="jogadores">Jogadores por time:</label>
+      <input type="number" id="jogadores" name="jogadores" min="1" max="11" required>
+
+      <input type="submit" value="Criar Partida">
+    </form>
+  </div>
+
+  <script>
+    // Modo claro/escuro
+    function toggleMode() {
+      const body = document.body;
+      body.classList.toggle('light');
+
+      const logo = document.getElementById('logoImg');
+      if (body.classList.contains('light')) {
+        logo.src = 'imagens/loguinho2.png';
+      } else {
+        logo.src = 'imagens/loguinho.png';
+      }
+    }
+  </script>
+</body>
+</html>

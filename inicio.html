@@ -66,6 +66,27 @@
       box-shadow: 0 0 20px #e81cff;
     }
 
+    .vip-button {
+      position: absolute;
+      top: 20px;
+      right: 160px;
+      background-color: gold;
+      color: #111;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 10px gold;
+      transition: all 0.3s ease;
+    }
+
+    .vip-button:hover {
+      background-color: #ffd700;
+      box-shadow: 0 0 20px gold;
+    }
+
     .config-bar {
       position: fixed;
       left: -300px;
@@ -137,16 +158,6 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
-    .highlight-section h2 {
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    .highlight-section p {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-
     .carousel {
       display: flex;
       overflow-x: auto;
@@ -163,36 +174,14 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
-    .carousel-item img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    .carousel-item h3 {
-      font-size: 20px;
-      color: #e81cff;
-      margin: 10px 0;
-    }
-
-    .carousel-item p {
-      font-size: 16px;
-      color: #aaa;
-    }
-
     footer {
       background-color: #222;
       color: #ccc;
       padding: 15px;
       text-align: center;
       font-size: 14px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
     }
 
-    /* MODAL */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -220,11 +209,6 @@
       text-align: center;
     }
 
-    .modal-content h2 {
-      margin-top: 0;
-      color: #e81cff;
-    }
-
     .close-modal {
       position: absolute;
       top: 10px;
@@ -232,24 +216,92 @@
       font-size: 20px;
       cursor: pointer;
       color: #e81cff;
-      transition: color 0.3s ease;
     }
 
-    .close-modal:hover {
-      color: #fff;
+    .vip-modal ul {
+      list-style: none;
+      padding: 0;
+      font-size: 18px;
+    }
+
+    .vip-modal ul li {
+      margin-bottom: 12px;
+    }
+
+    /* MODO CLARO */
+    body.light-mode {
+      background-color: #fff;
+      color: #000;
+    }
+
+    body.light-mode header,
+    body.light-mode .config-bar,
+    body.light-mode footer,
+    body.light-mode .carousel-item,
+    body.light-mode .highlight-section {
+      background-color: #f0f0f0;
+      color: #000;
+    }
+
+    body.light-mode .create-button {
+      border-color: #00bf63;
+      color: #00bf63;
+      box-shadow: 0 0 10px #00cc6655;
+    }
+
+    body.light-mode .create-button:hover {
+      background-color: #00bf63;
+      color: white;
+      box-shadow: 0 0 20px #00bf63;
+    }
+
+    body.light-mode .config-button {
+      background-color: #00bf63;
+    }
+
+    body.light-mode .vip-button {
+      background-color: #f5c100;
+      color: #000;
+      box-shadow: 0 0 10px #f5c10088;
+    }
+
+    body.light-mode .vip-button:hover {
+      background-color: #ffdb4d;
+      box-shadow: 0 0 20px #f5c100;
+    }
+
+    body.light-mode .config-bar ul li:hover,
+    body.light-mode .back-icon:hover,
+    body.light-mode .modal-content h2,
+    body.light-mode .close-modal {
+      color: #00bf63;
+    }
+
+    body.light-mode .modal-content {
+      border-color: #00bf63;
+      box-shadow: 0 0 30px #00cc6655;
+      background-color: #fff;
+      color: #000;
+    }
+    .vip{
+      margin: auto;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+      height: 150px;
+      width: 150px;
+
     }
   </style>
 </head>
 <body>
-
-  <!-- Cabeçalho -->
   <header>
     <img src="imagens/loguinho.png" alt="Logo">
     <button class="config-button" onclick="toggleConfigBar()">⚙️</button>
+    <button class="vip-button" onclick="openVipModal()">💎 Comprar VIP</button>
     <button class="create-button" onclick="window.location.href='criar.html'">➕ Criar</button>
   </header>
 
-  <!-- Menu lateral -->
   <div class="config-bar" id="configBar">
     <div class="config-bar-header">
       <h2>Configurações</h2>
@@ -261,10 +313,10 @@
       <li onclick="openModal()">Configuração</li>
       <li onclick="alert('Abrindo Amigos')">Amigos</li>
       <li onclick="alert('Abrindo Avaliação')">Avaliação</li>
+      <li onclick="alert('Cassino')">Cassino/Apostas </li>
     </ul>
   </div>
 
-  <!-- Conteúdo principal -->
   <div class="main-content">
     <div class="highlight-section">
       <h2>Criação em Destaque</h2>
@@ -292,25 +344,39 @@
     </div>
   </div>
 
-  <!-- Rodapé -->
   <footer>
     <p>&copy; 2025 Sistema. Todos os direitos reservados.</p>
   </footer>
 
-  <!-- Modal de Configuração -->
   <div class="modal-overlay" id="configModal">
     <div class="modal-content">
       <span class="close-modal" onclick="closeModal()">✖</span>
       <h2>Configurações</h2>
       <p>Aqui você poderá ajustar preferências futuramente...</p>
+      <label>
+        <input type="checkbox" id="themeToggle" onchange="toggleTheme()"> Modo Claro
+      </label>
     </div>
   </div>
 
-  <!-- Scripts -->
+  <div class="modal-overlay" id="vipModal">
+    <div class="modal-content vip-modal">
+      <span class="close-modal" onclick="closeVipModal()">✖</span>
+      <img class="vip" src="imagens/logo-vip.png" alt="logo">
+      <ul>
+        <li>✔️ Criar mais jogos por dia</li>
+        <li>✔️ Inscrever-se em mais jogos</li>
+        <li>✔️ Participar de torneios VIP de futebol</li>
+      </ul>
+      <button style="margin-top: 20px; padding: 10px 20px; font-weight: bold; background: gold; color: black; border: none; border-radius: 8px; cursor: pointer;">
+        Assinar Agora
+      </button>
+    </div>
+  </div>
+
   <script>
     function toggleConfigBar() {
-      const configBar = document.getElementById('configBar');
-      configBar.classList.toggle('open');
+      document.getElementById('configBar').classList.toggle('open');
     }
 
     function openModal() {
@@ -320,7 +386,31 @@
     function closeModal() {
       document.getElementById('configModal').style.display = 'none';
     }
-  </script>
 
+    function openVipModal() {
+      document.getElementById('vipModal').style.display = 'flex';
+    }
+
+    function closeVipModal() {
+      document.getElementById('vipModal').style.display = 'none';
+    }
+
+    function toggleTheme() {
+      const isLight = document.getElementById('themeToggle').checked;
+      document.body.classList.toggle('light-mode', isLight);
+      const logo = document.querySelector('header img');
+      logo.src = isLight ? 'imagens/loguinho2.png' : 'imagens/loguinho.png';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
+    window.onload = function () {
+      const savedTheme = localStorage.getItem('theme');
+      const isLight = savedTheme === 'light';
+      document.body.classList.toggle('light-mode', isLight);
+      document.getElementById('themeToggle').checked = isLight;
+      const logo = document.querySelector('header img');
+      logo.src = isLight ? 'imagens/loguinho2.png' : 'imagens/loguinho.png';
+    }
+  </script>
 </body>
 </html>
