@@ -233,7 +233,12 @@
       background-color: #fff;
       color: #000;
     }
-
+    .ft-perfil{
+     margin-left: 10px;
+     width: 230px;
+     height: 50px;
+     border: solid 5px purple;
+    }
     body.light-mode header,
     body.light-mode .config-bar,
     body.light-mode footer,
@@ -309,7 +314,7 @@
     </div>
     <ul>
       <li onclick="alert('Abrindo Amistosos')">Amistosos</li>
-      <li onclick="alert('Abrindo Perfil')">Perfil</li>
+      <li onclick="openPerfModal()">Perfil</li>
       <li onclick="openModal()">Configuração</li>
       <li onclick="alert('Abrindo Amigos')">Amigos</li>
       <li onclick="alert('Abrindo Avaliação')">Avaliação</li>
@@ -364,7 +369,7 @@
       <span class="close-modal" onclick="closeVipModal()">✖</span>
       <img class="vip" src="imagens/logo-vip.png" alt="logo">
       <ul>
-        <li>✔️ Criar mais jogos por dia</li>
+        <li>✔️ Criar mais jogos ilimitados</li>
         <li>✔️ Inscrever-se em mais jogos</li>
         <li>✔️ Participar de torneios VIP de futebol</li>
       </ul>
@@ -373,7 +378,20 @@
       </button>
     </div>
   </div>
+  <div class="modal-overlay" id="perfModal">
+    <div class="modal-content perfModal">
+      <span class="close-modal" onclick="closePerfModal()">✖</span>
+      <div class="ft-perfil">
+        <img src="" alt="">
+      </div>
+      <div class="info-perfil">
+        <label for="">Nome</label>
+      </div>
+      <div class="botao-perfil">
 
+      </div>
+    </div>
+  </div>
   <script>
     function toggleConfigBar() {
       document.getElementById('configBar').classList.toggle('open');
@@ -393,6 +411,13 @@
 
     function closeVipModal() {
       document.getElementById('vipModal').style.display = 'none';
+    }
+    function openPerfModal() {
+      document.getElementById('perfModal').style.display = 'flex';
+    }
+
+    function closePerfModal() {
+      document.getElementById('perfModal').style.display = 'none';
     }
 
     function toggleTheme() {

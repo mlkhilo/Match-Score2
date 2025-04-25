@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Partida</title>
   <link rel="icon" href="imagens/loguinho.png" type="image/png">
-  <link rel="stylesheet" href="estilo.css"> <!-- Se quiser separar os estilos -->
+  <link rel="stylesheet" href="estilo.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -108,7 +108,7 @@
 
   <div class="container">
     <h2>Criar Partida</h2>
-    <form action="salvar_partida.php" method="post">
+    <form onsubmit="salvarPartida(event)">
       <label for="nome">Nome da Partida:</label>
       <input type="text" id="nome" name="nome" required>
 
@@ -136,17 +136,30 @@
   </div>
 
   <script>
-    // Modo claro/escuro
     function toggleMode() {
       const body = document.body;
       body.classList.toggle('light');
-
       const logo = document.getElementById('logoImg');
-      if (body.classList.contains('light')) {
-        logo.src = 'imagens/loguinho2.png';
-      } else {
-        logo.src = 'imagens/loguinho.png';
-      }
+      logo.src = body.classList.contains('light') ? 'imagens/loguinho2.png' : 'imagens/loguinho.png';
+    }
+
+    function salvarPartida(event) {
+      event.preventDefault();
+
+      const partida = {
+        nome: document.getElementById('nome').value,
+        data: document.getElementById('data').value,
+        hora: document.getElementById('hora').value,
+        local: document.getElementById('local').value,
+        tipo: document.getElementById('tipo').value,
+        jogadores: document.getElementById('jogadores').value,
+      };
+
+      let partidas = JSON.parse(localStorage.getItem('partidas')) || [];
+      partidas.push(partida);
+      localStorage.setItem('partidas', JSON.stringify(partidas));
+
+      window.location.href = 'index.html';
     }
   </script>
 </body>

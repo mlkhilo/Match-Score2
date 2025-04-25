@@ -6,7 +6,6 @@
     <title>Cadastro</title>
     <link rel="icon" href="imagens/loguinho.png" type="image/png">
     <style>
-        /* Estilo da página de cadastro */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -22,7 +21,7 @@
             width: 500px;
             background: linear-gradient(#212121, #212121) padding-box,
               linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
-              border: 2px solid transparent;
+            border: 2px solid transparent;
             padding: 32px 24px;
             margin-left: 150px;
             font-size: 14px;
@@ -91,7 +90,6 @@
             border-color: #e81cff;
         }
 
-        /* Estilo para o campo Pix com logo dentro */
         .form-group.pix-group {
             position: relative;
             display: flex;
@@ -100,7 +98,7 @@
 
         .form-group.pix-group input {
             width: 100%;
-            padding-left: 40px; /* Espaço para o logo */
+            padding-left: 40px;
         }
 
         .form-group.pix-group img {
@@ -112,31 +110,28 @@
             height: auto;
         }
 
-        .form-container .form-submit-btn {
+        .form-container .form-submit-btn,
+        .form-container button {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: center;
-            align-self: flex-start;
             font-family: inherit;
-            color: #717171;
-            font-weight: 600;
-            width: 40%;
-            background: #313131;
-            border: 1px solid #414141;
+            color: #fff;
+            background: #111;
+            border: none;
+            border-radius: 10px;
             padding: 12px 16px;
-            font-size: inherit;
-            gap: 8px;
-            margin-top: 8px;
             cursor: pointer;
-            border-radius: 6px;
+            margin: auto;
+            width: 220px;
+            height: 50px;
         }
 
-        .form-container .form-submit-btn:hover {
+        .form-container button:hover {
             background-color: #fff;
-            border-color: #fff;
+            color: #000;
         }
 
-        /* Estilo para os campos de entrada */
         .form-container input, .form-container select {
             width: 100%;
             padding: 10px;
@@ -156,36 +151,16 @@
             outline: none;
         }
 
-        /* Estilo do botão */
-        .form-container button {
-            width: 220px;
-            height: 50px;
-            border: none;
-            outline: none;
-            color: #fff;
-            background: #111;
-            cursor: pointer;
-            position: relative;
-            z-index: 0;
-            border-radius: 10px;
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            margin: auto;
-        }
-
-        /* Estilo da tela de carregamento */
         .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            display: none;
             background-color: black;
         }
 
@@ -194,7 +169,6 @@
             max-width: 600px;
         }
 
-        /* Imagens representativas para selecionar o esporte */
         .sports-selection {
             display: flex;
             justify-content: space-around;
@@ -213,7 +187,6 @@
             transform: scale(1.1);
         }
 
-        /* Carousel */
         .carousel {
             display: flex;
             overflow: hidden;
@@ -231,28 +204,46 @@
             width: 100%;
             height: auto;
         }
-        .imagePreview{
+
+        .imagePreview {
             width: 1000px;
             height: 80%;
             margin: auto;
-            
-            
         }
 
+        .posicao {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .posicao:hover {
+            transform: scale(1.2);
+        }
+
+        .posicao.selected {
+            background-color: limegreen;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Formulário de Cadastro -->
     <div class="form-container">
-        <!-- Formulário de entrada de dados -->
         <div class="form">
             <div class="logo">
                 <img src="imagens/loguinho.png" alt="Logo" style="width: 80px; height: auto;">
             </div>
             <h2 style="text-align: center;">Criar Conta</h2>
             <form id="registerForm" onsubmit="showLoadingScreen(event)">
-                <!-- Selecione o esporte com imagens representativas -->
                 <div class="form-group">
                     <label for="esporte">Escolha o Esporte</label>
                     <div class="sports-selection">
@@ -261,7 +252,6 @@
                     </div>
                 </div>
 
-                <!-- Selecione a posição -->
                 <div class="form-group">
                     <label for="posicao">Posição</label>
                     <select id="posicao" required>
@@ -269,13 +259,11 @@
                     </select>
                 </div>
 
-                <!-- Campo Pix com logo dentro -->
                 <div class="form-group pix-group">
                     <input type="text" id="pix" placeholder="Pix (Chave Pix)" required>
                     <img src="https://files.passeidireto.com/2889edc1-1a70-456a-a32c-e3f050102347/2889edc1-1a70-456a-a32c-e3f050102347.png" alt="Logo Pix">
                 </div>
 
-                <!-- Outros campos -->
                 <select id="campo" required onchange="showCampoImage()">
                     <option value="">Selecione o Tipo de Campo</option>
                     <option value="quadra">Quadra</option>
@@ -296,79 +284,67 @@
         </div>
     </div>
 
-    <!-- Pré-visualização da imagem do lado direito -->
     <div class="preview">
         <img id="imagePreview" src="" alt="Pré-visualização" />
     </div>
 
-    <!-- Tela de Carregamento com vídeo -->
     <div id="loading" class="loading-screen">
         <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video>
     </div>
 
+    <!-- Quadra de Futsal com posições -->
+    <div id="futsalQuadraContainer" style="display: none; position: absolute; top: 20px; right: 20px; z-index: 10;">
+        <div style="position: relative;">
+            <img src="imagens/futsal.png" alt="Quadra de Futsal" style="width: 600px; height: auto;">
+
+            <div class="posicao" style="top: 45%; left: 5%;" data-posicao="Goleiro">G</div>
+            <div class="posicao" style="top: 20%; left: 40%;" data-posicao="Ala">A</div>
+            <div class="posicao" style="top: 70%; left: 40%;" data-posicao="Ala">A</div>
+            <div class="posicao" style="top: 35%; left: 70%;" data-posicao="Pivô">P</div>
+            <div class="posicao" style="top: 55%; left: 70%;" data-posicao="Fixação">F</div>
+        </div>
+    </div>
+
     <script>
-        // Função para exibir a tela de carregamento
         function showLoadingScreen(event) {
             event.preventDefault();
-
-            // Exibe a tela de carregamento
             document.getElementById('loading').style.display = 'flex';
-
-            // Simula o tempo de carregamento
-            setTimeout(function() {
-                // Esconde a tela de carregamento
+            setTimeout(function () {
                 document.getElementById('loading').style.display = 'none';
-
-                // Redireciona para a página de sucesso após o "carregamento"
-                window.location.href = 'inicio.html'; 
-            }, 3000); 
+                window.location.href = 'inicio.html';
+            }, 3000);
         }
 
-        // Função para exibir a pré-visualização da imagem
         function previewImage() {
             const file = document.getElementById('fotoPerfil').files[0];
             const reader = new FileReader();
-
-            reader.onloadend = function() {
+            reader.onloadend = function () {
                 document.getElementById('imagePreview').src = reader.result;
             }
-
             if (file) {
                 reader.readAsDataURL(file);
             }
         }
 
-        // Função para exibir a imagem do tipo de campo selecionado
         function showCampoImage() {
             const campo = document.getElementById('campo').value;
-
-            // Esconde todas as imagens
             const images = document.querySelectorAll('.campo-image');
             images.forEach(image => image.style.display = 'none');
-
-            // Exibe a imagem do campo selecionado
             if (campo) {
                 document.getElementById(campo + '-image').style.display = 'block';
             }
         }
 
-        // Função para atualizar as posições com base no esporte selecionado
         function updatePosicoes(esporte) {
             const posicaoSelect = document.getElementById('posicao');
-            
-            // Limpar opções anteriores
             posicaoSelect.innerHTML = '<option value="">Escolha a posição</option>';
-
             let opcoesPosicao = [];
-
             if (esporte === 'futebol') {
                 opcoesPosicao = ['Atacante', 'Meio-Campo', 'Zagueiro', 'Goleiro'];
             } else if (esporte === 'futsal') {
                 opcoesPosicao = ['Goleiro', 'Pivô', 'Ala', 'Fixação'];
             }
-
-            // Adicionar as opções de posição ao select
-            opcoesPosicao.forEach(function(posicao) {
+            opcoesPosicao.forEach(function (posicao) {
                 const option = document.createElement('option');
                 option.value = posicao;
                 option.textContent = posicao;
@@ -376,11 +352,23 @@
             });
         }
 
-        // Função chamada ao clicar na imagem do esporte
         function selectSport(esporte) {
             updatePosicoes(esporte);
+            const quadra = document.getElementById('futsalQuadraContainer');
+            if (esporte === 'futsal') {
+                quadra.style.display = 'block';
+            } else {
+                quadra.style.display = 'none';
+            }
         }
-    </script>
 
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.posicao').forEach(function (element) {
+                element.addEventListener('click', function () {
+                    this.classList.toggle('selected');
+                });
+            });
+        });
+    </script>
 </body>
 </html>

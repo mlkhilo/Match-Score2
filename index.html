@@ -111,6 +111,14 @@
       transform: scale(1.02);
       color: white;
     }
+
+    #sobre{
+      align-items: center;
+      margin: auto;
+      margin-bottom: 1000px;
+      
+    }
+
   </style>
 </head>
 <body>
@@ -118,9 +126,7 @@
     <div class="button-container">
       <button onclick="showLoadingScreen('cadastro.html')">Criar</button>
       <button onclick="showLoadingScreen('entrar.html')">Entrar</button>
-      <button onclick="showLoadingScreen('sobre.html')">Sobre</button>
     </div>
-
     <div>
       <img src="imagens/loguinho.png" alt="" id="logo">
     </div>
@@ -128,6 +134,7 @@
       <img src="imagens/nome logo.png" alt="" id="nomel">
     </div>
   </header>
+  <button onclick="showLoadingScreen('sobre.html')" id="sobre">Sobre</button>
 
   <div id="loading" class="loading-screen">
     <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video>
