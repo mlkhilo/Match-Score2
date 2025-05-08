@@ -32,6 +32,7 @@
             gap: 20px;
             box-sizing: border-box;
             border-radius: 16px;
+            position: relative;
         }
 
         .form-container .form {
@@ -41,20 +42,6 @@
             width: 100%;
             max-width: 400px;
             margin: 0 auto;
-        }
-
-        .form-container .preview {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #414141;
-            padding: 10px;
-            background-color: #1d1d1d;
-            border-radius: 8px;
-            height: 100%;
-            margin-top: 20px;
         }
 
         .form-container .form-group {
@@ -187,28 +174,10 @@
             transform: scale(1.1);
         }
 
-        .carousel {
-            display: flex;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .carousel img {
-            width: 100%;
-            object-fit: cover;
-            margin-right: 10px;
-        }
-
         .campo-image {
             display: none;
             width: 100%;
             height: auto;
-        }
-
-        .imagePreview {
-            width: 1000px;
-            height: 80%;
-            margin: auto;
         }
 
         .posicao {
@@ -233,11 +202,155 @@
         .posicao.selected {
             background-color: limegreen;
         }
+
+        /* NOVOS ESTILOS ADICIONADOS */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                padding: 20px;
+            }
+            
+            .form-container {
+                width: 100%;
+                margin-left: 0;
+                margin-bottom: 20px;
+            }
+            
+            #futsalQuadraContainer {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 400px;
+            }
+            
+            #futsalQuadraContainer img {
+                width: 100%;
+                height: auto;
+            }
+            
+            .close-btn {
+                font-size: 24px;
+            }
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 11;
+            border: 2px solid white;
+        }
+        
+        .selected-positions {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .position-tag {
+            background: limegreen;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .position-tag .remove-tag {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        /* Estilos para o círculo de foto */
+        .photo-upload-container {
+            position: absolute;
+            top: -40px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            z-index: 10;
+        }
+        
+        .photo-circle {
+            left: 440%;
+            top: 80%;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #333;
+            border: 2px dashed #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .photo-circle:hover {
+            border-color: #e81cff;
+            transform: scale(1.05);
+        }
+        
+        .plus-sign {
+            color: #666;
+            font-size: 30px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        
+        .photo-circle:hover .plus-sign {
+            color: #e81cff;
+        }
+        
+        .photo-circle.has-image .plus-sign {
+            display: none;
+        }
+        
+        .photo-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .photo-circle.has-image .photo-preview {
+            display: block;
+        }
+        
+        #photoInput {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
     <div class="form-container">
+        <!-- Círculo de upload de foto -->
+        <div class="photo-upload-container">
+            <div class="photo-circle" id="photoCircle" onclick="document.getElementById('photoInput').click()">
+                <div class="plus-sign">+</div>
+                <img class="photo-preview" id="photoPreview" src="" alt="Foto do perfil">
+            </div>
+            <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload()">
+        </div>
+
         <div class="form">
             <div class="logo">
                 <img src="imagens/loguinho.png" alt="Logo" style="width: 80px; height: auto;">
@@ -257,6 +370,7 @@
                     <select id="posicao" required>
                         <option value="">Escolha a posição</option>
                     </select>
+                    <div id="selectedPositionsForm" class="selected-positions"></div>
                 </div>
 
                 <div class="form-group pix-group">
@@ -278,14 +392,9 @@
                 </div>
 
                 <input type="number" id="idade" placeholder="Idade" required>
-                <input type="file" id="fotoPerfil" accept="image/*" required onchange="previewImage()">
                 <button type="submit">Cadastrar</button>
             </form>
         </div>
-    </div>
-
-    <div class="preview">
-        <img id="imagePreview" src="" alt="Pré-visualização" />
     </div>
 
     <div id="loading" class="loading-screen">
@@ -293,7 +402,8 @@
     </div>
 
     <!-- Quadra de Futsal com posições (vertical) -->
-    <div id="futsalQuadraContainer" style="display: none; position: absolute; top: 20px; right: 20px; z-index: 10;">
+    <div id="futsalQuadraContainer" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px;">
+        <div class="close-btn" onclick="document.getElementById('futsalQuadraContainer').style.display = 'none'">X</div>
         <div style="position: relative;">
             <img src="imagens/futsal.png" alt="Quadra de Futsal" style="width: 300px; height: 500px; object-fit: cover;">
 
@@ -304,9 +414,12 @@
             <div class="posicao" style="top: 65%; left: 45%;" data-posicao="Pivô">P</div>
             <div class="posicao" style="top: 30%; left: 45%;" data-posicao="Fixo">F</div>
         </div>
+        <div class="selected-positions" id="selectedPositions"></div>
     </div>
 
     <script>
+        const selectedPositions = new Set();
+        
         function showLoadingScreen(event) {
             event.preventDefault();
             document.getElementById('loading').style.display = 'flex';
@@ -316,13 +429,15 @@
             }, 3000);
         }
 
-        function previewImage() {
-            const file = document.getElementById('fotoPerfil').files[0];
-            const reader = new FileReader();
-            reader.onloadend = function () {
-                document.getElementById('imagePreview').src = reader.result;
-            }
+        function handlePhotoUpload() {
+            const file = document.getElementById('photoInput').files[0];
             if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('photoPreview');
+                    preview.src = e.target.result;
+                    document.getElementById('photoCircle').classList.add('has-image');
+                }
                 reader.readAsDataURL(file);
             }
         }
@@ -358,17 +473,61 @@
             const quadra = document.getElementById('futsalQuadraContainer');
             if (esporte === 'futsal') {
                 quadra.style.display = 'block';
+                selectedPositions.clear();
+                document.getElementById('selectedPositions').innerHTML = '';
+                document.getElementById('selectedPositionsForm').innerHTML = '';
+                document.querySelectorAll('.posicao').forEach(el => el.classList.remove('selected'));
             } else {
                 quadra.style.display = 'none';
             }
         }
 
+        function updateSelectedPositionsDisplay() {
+            const container = document.getElementById('selectedPositions');
+            const formContainer = document.getElementById('selectedPositionsForm');
+            container.innerHTML = '';
+            formContainer.innerHTML = '';
+            
+            selectedPositions.forEach(position => {
+                const tag = document.createElement('div');
+                tag.className = 'position-tag';
+                tag.innerHTML = `
+                    ${position}
+                    <span class="remove-tag" onclick="removePosition('${position}')">×</span>
+                `;
+                container.appendChild(tag);
+                formContainer.appendChild(tag.cloneNode(true));
+            });
+            
+            // Atualiza o select
+            const select = document.getElementById('posicao');
+            if (selectedPositions.size > 0) {
+                select.value = Array.from(selectedPositions).join(', ');
+            } else {
+                select.value = '';
+            }
+        }
+        
+        function removePosition(position) {
+            selectedPositions.delete(position);
+            document.querySelector(`.posicao[data-posicao="${position}"]`).classList.remove('selected');
+            updateSelectedPositionsDisplay();
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.posicao').forEach(function (element) {
                 element.addEventListener('click', function () {
-                    this.classList.toggle('selected');
-                    const posicaoSelect = document.getElementById('posicao');
-                    posicaoSelect.value = this.getAttribute('data-posicao');
+                    const position = this.getAttribute('data-posicao');
+                    
+                    if (selectedPositions.has(position)) {
+                        selectedPositions.delete(position);
+                        this.classList.remove('selected');
+                    } else {
+                        selectedPositions.add(position);
+                        this.classList.add('selected');
+                    }
+                    
+                    updateSelectedPositionsDisplay();
                 });
             });
         });
