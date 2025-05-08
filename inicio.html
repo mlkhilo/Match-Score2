@@ -228,17 +228,38 @@
       margin-bottom: 12px;
     }
 
+    .ft-perfil {
+      margin-left: 10px;
+      width: 230px;
+      height: 50px;
+      border: solid 5px purple;
+    }
+
+    .vip {
+      margin: auto;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+      height: 150px;
+      width: 150px;
+    }
+
+    .editar-perfil-btn {
+      padding: 10px 20px;
+      background-color: #e81cff;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
     /* MODO CLARO */
     body.light-mode {
       background-color: #fff;
       color: #000;
     }
-    .ft-perfil{
-     margin-left: 10px;
-     width: 230px;
-     height: 50px;
-     border: solid 5px purple;
-    }
+
     body.light-mode header,
     body.light-mode .config-bar,
     body.light-mode footer,
@@ -288,14 +309,10 @@
       background-color: #fff;
       color: #000;
     }
-    .vip{
-      margin: auto;
-      padding: 15px;
-      text-align: center;
-      font-size: 14px;
-      height: 150px;
-      width: 150px;
 
+    body.light-mode .editar-perfil-btn {
+      background-color: #00bf63;
+      color: white;
     }
   </style>
 </head>
@@ -378,20 +395,28 @@
       </button>
     </div>
   </div>
+
   <div class="modal-overlay" id="perfModal">
     <div class="modal-content perfModal">
       <span class="close-modal" onclick="closePerfModal()">✖</span>
       <div class="ft-perfil">
-        <img src="" alt="">
+        <img id="fotoPerfil" src="imagens/perfil-exemplo.jpg" alt="Foto de perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
       </div>
-      <div class="info-perfil">
-        <label for="">Nome</label>
+      <div class="info-perfil" style="text-align: left; margin-top: 20px;">
+        <p><strong>Nome:</strong> <span id="nomePerfil">João Silva</span></p>
+        <p><strong>E-mail:</strong> <span id="emailPerfil">joao@email.com</span></p>
+        <p><strong>Senha:</strong> <span id="senhaPerfil">••••••••</span></p>
+        <p><strong>Posição:</strong> <span id="posicaoPerfil">Atacante</span></p>
+        <p><strong>Pix:</strong> <span id="pixPerfil">joao@pix.com</span></p>
       </div>
-      <div class="botao-perfil">
-
+      <div class="botao-perfil" style="margin-top: 20px;">
+        <button class="editar-perfil-btn" onclick="alert('Editar perfil em breve...')">
+          Editar Perfil
+        </button>
       </div>
     </div>
   </div>
+
   <script>
     function toggleConfigBar() {
       document.getElementById('configBar').classList.toggle('open');
@@ -412,7 +437,9 @@
     function closeVipModal() {
       document.getElementById('vipModal').style.display = 'none';
     }
+
     function openPerfModal() {
+      carregarPerfil();
       document.getElementById('perfModal').style.display = 'flex';
     }
 
@@ -435,7 +462,32 @@
       document.getElementById('themeToggle').checked = isLight;
       const logo = document.querySelector('header img');
       logo.src = isLight ? 'imagens/loguinho2.png' : 'imagens/loguinho.png';
+
+      carregarPerfil();
     }
+
+    function carregarPerfil() {
+      const dados = JSON.parse(localStorage.getItem('perfil'));
+      if (!dados) return;
+
+      document.getElementById('fotoPerfil').src = dados.foto || 'imagens/default.jpg';
+      document.getElementById('nomePerfil').innerText = dados.nome || 'Não definido';
+      document.getElementById('emailPerfil').innerText = dados.email || 'Não definido';
+      document.getElementById('senhaPerfil').innerText = dados.senha ? '•'.repeat(dados.senha.length) : 'Não definida';
+      document.getElementById('posicaoPerfil').innerText = dados.posicao || 'Não definida';
+      document.getElementById('pixPerfil').innerText = dados.pix || 'Não definida';
+    }
+
+    const perfil = {
+      foto: 'imagens/perfil-exemplo.jpg',
+      nome: 'João Silva',
+      email: 'joao@email.com',
+      senha: 'minhasenha123',
+      posicao: 'Meio-Campo',
+      pix: 'joao@pix.com'
+    };
+
+    localStorage.setItem('perfil', JSON.stringify(perfil));
   </script>
 </body>
 </html>

@@ -112,11 +112,26 @@
       color: white;
     }
 
-    #sobre{
-      align-items: center;
-      margin: auto;
-      margin-bottom: 1000px;
-      
+    #sobre {
+      position: absolute;
+      top: 550px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 15px 30px;
+      font-size: 20px;
+      background-color: black;
+      color: white;
+      border: solid white 3px;
+      border-radius: 300px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      z-index: 2;
+    }
+
+    #sobre:hover {
+      background-color: white;
+      color: black;
+      border: 2px solid black;
     }
 
   </style>
@@ -134,8 +149,11 @@
       <img src="imagens/nome logo.png" alt="" id="nomel">
     </div>
   </header>
+
+  <!-- Botão "Sobre" centralizado -->
   <button onclick="showLoadingScreen('sobre.html')" id="sobre">Sobre</button>
 
+  <!-- Tela de carregamento -->
   <div id="loading" class="loading-screen">
     <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video>
   </div>
