@@ -292,16 +292,17 @@
         <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video>
     </div>
 
-    <!-- Quadra de Futsal com posições -->
+    <!-- Quadra de Futsal com posições (vertical) -->
     <div id="futsalQuadraContainer" style="display: none; position: absolute; top: 20px; right: 20px; z-index: 10;">
         <div style="position: relative;">
-            <img src="imagens/futsal.png" alt="Quadra de Futsal" style="width: 600px; height: auto;">
+            <img src="imagens/futsal.png" alt="Quadra de Futsal" style="width: 300px; height: 500px; object-fit: cover;">
 
-            <div class="posicao" style="top: 45%; left: 5%;" data-posicao="Goleiro">G</div>
-            <div class="posicao" style="top: 20%; left: 40%;" data-posicao="Ala">A</div>
-            <div class="posicao" style="top: 70%; left: 40%;" data-posicao="Ala">A</div>
-            <div class="posicao" style="top: 35%; left: 70%;" data-posicao="Pivô">P</div>
-            <div class="posicao" style="top: 55%; left: 70%;" data-posicao="Fixação">F</div>
+            <!-- Posições ajustadas para quadra vertical -->
+            <div class="posicao" style="top: 10%; left: 45%;" data-posicao="Goleiro">G</div>
+            <div class="posicao" style="top: 47%; left: 20%;" data-posicao="Ala">A</div>
+            <div class="posicao" style="top: 47%; left: 70%;" data-posicao="Ala">A</div>
+            <div class="posicao" style="top: 65%; left: 45%;" data-posicao="Pivô">P</div>
+            <div class="posicao" style="top: 30%; left: 45%;" data-posicao="Fixo">F</div>
         </div>
     </div>
 
@@ -342,7 +343,7 @@
             if (esporte === 'futebol') {
                 opcoesPosicao = ['Atacante', 'Meio-Campo', 'Zagueiro', 'Goleiro'];
             } else if (esporte === 'futsal') {
-                opcoesPosicao = ['Goleiro', 'Pivô', 'Ala', 'Fixação'];
+                opcoesPosicao = ['Goleiro', 'Pivô', 'Ala', 'Fixo'];
             }
             opcoesPosicao.forEach(function (posicao) {
                 const option = document.createElement('option');
@@ -366,6 +367,8 @@
             document.querySelectorAll('.posicao').forEach(function (element) {
                 element.addEventListener('click', function () {
                     this.classList.toggle('selected');
+                    const posicaoSelect = document.getElementById('posicao');
+                    posicaoSelect.value = this.getAttribute('data-posicao');
                 });
             });
         });
