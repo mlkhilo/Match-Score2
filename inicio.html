@@ -6,7 +6,7 @@
   <title>Match Score</title>
   <link rel="icon" href="imagens/loguinho.png" type="image/png">
   <style>
-    /* Variáveis CSS para temas */
+    /* Reset e Variáveis */
     :root {
       --primary: #e81cff;
       --secondary: #40c9ff;
@@ -18,34 +18,34 @@
       --vip-gold: gold;
       --success: #00bf63;
       
-      --bg-color: var(--dark);
-      --text-color: var(--white);
-      --header-color: var(--dark-gray);
-      --card-color: var(--medium-gray);
-      --button-primary: var(--primary);
+      --bg: var(--dark);
+      --text: var(--white);
+      --header: var(--dark-gray);
+      --card: var(--medium-gray);
+      --btn-primary: var(--primary);
     }
 
-    /* Reset e estilos base */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* Header responsivo */
-    header {
-      background-color: var(--header-color);
-      padding: 0.8rem 1rem;
+    /* Header */
+    .app-header {
+      background: var(--header);
+      padding: 12px 16px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -56,200 +56,104 @@
     }
 
     .logo {
-      height: 40px;
-      width: auto;
+      height: 36px;
     }
 
     .logo img {
       height: 100%;
-      width: auto;
       max-width: 120px;
-    }
-
-    /* Menu mobile */
-    .menu-toggle {
-      background: none;
-      border: none;
-      color: var(--text-color);
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 0.8rem;
-      align-items: center;
     }
 
     /* Botões */
     .btn {
-      padding: 0.5rem 1rem;
+      padding: 8px 12px;
       border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      font-size: 0.9rem;
+      font-weight: 600;
+      font-size: 14px;
       border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .btn-primary {
-      background-color: var(--button-primary);
-      color: var(--white);
-      box-shadow: 0 0 10px rgba(232, 28, 255, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(232, 28, 255, 0.4);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--button-primary);
-      color: var(--button-primary);
+    .btn-menu {
+      background: none;
+      color: var(--text);
+      font-size: 24px;
+      padding: 4px;
+      display: none; /* Escondido por padrão em desktop */
     }
 
     .btn-vip {
-      background-color: var(--vip-gold);
-      color: var(--dark);
-      font-weight: bold;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      background: var(--vip-gold);
+      color: #000;
+      margin-right: 8px;
     }
 
-    /* Conteúdo principal */
-    main {
-      flex: 1;
-      padding: 1.5rem 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
+    .btn-create {
+      background: transparent;
+      border: 2px solid var(--btn-primary);
+      color: var(--btn-primary);
+      box-shadow: 0 0 8px rgba(232, 28, 255, 0.3);
     }
 
-    /* Seção de destaque */
-    .featured {
-      background-color: var(--card-color);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    .btn-close {
+      background: none;
+      border: none;
+      color: var(--btn-primary);
+      font-size: 24px;
+      cursor: pointer;
     }
 
-    .featured img {
-      width: 100%;
-      border-radius: 8px;
-      margin-top: 1rem;
-      height: auto;
-      max-height: 300px;
-      object-fit: cover;
-    }
-
-    /* Carrossel */
-    .carousel-container {
-      position: relative;
-      margin: 2rem 0;
-    }
-
-    .carousel-title {
-      margin-bottom: 1rem;
-      font-size: 1.3rem;
-    }
-
-    .carousel {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 1rem;
-      padding-bottom: 1rem;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .carousel::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .carousel::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 3px;
-    }
-
-    .carousel-item {
-      scroll-snap-align: start;
-      flex: 0 0 85%;
-      background-color: var(--card-color);
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .carousel-item img {
-      width: 100%;
-      border-radius: 6px;
-      height: 150px;
-      object-fit: cover;
-      margin-bottom: 0.8rem;
-    }
-
-    /* Menu lateral */
+    /* Menu Lateral */
     .sidebar {
       position: fixed;
       top: 0;
-      left: -100%;
-      width: 85%;
-      max-width: 300px;
+      left: -300px; /* Alterado para valor fixo */
+      width: 280px;
       height: 100vh;
-      background-color: var(--header-color);
+      background: var(--header);
       z-index: 1000;
-      transition: left 0.3s ease;
-      padding: 1.5rem;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 20px;
       overflow-y: auto;
     }
 
     .sidebar.open {
-      left: 0;
+      transform: translateX(300px); /* Corrigido para valor fixo */
     }
 
     .sidebar-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
       border-bottom: 1px solid var(--medium-gray);
     }
 
-    .sidebar-nav ul {
+    .nav-menu {
       list-style: none;
     }
 
-    .sidebar-nav li {
-      margin-bottom: 1rem;
+    .nav-item {
+      margin-bottom: 12px;
     }
 
-    .sidebar-nav a {
-      color: var(--text-color);
-      text-decoration: none;
+    .nav-link {
       display: block;
-      padding: 0.8rem;
+      padding: 12px;
+      color: var(--text);
+      text-decoration: none;
       border-radius: 6px;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
 
-    .sidebar-nav a:hover {
-      background-color: rgba(232, 28, 255, 0.1);
-      color: var(--primary);
-    }
-
-    .close-sidebar {
-      background: none;
-      border: none;
-      color: var(--text-color);
-      font-size: 1.5rem;
-      cursor: pointer;
+    .nav-link:hover {
+      background: rgba(232, 28, 255, 0.1);
+      color: var(--btn-primary);
     }
 
     /* Overlay */
@@ -259,14 +163,73 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
       z-index: 999;
       display: none;
-      backdrop-filter: blur(3px);
     }
 
     .overlay.active {
       display: block;
+    }
+
+    /* Conteúdo Principal */
+    .main-content {
+      flex: 1;
+      padding: 16px;
+      margin-left: 0; /* Adicionado para desktop */
+      transition: margin-left 0.3s; /* Suaviza a transição */
+    }
+
+    /* Seções */
+    .section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    /* Carrossel */
+    .carrossel {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      overflow: hidden;
+      margin: auto;
+    }
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      width: 100%;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+    .controles {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+    }
+
+    .controles button {
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
     }
 
     /* Modal */
@@ -275,9 +238,9 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background-color: var(--header-color);
+      background: var(--header);
       border-radius: 12px;
-      padding: 1.5rem;
+      padding: 20px;
       z-index: 1001;
       width: 90%;
       max-width: 400px;
@@ -295,21 +258,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--primary);
-      font-size: 1.5rem;
-      cursor: pointer;
+      margin-bottom: 16px;
     }
 
     /* Modal VIP */
     .vip-badge {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin: 16px 0;
     }
 
     .vip-badge img {
@@ -317,178 +272,180 @@
       height: auto;
     }
 
-    .vip-benefits {
-      margin-bottom: 1.5rem;
+    .vip-features {
+      list-style: none;
+      margin-bottom: 20px;
     }
 
-    .vip-benefits li {
-      margin-bottom: 0.8rem;
+    .vip-feature {
+      margin-bottom: 12px;
+      padding-left: 28px;
       position: relative;
-      padding-left: 1.8rem;
     }
 
-    .vip-benefits li:before {
+    .vip-feature::before {
       content: "✓";
       color: var(--vip-gold);
       position: absolute;
-      left: 0;
+      left: 8px;
     }
 
     /* Modal Perfil */
-    .profile-picture {
-      width: 120px;
-      height: 120px;
+    .profile-pic {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      margin: 0 auto 1.5rem;
+      margin: 0 auto 16px;
       overflow: hidden;
-      border: 4px solid var(--primary);
+      border: 3px solid var(--btn-primary);
     }
 
-    .profile-picture img {
+    .profile-pic img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
     .profile-info {
-      margin-bottom: 1.5rem;
+      margin-bottom: 16px;
     }
 
     .profile-info p {
-      margin-bottom: 0.8rem;
+      margin-bottom: 8px;
+      font-size: 14px;
     }
 
     /* Footer */
-    footer {
-      background-color: var(--header-color);
+    .app-footer {
+      background: var(--header);
       color: var(--light-gray);
       text-align: center;
-      padding: 1rem;
-      font-size: 0.8rem;
+      padding: 12px;
+      font-size: 12px;
     }
 
-    /* Modo claro */
+    /* Modo Claro */
     body.light-mode {
-      --bg-color: #f5f5f5;
-      --text-color: #333;
-      --header-color: #fff;
-      --card-color: #fff;
-      --button-primary: var(--success);
+      --bg: #f5f5f5;
+      --text: #333;
+      --header: #fff;
+      --card: #fff;
+      --btn-primary: var(--success);
     }
 
     /* Media Queries */
-    @media (min-width: 768px) {
-      .menu-toggle {
-        display: none;
+    @media (max-width: 768px) {
+      .btn-menu {
+        display: block; /* Mostra o botão de menu em mobile */
       }
       
+      .main-content {
+        margin-left: 0 !important; /* Garante que não tenha margem em mobile */
+      }
+      
+    }
+
+    @media (min-width: 769px) {
       .sidebar {
-        width: 300px;
-        left: -300px;
+        transform: translateX(0); /* Barra sempre visível em desktop */
+        left: 0;
       }
       
-      .carousel-item {
-        flex: 0 0 45%;
+      .main-content {
+        margin-left: 280px; /* Compensa a largura da barra lateral */
       }
       
-      .btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 1rem;
+      .overlay {
+        display: none !important; /* Nunca mostra overlay em desktop */
       }
     }
 
-    @media (min-width: 992px) {
-      .carousel-item {
-        flex: 0 0 30%;
+    @media (min-width: 1024px) {
+      
+      .btn {
+        padding: 10px 16px;
+        font-size: 15px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <button class="menu-toggle" aria-label="Abrir menu" onclick="toggleSidebar()">☰</button>
+  <!-- Cabeçalho -->
+  <header class="app-header">
+    <button class="btn btn-menu" onclick="toggleSidebar()">☰</button>
     
     <div class="logo">
       <img src="imagens/loguinho.png" alt="Match Score">
     </div>
     
-    <div class="header-actions">
-      <button class="btn btn-vip" onclick="openModal('vip-modal')">💎 VIP</button>
-      <button class="btn btn-outline" onclick="window.location.href='criar.html'">➕ Criar</button>
+    <div>
+      <button class="btn btn-vip" onclick="openModal('vipModal')">💎 VIP</button>
+      <button class="btn btn-create" onclick="window.location.href='criar.html'">➕ Criar</button>
     </div>
   </header>
 
   <!-- Menu Lateral -->
-  <div class="sidebar" id="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <h2>Menu</h2>
-      <button class="close-sidebar" onclick="toggleSidebar()">×</button>
+      <button class="btn-close" onclick="toggleSidebar()">×</button>
     </div>
     
-    <nav class="sidebar-nav">
-      <ul>
-        <li><a href="#" onclick="alert('Amistosos')">Amistosos</a></li>
-        <li><a href="#" onclick="openModal('profile-modal')">Perfil</a></li>
-        <li><a href="#" onclick="openModal('settings-modal')">Configurações</a></li>
-        <li><a href="#" onclick="alert('Amigos')">Amigos</a></li>
-        <li><a href="#" onclick="alert('Avaliação')">Avaliação</a></li>
-        <li><a href="#" onclick="alert('Cassino')">Cassino/Apostas</a></li>
-      </ul>
-    </nav>
-  </div>
+    <ul class="nav-menu">
+      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Amistosos')">Amistosos</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="openModal('profileModal')">Perfil</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="openModal('settingsModal')">Configurações</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Amigos')">Amigos</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Avaliação')">Avaliação</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Cassino')">Cassino/Apostas</a></li>
+    </ul>
+  </aside>
 
   <!-- Overlay -->
   <div class="overlay" id="overlay"></div>
 
   <!-- Conteúdo Principal -->
-  <main>
-    <section class="featured">
-      <h2>Criação em Destaque</h2>
-      <p>Confira a criação mais recente e popular feita pelos usuários.</p>
-      <img src="imagens/destaque.jpg" alt="Criação em destaque">
+  <main class="main-content">
+    <section class="section">
+      <h2 class="section-title">Destaque</h2>
+      <p>Confira a criação mais popular da semana.</p>
+      <img src="imagens/destaque.jpg" alt="Criação em destaque" style="width:100%; border-radius:8px; margin-top:12px;">
     </section>
     
-    <section class="carousel-container">
-      <h3 class="carousel-title">Criações Recentes</h3>
-      <div class="carousel">
-        <div class="carousel-item">
-          <img src="imagens/criacao1.jpg" alt="Criação 1">
-          <h4>Criação 1</h4>
-          <p>Descrição breve da criação 1.</p>
+    <section>
+      <h2 class="section-title">Criações Recentes</h2>
+      <div class="carrossel">
+        <div class="slides" id="slides">
+          <div class="slide" style="background-image: url('https://image-service.onefootball.com/transform?w=256&dpr=2&image=https://images.onefootball.com/icons/teams/164/18.png');"></div>
+          <div class="slide" style="background-image: url('https://img.uefa.com/imgml/TP/teams/logos/240x240/50051.png');"></div>
+          <div class="slide" style="background-image: url('https://upload.wikimedia.org/wikipedia/pt/thumb/4/43/FCBarcelona.svg/2020px-FCBarcelona.svg.png');"></div>
         </div>
-        <div class="carousel-item">
-          <img src="imagens/criacao2.jpg" alt="Criação 2">
-          <h4>Criação 2</h4>
-          <p>Descrição breve da criação 2.</p>
+        <div class="controles">
+          <button onclick="mudarSlide(-1)">❮</button>
+          <button onclick="mudarSlide(1)">❯</button>
         </div>
-        <div class="carousel-item">
-          <img src="imagens/criacao3.jpg" alt="Criação 3">
-          <h4>Criação 3</h4>
-          <p>Descrição breve da criação 3.</p>
-        </div>
-      </div>
+      </div>      
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer>
+  <!-- Rodapé -->
+  <footer class="app-footer">
     <p>&copy; 2025 Match Score. Todos os direitos reservados.</p>
   </footer>
 
   <!-- Modal Configurações -->
-  <div class="modal" id="settings-modal">
+  <div class="modal" id="settingsModal">
     <div class="modal-header">
       <h3>Configurações</h3>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="btn-close" onclick="closeModal()">×</button>
     </div>
     
-    <div class="modal-content">
-      <p>Personalize sua experiência no Match Score.</p>
+    <div>
+      <p>Personalize sua experiência no app.</p>
       
-      <div style="margin-top: 1.5rem;">
-        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-          <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+      <div style="margin-top:16px;">
+        <label style="display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
           <span>Modo Claro</span>
         </label>
       </div>
@@ -496,134 +453,138 @@
   </div>
 
   <!-- Modal VIP -->
-  <div class="modal" id="vip-modal">
+  <div class="modal" id="vipModal">
     <div class="modal-header">
       <h3>Seja VIP</h3>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="btn-close" onclick="closeModal()">×</button>
     </div>
     
-    <div class="modal-content">
+    <div>
       <div class="vip-badge">
         <img src="imagens/logo-vip.png" alt="VIP">
       </div>
       
-      <ul class="vip-benefits">
-        <li>Crie jogos ilimitados</li>
-        <li>Participe de mais jogos</li>
-        <li>Acesso a torneios exclusivos</li>
-        <li>Benefícios especiais</li>
+      <ul class="vip-features">
+        <li class="vip-feature">Crie jogos ilimitados</li>
+        <li class="vip-feature">Participe de mais jogos</li>
+        <li class="vip-feature">Torneios exclusivos</li>
+        <li class="vip-feature">Benefícios especiais</li>
       </ul>
       
-      <button class="btn btn-primary" style="width: 100%;" onclick="alert('Redirecionando para assinatura VIP')">
-        Assinar Agora
+      <button class="btn" style="background:var(--vip-gold); color:#000; width:100%;" onclick="alert('Redirecionando...')">
+        Assinar VIP
       </button>
     </div>
   </div>
 
   <!-- Modal Perfil -->
-  <div class="modal" id="profile-modal">
+  <div class="modal" id="profileModal">
     <div class="modal-header">
       <h3>Meu Perfil</h3>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="btn-close" onclick="closeModal()">×</button>
     </div>
     
-    <div class="modal-content">
-      <div class="profile-picture">
-        <img src="imagens/perfil-exemplo.jpg" alt="Foto de perfil" id="profile-img">
+    <div>
+      <div class="profile-pic">
+        <img src="imagens/perfil-exemplo.jpg" alt="Foto de perfil">
       </div>
       
       <div class="profile-info">
-        <p><strong>Nome:</strong> <span id="profile-name">João Silva</span></p>
-        <p><strong>Email:</strong> <span id="profile-email">joao@email.com</span></p>
-        <p><strong>Posição:</strong> <span id="profile-position">Atacante</span></p>
-        <p><strong>Chave Pix:</strong> <span id="profile-pix">joao@pix.com</span></p>
+        <p><strong>Nome:</strong> João Silva</p>
+        <p><strong>Email:</strong> joao@email.com</p>
+        <p><strong>Posição:</strong> Atacante</p>
+        <p><strong>Pix:</strong> joao@pix.com</p>
       </div>
       
-      <button class="btn btn-primary" style="width: 100%;" onclick="alert('Editar perfil')">
+      <button class="btn" style="background:var(--btn-primary); width:100%;" onclick="alert('Editando perfil...')">
         Editar Perfil
       </button>
     </div>
   </div>
 
   <script>
-    // Controle do menu lateral
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('overlay');
-      
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
-      
-      // Bloquear scroll do body quando o menu está aberto
-      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : 'auto';
+    // Verifica se é um dispositivo móvel
+    function isMobile() {
+      return window.innerWidth <= 768;
     }
 
-    // Controle dos modais
+    // Controle do Menu Lateral
+    function toggleSidebar() {
+      if (isMobile()) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : 'auto';
+      }
+      // Em desktop, não faz nada pois a sidebar já está sempre visível
+    }
+
+    // Controle dos Modais
     function openModal(modalId) {
-      const modal = document.getElementById(modalId);
-      const overlay = document.getElementById('overlay');
-      
-      modal.classList.add('active');
-      overlay.classList.add('active');
+      document.getElementById(modalId).classList.add('active');
+      document.getElementById('overlay').classList.add('active');
       document.body.style.overflow = 'hidden';
-      
-      // Fechar sidebar se estiver aberto
-      document.getElementById('sidebar').classList.remove('open');
     }
 
     function closeModal() {
-      const modals = document.querySelectorAll('.modal');
-      const overlay = document.getElementById('overlay');
-      
-      modals.forEach(modal => modal.classList.remove('active'));
-      overlay.classList.remove('active');
+      document.querySelectorAll('.modal').forEach(modal => {
+        modal.classList.remove('active');
+      });
+      document.getElementById('overlay').classList.remove('active');
       document.body.style.overflow = 'auto';
     }
 
-    // Alternar tema claro/escuro
+    // Alternar Tema
     function toggleTheme() {
-      const isLight = document.getElementById('theme-toggle').checked;
+      const isLight = document.getElementById('themeToggle').checked;
       document.body.classList.toggle('light-mode', isLight);
-      
-      // Salvar preferência
       localStorage.setItem('theme', isLight ? 'light' : 'dark');
     }
 
-    // Carregar tema salvo
+    // Carregar Tema Salvo
     function loadTheme() {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'light') {
         document.body.classList.add('light-mode');
-        document.getElementById('theme-toggle').checked = true;
+        document.getElementById('themeToggle').checked = true;
       }
     }
 
-    // Carregar dados do perfil
-    function loadProfile() {
-      // Simulando dados do localStorage
-      const profileData = {
-        name: "João Silva",
-        email: "joao@email.com",
-        position: "Atacante",
-        pix: "joao@pix.com",
-        photo: "imagens/perfil-exemplo.jpg"
-      };
-      
-      document.getElementById('profile-name').textContent = profileData.name;
-      document.getElementById('profile-email').textContent = profileData.email;
-      document.getElementById('profile-position').textContent = profileData.position;
-      document.getElementById('profile-pix').textContent = profileData.pix;
-      document.getElementById('profile-img').src = profileData.photo;
-    }
-
-    // Fechar modais ao clicar no overlay
+    // Fechar ao clicar no overlay
     document.getElementById('overlay').addEventListener('click', closeModal);
 
     // Inicialização
     window.addEventListener('DOMContentLoaded', () => {
       loadTheme();
-      loadProfile();
+      
+      // Ajusta a margem do conteúdo principal para desktop
+      if (window.innerWidth > 768) {
+        document.querySelector('.main-content').style.marginLeft = '280px';
+      }
     });
+
+    // Atualiza quando a janela é redimensionada
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        document.querySelector('.main-content').style.marginLeft = '280px';
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('overlay').classList.remove('active');
+      } else {
+        document.querySelector('.main-content').style.marginLeft = '0';
+      }
+    });
+
+    //Carrosel função
+    let slideIndex = 0;
+  const slides = document.getElementById("slides");
+
+  function mudarSlide(direcao) {
+    const totalSlides = slides.children.length;
+    slideIndex = (slideIndex + direcao + totalSlides) % totalSlides;
+    slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+  }
   </script>
 </body>
 </html>
