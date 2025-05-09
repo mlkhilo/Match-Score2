@@ -1,493 +1,629 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Início</title>
-  <link rel="icon" href="imagens/loguinho.png" type="image/png"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Match Score</title>
+  <link rel="icon" href="imagens/loguinho.png" type="image/png">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: white;
+    /* Variáveis CSS para temas */
+    :root {
+      --primary: #e81cff;
+      --secondary: #40c9ff;
+      --dark: #111;
+      --dark-gray: #222;
+      --medium-gray: #333;
+      --light-gray: #ccc;
+      --white: #fff;
+      --vip-gold: gold;
+      --success: #00bf63;
+      
+      --bg-color: var(--dark);
+      --text-color: var(--white);
+      --header-color: var(--dark-gray);
+      --card-color: var(--medium-gray);
+      --button-primary: var(--primary);
+    }
+
+    /* Reset e estilos base */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
 
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header responsivo */
     header {
-      background-color: #222;
-      padding: 20px;
-      text-align: center;
-      position: relative;
-    }
-
-    header img {
-      width: 150px;
-      height: auto;
-    }
-
-    .config-button {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background-color: #e81cff;
-      color: white;
-      padding: 10px;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 18px;
-      transition: background-color 0.3s ease;
-    }
-
-    .config-button:hover {
-      background-color: #ba1cb0;
-    }
-
-    .create-button {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: transparent;
-      border: 2px solid #e81cff;
-      color: #e81cff;
-      padding: 10px 20px;
-      font-size: 18px;
-      cursor: pointer;
-      border-radius: 10px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px #e81cff55;
-    }
-
-    .create-button:hover {
-      background-color: #e81cff;
-      color: #111;
-      box-shadow: 0 0 20px #e81cff;
-    }
-
-    .vip-button {
-      position: absolute;
-      top: 20px;
-      right: 160px;
-      background-color: gold;
-      color: #111;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 0 10px gold;
-      transition: all 0.3s ease;
-    }
-
-    .vip-button:hover {
-      background-color: #ffd700;
-      box-shadow: 0 0 20px gold;
-    }
-
-    .config-bar {
-      position: fixed;
-      left: -300px;
+      background-color: var(--header-color);
+      padding: 0.8rem 1rem;
+      position: sticky;
       top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .logo img {
       height: 100%;
-      width: 270px;
-      background-color: #222;
-      color: white;
-      padding: 20px;
-      transition: left 0.3s ease;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
-      overflow-y: auto;
-      z-index: 1000;
+      width: auto;
+      max-width: 120px;
     }
 
-    .config-bar.open {
-      left: 0;
-    }
-
-    .config-bar-header {
+    /* Menu mobile */
+    .menu-toggle {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.5rem;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
+      justify-content: center;
     }
 
-    .config-bar-header h2 {
-      font-size: 24px;
-      margin: 0;
+    .header-actions {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
     }
 
-    .back-icon {
-      font-size: 20px;
-      cursor: pointer;
-      color: #e81cff;
-      transition: color 0.3s;
-    }
-
-    .back-icon:hover {
-      color: #ba1cb0;
-    }
-
-    .config-bar ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .config-bar ul li {
-      font-size: 18px;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-
-    .config-bar ul li:hover {
-      color: #e81cff;
-    }
-
-    .main-content {
-      padding: 20px;
-      text-align: center;
-    }
-
-    .highlight-section {
-      background-color: #333;
-      padding: 50px 20px;
-      margin: 20px 0;
+    /* Botões */
+    .btn {
+      padding: 0.5rem 1rem;
       border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      font-size: 0.9rem;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--button-primary);
+      color: var(--white);
+      box-shadow: 0 0 10px rgba(232, 28, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(232, 28, 255, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--button-primary);
+      color: var(--button-primary);
+    }
+
+    .btn-vip {
+      background-color: var(--vip-gold);
+      color: var(--dark);
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Conteúdo principal */
+    main {
+      flex: 1;
+      padding: 1.5rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Seção de destaque */
+    .featured {
+      background-color: var(--card-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .featured img {
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 1rem;
+      height: auto;
+      max-height: 300px;
+      object-fit: cover;
+    }
+
+    /* Carrossel */
+    .carousel-container {
+      position: relative;
+      margin: 2rem 0;
+    }
+
+    .carousel-title {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
     }
 
     .carousel {
       display: flex;
       overflow-x: auto;
-      padding: 10px 0;
-      gap: 20px;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .carousel::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .carousel::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 3px;
     }
 
     .carousel-item {
-      flex: 0 0 auto;
-      background-color: #222;
-      padding: 20px;
-      border-radius: 8px;
-      width: 250px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      scroll-snap-align: start;
+      flex: 0 0 85%;
+      background-color: var(--card-color);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
 
-    footer {
-      background-color: #222;
-      color: #ccc;
-      padding: 15px;
-      text-align: center;
-      font-size: 14px;
+    .carousel-item img {
+      width: 100%;
+      border-radius: 6px;
+      height: 150px;
+      object-fit: cover;
+      margin-bottom: 0.8rem;
     }
 
-    .modal-overlay {
-      display: none;
+    /* Menu lateral */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 85%;
+      max-width: 300px;
+      height: 100vh;
+      background-color: var(--header-color);
+      z-index: 1000;
+      transition: left 0.3s ease;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .sidebar-nav ul {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 1rem;
+    }
+
+    .sidebar-nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      display: block;
+      padding: 0.8rem;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .sidebar-nav a:hover {
+      background-color: rgba(232, 28, 255, 0.1);
+      color: var(--primary);
+    }
+
+    .close-sidebar {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Overlay */
+    .overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(10, 0, 20, 0.85);
-      backdrop-filter: blur(4px);
-      z-index: 2000;
-      justify-content: center;
-      align-items: center;
+      background-color: rgba(0,0,0,0.7);
+      z-index: 999;
+      display: none;
+      backdrop-filter: blur(3px);
     }
 
-    .modal-content {
-      background-color: #1c1c1c;
-      border: 2px solid #e81cff;
-      padding: 30px;
+    .overlay.active {
+      display: block;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--header-color);
       border-radius: 12px;
-      box-shadow: 0 0 30px #e81cff55;
-      max-width: 500px;
+      padding: 1.5rem;
+      z-index: 1001;
       width: 90%;
-      color: white;
-      position: relative;
-      text-align: center;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: none;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
     }
 
-    .close-modal {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      cursor: pointer;
-      color: #e81cff;
+    .modal.active {
+      display: block;
     }
 
-    .vip-modal ul {
-      list-style: none;
-      padding: 0;
-      font-size: 18px;
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
     }
 
-    .vip-modal ul li {
-      margin-bottom: 12px;
-    }
-
-    .ft-perfil {
-      margin-left: 10px;
-      width: 230px;
-      height: 50px;
-      border: solid 5px purple;
-    }
-
-    .vip {
-      margin: auto;
-      padding: 15px;
-      text-align: center;
-      font-size: 14px;
-      height: 150px;
-      width: 150px;
-    }
-
-    .editar-perfil-btn {
-      padding: 10px 20px;
-      background-color: #e81cff;
+    .modal-close {
+      background: none;
       border: none;
-      color: white;
-      border-radius: 6px;
+      color: var(--primary);
+      font-size: 1.5rem;
       cursor: pointer;
-      font-weight: bold;
     }
 
-    /* MODO CLARO */
+    /* Modal VIP */
+    .vip-badge {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .vip-badge img {
+      width: 100px;
+      height: auto;
+    }
+
+    .vip-benefits {
+      margin-bottom: 1.5rem;
+    }
+
+    .vip-benefits li {
+      margin-bottom: 0.8rem;
+      position: relative;
+      padding-left: 1.8rem;
+    }
+
+    .vip-benefits li:before {
+      content: "✓";
+      color: var(--vip-gold);
+      position: absolute;
+      left: 0;
+    }
+
+    /* Modal Perfil */
+    .profile-picture {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      overflow: hidden;
+      border: 4px solid var(--primary);
+    }
+
+    .profile-picture img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-info p {
+      margin-bottom: 0.8rem;
+    }
+
+    /* Footer */
+    footer {
+      background-color: var(--header-color);
+      color: var(--light-gray);
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+    }
+
+    /* Modo claro */
     body.light-mode {
-      background-color: #fff;
-      color: #000;
+      --bg-color: #f5f5f5;
+      --text-color: #333;
+      --header-color: #fff;
+      --card-color: #fff;
+      --button-primary: var(--success);
     }
 
-    body.light-mode header,
-    body.light-mode .config-bar,
-    body.light-mode footer,
-    body.light-mode .carousel-item,
-    body.light-mode .highlight-section {
-      background-color: #f0f0f0;
-      color: #000;
+    /* Media Queries */
+    @media (min-width: 768px) {
+      .menu-toggle {
+        display: none;
+      }
+      
+      .sidebar {
+        width: 300px;
+        left: -300px;
+      }
+      
+      .carousel-item {
+        flex: 0 0 45%;
+      }
+      
+      .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 1rem;
+      }
     }
 
-    body.light-mode .create-button {
-      border-color: #00bf63;
-      color: #00bf63;
-      box-shadow: 0 0 10px #00cc6655;
-    }
-
-    body.light-mode .create-button:hover {
-      background-color: #00bf63;
-      color: white;
-      box-shadow: 0 0 20px #00bf63;
-    }
-
-    body.light-mode .config-button {
-      background-color: #00bf63;
-    }
-
-    body.light-mode .vip-button {
-      background-color: #f5c100;
-      color: #000;
-      box-shadow: 0 0 10px #f5c10088;
-    }
-
-    body.light-mode .vip-button:hover {
-      background-color: #ffdb4d;
-      box-shadow: 0 0 20px #f5c100;
-    }
-
-    body.light-mode .config-bar ul li:hover,
-    body.light-mode .back-icon:hover,
-    body.light-mode .modal-content h2,
-    body.light-mode .close-modal {
-      color: #00bf63;
-    }
-
-    body.light-mode .modal-content {
-      border-color: #00bf63;
-      box-shadow: 0 0 30px #00cc6655;
-      background-color: #fff;
-      color: #000;
-    }
-
-    body.light-mode .editar-perfil-btn {
-      background-color: #00bf63;
-      color: white;
+    @media (min-width: 992px) {
+      .carousel-item {
+        flex: 0 0 30%;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <img src="imagens/loguinho.png" alt="Logo">
-    <button class="config-button" onclick="toggleConfigBar()">⚙️</button>
-    <button class="vip-button" onclick="openVipModal()">💎 Comprar VIP</button>
-    <button class="create-button" onclick="window.location.href='criar.html'">➕ Criar</button>
+    <button class="menu-toggle" aria-label="Abrir menu" onclick="toggleSidebar()">☰</button>
+    
+    <div class="logo">
+      <img src="imagens/loguinho.png" alt="Match Score">
+    </div>
+    
+    <div class="header-actions">
+      <button class="btn btn-vip" onclick="openModal('vip-modal')">💎 VIP</button>
+      <button class="btn btn-outline" onclick="window.location.href='criar.html'">➕ Criar</button>
+    </div>
   </header>
 
-  <div class="config-bar" id="configBar">
-    <div class="config-bar-header">
-      <h2>Configurações</h2>
-      <span class="back-icon" onclick="toggleConfigBar()">⬅️</span>
+  <!-- Menu Lateral -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>Menu</h2>
+      <button class="close-sidebar" onclick="toggleSidebar()">×</button>
     </div>
-    <ul>
-      <li onclick="alert('Abrindo Amistosos')">Amistosos</li>
-      <li onclick="openPerfModal()">Perfil</li>
-      <li onclick="openModal()">Configuração</li>
-      <li onclick="alert('Abrindo Amigos')">Amigos</li>
-      <li onclick="alert('Abrindo Avaliação')">Avaliação</li>
-      <li onclick="alert('Cassino')">Cassino/Apostas </li>
-    </ul>
+    
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="#" onclick="alert('Amistosos')">Amistosos</a></li>
+        <li><a href="#" onclick="openModal('profile-modal')">Perfil</a></li>
+        <li><a href="#" onclick="openModal('settings-modal')">Configurações</a></li>
+        <li><a href="#" onclick="alert('Amigos')">Amigos</a></li>
+        <li><a href="#" onclick="alert('Avaliação')">Avaliação</a></li>
+        <li><a href="#" onclick="alert('Cassino')">Cassino/Apostas</a></li>
+      </ul>
+    </nav>
   </div>
 
-  <div class="main-content">
-    <div class="highlight-section">
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Conteúdo Principal -->
+  <main>
+    <section class="featured">
       <h2>Criação em Destaque</h2>
-      <p>Aqui está a criação mais recente e popular feita pelos usuários.</p>
-      <img src="imagens/destaque.jpg" alt="Criação em Destaque" style="width: 100%; height: auto; border-radius: 8px;">
-    </div>
+      <p>Confira a criação mais recente e popular feita pelos usuários.</p>
+      <img src="imagens/destaque.jpg" alt="Criação em destaque">
+    </section>
+    
+    <section class="carousel-container">
+      <h3 class="carousel-title">Criações Recentes</h3>
+      <div class="carousel">
+        <div class="carousel-item">
+          <img src="imagens/criacao1.jpg" alt="Criação 1">
+          <h4>Criação 1</h4>
+          <p>Descrição breve da criação 1.</p>
+        </div>
+        <div class="carousel-item">
+          <img src="imagens/criacao2.jpg" alt="Criação 2">
+          <h4>Criação 2</h4>
+          <p>Descrição breve da criação 2.</p>
+        </div>
+        <div class="carousel-item">
+          <img src="imagens/criacao3.jpg" alt="Criação 3">
+          <h4>Criação 3</h4>
+          <p>Descrição breve da criação 3.</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <h2>Criações Recentes</h2>
-    <div class="carousel">
-      <div class="carousel-item">
-        <img src="imagens/criacao1.jpg" alt="Criação 1">
-        <h3>Criação 1</h3>
-        <p>Descrição breve da criação 1.</p>
-      </div>
-      <div class="carousel-item">
-        <img src="imagens/criacao2.jpg" alt="Criação 2">
-        <h3>Criação 2</h3>
-        <p>Descrição breve da criação 2.</p>
-      </div>
-      <div class="carousel-item">
-        <img src="imagens/criacao3.jpg" alt="Criação 3">
-        <h3>Criação 3</h3>
-        <p>Descrição breve da criação 3.</p>
-      </div>
-    </div>
-  </div>
-
+  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 Sistema. Todos os direitos reservados.</p>
+    <p>&copy; 2025 Match Score. Todos os direitos reservados.</p>
   </footer>
 
-  <div class="modal-overlay" id="configModal">
+  <!-- Modal Configurações -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-header">
+      <h3>Configurações</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    
     <div class="modal-content">
-      <span class="close-modal" onclick="closeModal()">✖</span>
-      <h2>Configurações</h2>
-      <p>Aqui você poderá ajustar preferências futuramente...</p>
-      <label>
-        <input type="checkbox" id="themeToggle" onchange="toggleTheme()"> Modo Claro
-      </label>
+      <p>Personalize sua experiência no Match Score.</p>
+      
+      <div style="margin-top: 1.5rem;">
+        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+          <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+          <span>Modo Claro</span>
+        </label>
+      </div>
     </div>
   </div>
 
-  <div class="modal-overlay" id="vipModal">
-    <div class="modal-content vip-modal">
-      <span class="close-modal" onclick="closeVipModal()">✖</span>
-      <img class="vip" src="imagens/logo-vip.png" alt="logo">
-      <ul>
-        <li>✔️ Criar mais jogos ilimitados</li>
-        <li>✔️ Inscrever-se em mais jogos</li>
-        <li>✔️ Participar de torneios VIP de futebol</li>
+  <!-- Modal VIP -->
+  <div class="modal" id="vip-modal">
+    <div class="modal-header">
+      <h3>Seja VIP</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    
+    <div class="modal-content">
+      <div class="vip-badge">
+        <img src="imagens/logo-vip.png" alt="VIP">
+      </div>
+      
+      <ul class="vip-benefits">
+        <li>Crie jogos ilimitados</li>
+        <li>Participe de mais jogos</li>
+        <li>Acesso a torneios exclusivos</li>
+        <li>Benefícios especiais</li>
       </ul>
-      <button style="margin-top: 20px; padding: 10px 20px; font-weight: bold; background: gold; color: black; border: none; border-radius: 8px; cursor: pointer;">
+      
+      <button class="btn btn-primary" style="width: 100%;" onclick="alert('Redirecionando para assinatura VIP')">
         Assinar Agora
       </button>
     </div>
   </div>
 
-  <div class="modal-overlay" id="perfModal">
-    <div class="modal-content perfModal">
-      <span class="close-modal" onclick="closePerfModal()">✖</span>
-      <div class="ft-perfil">
-        <img id="fotoPerfil" src="imagens/perfil-exemplo.jpg" alt="Foto de perfil" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+  <!-- Modal Perfil -->
+  <div class="modal" id="profile-modal">
+    <div class="modal-header">
+      <h3>Meu Perfil</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    
+    <div class="modal-content">
+      <div class="profile-picture">
+        <img src="imagens/perfil-exemplo.jpg" alt="Foto de perfil" id="profile-img">
       </div>
-      <div class="info-perfil" style="text-align: left; margin-top: 20px;">
-        <p><strong>Nome:</strong> <span id="nomePerfil">João Silva</span></p>
-        <p><strong>E-mail:</strong> <span id="emailPerfil">joao@email.com</span></p>
-        <p><strong>Senha:</strong> <span id="senhaPerfil">••••••••</span></p>
-        <p><strong>Posição:</strong> <span id="posicaoPerfil">Atacante</span></p>
-        <p><strong>Pix:</strong> <span id="pixPerfil">joao@pix.com</span></p>
+      
+      <div class="profile-info">
+        <p><strong>Nome:</strong> <span id="profile-name">João Silva</span></p>
+        <p><strong>Email:</strong> <span id="profile-email">joao@email.com</span></p>
+        <p><strong>Posição:</strong> <span id="profile-position">Atacante</span></p>
+        <p><strong>Chave Pix:</strong> <span id="profile-pix">joao@pix.com</span></p>
       </div>
-      <div class="botao-perfil" style="margin-top: 20px;">
-        <button class="editar-perfil-btn" onclick="alert('Editar perfil em breve...')">
-          Editar Perfil
-        </button>
-      </div>
+      
+      <button class="btn btn-primary" style="width: 100%;" onclick="alert('Editar perfil')">
+        Editar Perfil
+      </button>
     </div>
   </div>
 
   <script>
-    function toggleConfigBar() {
-      document.getElementById('configBar').classList.toggle('open');
+    // Controle do menu lateral
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
+      
+      // Bloquear scroll do body quando o menu está aberto
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : 'auto';
     }
 
-    function openModal() {
-      document.getElementById('configModal').style.display = 'flex';
+    // Controle dos modais
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      const overlay = document.getElementById('overlay');
+      
+      modal.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Fechar sidebar se estiver aberto
+      document.getElementById('sidebar').classList.remove('open');
     }
 
     function closeModal() {
-      document.getElementById('configModal').style.display = 'none';
+      const modals = document.querySelectorAll('.modal');
+      const overlay = document.getElementById('overlay');
+      
+      modals.forEach(modal => modal.classList.remove('active'));
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
     }
 
-    function openVipModal() {
-      document.getElementById('vipModal').style.display = 'flex';
-    }
-
-    function closeVipModal() {
-      document.getElementById('vipModal').style.display = 'none';
-    }
-
-    function openPerfModal() {
-      carregarPerfil();
-      document.getElementById('perfModal').style.display = 'flex';
-    }
-
-    function closePerfModal() {
-      document.getElementById('perfModal').style.display = 'none';
-    }
-
+    // Alternar tema claro/escuro
     function toggleTheme() {
-      const isLight = document.getElementById('themeToggle').checked;
+      const isLight = document.getElementById('theme-toggle').checked;
       document.body.classList.toggle('light-mode', isLight);
-      const logo = document.querySelector('header img');
-      logo.src = isLight ? 'imagens/loguinho2.png' : 'imagens/loguinho.png';
+      
+      // Salvar preferência
       localStorage.setItem('theme', isLight ? 'light' : 'dark');
     }
 
-    window.onload = function () {
+    // Carregar tema salvo
+    function loadTheme() {
       const savedTheme = localStorage.getItem('theme');
-      const isLight = savedTheme === 'light';
-      document.body.classList.toggle('light-mode', isLight);
-      document.getElementById('themeToggle').checked = isLight;
-      const logo = document.querySelector('header img');
-      logo.src = isLight ? 'imagens/loguinho2.png' : 'imagens/loguinho.png';
-
-      carregarPerfil();
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        document.getElementById('theme-toggle').checked = true;
+      }
     }
 
-    function carregarPerfil() {
-      const dados = JSON.parse(localStorage.getItem('perfil'));
-      if (!dados) return;
-
-      document.getElementById('fotoPerfil').src = dados.foto || 'imagens/default.jpg';
-      document.getElementById('nomePerfil').innerText = dados.nome || 'Não definido';
-      document.getElementById('emailPerfil').innerText = dados.email || 'Não definido';
-      document.getElementById('senhaPerfil').innerText = dados.senha ? '•'.repeat(dados.senha.length) : 'Não definida';
-      document.getElementById('posicaoPerfil').innerText = dados.posicao || 'Não definida';
-      document.getElementById('pixPerfil').innerText = dados.pix || 'Não definida';
+    // Carregar dados do perfil
+    function loadProfile() {
+      // Simulando dados do localStorage
+      const profileData = {
+        name: "João Silva",
+        email: "joao@email.com",
+        position: "Atacante",
+        pix: "joao@pix.com",
+        photo: "imagens/perfil-exemplo.jpg"
+      };
+      
+      document.getElementById('profile-name').textContent = profileData.name;
+      document.getElementById('profile-email').textContent = profileData.email;
+      document.getElementById('profile-position').textContent = profileData.position;
+      document.getElementById('profile-pix').textContent = profileData.pix;
+      document.getElementById('profile-img').src = profileData.photo;
     }
 
-    const perfil = {
-      foto: 'imagens/perfil-exemplo.jpg',
-      nome: 'João Silva',
-      email: 'joao@email.com',
-      senha: 'minhasenha123',
-      posicao: 'Meio-Campo',
-      pix: 'joao@pix.com'
-    };
+    // Fechar modais ao clicar no overlay
+    document.getElementById('overlay').addEventListener('click', closeModal);
 
-    localStorage.setItem('perfil', JSON.stringify(perfil));
+    // Inicialização
+    window.addEventListener('DOMContentLoaded', () => {
+      loadTheme();
+      loadProfile();
+    });
   </script>
 </body>
 </html>
