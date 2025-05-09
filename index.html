@@ -14,31 +14,63 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      position: relative;
       min-height: 100vh;
       overflow-x: hidden;
-      background-color: #111;
+      background: #0f051d;
       color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
     }
 
-    .background-gif {
-      position: absolute;
+    /* Fundo moderno com tema de futebol */
+    .background {
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
       z-index: -1;
-      opacity: 0.7;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(106, 13, 173, 0.3) 0%, transparent 25%),
+        radial-gradient(circle at 80% 70%, rgba(83, 28, 156, 0.3) 0%, transparent 25%),
+        linear-gradient(to bottom, #0f051d 0%, #1a0933 100%);
+    }
+
+    .field-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        /* Linhas do campo */
+        linear-gradient(to bottom, 
+          transparent 48%, 
+          rgba(255, 255, 255, 0.05) 48%, 
+          rgba(255, 255, 255, 0.05) 52%, 
+          transparent 52%),
+        linear-gradient(to right, 
+          transparent 48%, 
+          rgba(255, 255, 255, 0.05) 48%, 
+          rgba(255, 255, 255, 0.05) 52%, 
+          transparent 52%),
+        /* Círculo central */
+        radial-gradient(circle at center, 
+          transparent 70%, 
+          rgba(255, 255, 255, 0.03) 70.5%, 
+          transparent 71%);
+      opacity: 0.5;
     }
 
     /* Header */
     header {
-      position: relative;
-      padding: 15px;
+      width: 100%;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -54,13 +86,27 @@
     #logo {
       height: 100px;
       width: 100px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 8px rgba(147, 112, 219, 0.7));
     }
 
     #nomel {
       height: auto;
       width: 80%;
-      max-width: 400px;
+      max-width: 350px;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+    }
+
+    /* Conteúdo principal */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 20px;
+      z-index: 1;
     }
 
     /* Botões */
@@ -68,100 +114,116 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
+      gap: 20px;
       width: 100%;
-      margin-top: 20px;
+      max-width: 300px;
     }
 
     button {
-      background-color: black;
+      background: rgba(20, 5, 45, 0.8);
       color: white;
-      border: none;
-      padding: 12px 20px;
-      cursor: pointer;
-      width: 80%;
-      max-width: 250px;
-      border-radius: 50px;
+      border: 2px solid #8a2be2;
+      padding: 14px 24px;
+      width: 100%;
+      border-radius: 30px;
       font-size: 18px;
-      border: solid white 2px;
-      transition: all 0.3s;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
     }
 
     button:hover {
-      background-color: white;
-      color: black;
-      border: 2px solid black;
+      background: #8a2be2;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(138, 43, 226, 0.5);
     }
 
     /* Botão Sobre */
     #sobre {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 12px 20px;
-      font-size: 18px;
-      background-color: black;
-      color: white;
-      border: solid white 2px;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: all 0.3s;
-      width: 80%;
-      max-width: 250px;
-      z-index: 2;
+      margin-top: 30px;
+      background: rgba(20, 5, 45, 0.8);
+      border: 2px solid #9370db;
+      box-shadow: 0 4px 15px rgba(147, 112, 219, 0.3);
     }
 
     #sobre:hover {
-      background-color: white;
-      color: black;
-      border: 2px solid black;
+      background: #9370db;
+      box-shadow: 0 6px 20px rgba(147, 112, 219, 0.5);
     }
 
     /* Footer */
     footer {
-      position: fixed;
-      bottom: 0;
       width: 100%;
-      background-color: rgba(0, 0, 0, 0.85);
-      color: #aaa;
+      padding: 15px;
       text-align: center;
-      padding: 12px 0;
+      background: rgba(15, 5, 29, 0.9);
+      border-top: 1px solid rgba(147, 112, 219, 0.2);
       font-size: 14px;
-      z-index: 10;
+      color: #aaa;
+      z-index: 2;
     }
 
-    /* Tela de carregamento */
-    .loading-screen {
+    /* Tela de Loading Corrigida */
+    .loading-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
+      background: black;
       display: none;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
-      background-color: black;
+      z-index: 1000;
+    }
+
+    .loading-video-container {
+      width: 100%;
+      height: 100%;
+      max-width: 500px;
+      max-height: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
     }
 
     .loading-video {
       width: 100%;
-      max-width: 500px;
-      padding: 20px;
+      height: 100%;
+      object-fit: contain;
     }
 
-    /* Media Queries para telas maiores */
+    .loading-text {
+      position: absolute;
+      top: -40%;
+      bottom: 15%;
+      color: #b19cd9;
+      font-size: 18px;
+      text-align: center;
+      animation: pulse 1.5s infinite;
+      width: 100%;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    /* Responsivo */
     @media (min-width: 768px) {
       header {
         flex-direction: row;
         justify-content: space-between;
-        padding: 20px 30px;
+        padding: 30px 40px;
       }
 
       .logo-container {
         flex-direction: row;
-        align-items: center;
         margin-bottom: 0;
       }
 
@@ -173,86 +235,116 @@
       }
 
       #nomel {
+        height: 60px;
         width: auto;
-        height: 80px;
       }
 
       .button-container {
         flex-direction: row;
-        justify-content: flex-end;
-        margin-top: 0;
-        width: auto;
+        max-width: 500px;
       }
 
       button {
-        width: auto;
-        padding: 15px 30px;
+        padding: 16px 30px;
         font-size: 20px;
-      }
-
-      #sobre {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, 200px);
-        width: auto;
-        padding: 15px 30px;
-      }
-
-      .background-gif {
-        opacity: 1;
       }
     }
   </style>
 </head>
 <body>
-  <video autoplay muted loop class="background-gif">
-    <source src="videos/Design sem nome.gif" type="video/mp4">
-    Seu navegador não suporta vídeos HTML5
-  </video>
+  <!-- Fundo estilizado -->
+  <div class="background"></div>
+  <div class="field-pattern"></div>
 
   <header>
     <div class="logo-container">
       <img src="imagens/loguinho.png" alt="Logo Match Score" id="logo">
       <img src="imagens/nome logo.png" alt="Match Score" id="nomel">
     </div>
-    
-    <div class="button-container">
-      <button onclick="showLoadingScreen('cadastro.html')">Criar</button>
-      <button onclick="showLoadingScreen('entrar.html')">Entrar</button>
-    </div>
   </header>
 
-  <!-- Botão "Sobre" -->
-  <button onclick="showLoadingScreen('sobre.html')" id="sobre">Sobre</button>
-
-  <!-- Tela de carregamento -->
-  <div id="loading" class="loading-screen">
-    <video class="loading-video" src="videos/loading MATCH SCORE.mp4" autoplay loop muted></video>
+  <div class="main-content">
+    <div class="button-container">
+      <button onclick="showLoadingScreen('cadastro.html')">Criar Conta</button>
+      <button onclick="showLoadingScreen('entrar.html')">Entrar</button>
+    </div>
+    
+    <button id="sobre" onclick="showLoadingScreen('sobre.html')">Sobre o App</button>
   </div>
 
   <footer>
     © 2025 Match Score. Todos os direitos reservados.
   </footer>
 
+  <!-- Tela de Loading corrigida -->
+  <div id="loading" class="loading-overlay">
+    <div class="loading-video-container">
+      <video class="loading-video" autoplay muted loop>
+        <source src="videos/loading MATCH SCORE.mp4" type="video/mp4">
+        Seu navegador não suporta vídeos HTML5
+      </video>
+      <p class="loading-text">Carregando...</p>
+    </div>
+  </div>
+
   <script>
     function showLoadingScreen(page) {
-      document.getElementById('loading').style.display = 'flex';
-      document.querySelector('.button-container').style.display = 'none';
-      document.getElementById('sobre').style.display = 'none';
+      const loadingScreen = document.getElementById('loading');
+      const mainContent = document.querySelector('.main-content');
       
-      setTimeout(function() {
+      // Mostra a tela de loading
+      loadingScreen.style.display = 'flex';
+      
+      // Esconde o conteúdo principal
+      mainContent.style.opacity = '0';
+      mainContent.style.pointerEvents = 'none';
+      
+      // Garante que o vídeo comece do início
+      const loadingVideo = document.querySelector('.loading-video');
+      loadingVideo.currentTime = 0;
+      
+      // Tenta reproduzir o vídeo
+      const playPromise = loadingVideo.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          // Fallback para navegadores que bloqueiam autoplay
+          console.log('Autoplay prevented, showing play button');
+          const playButton = document.createElement('button');
+          playButton.textContent = 'Clique para Carregar';
+          playButton.style.position = 'absolute';
+          playButton.style.top = '50%';
+          playButton.style.left = '50%';
+          playButton.style.transform = 'translate(-50%, -50%)';
+          playButton.style.zIndex = '1001';
+          playButton.style.padding = '10px 20px';
+          playButton.style.backgroundColor = '#8a2be2';
+          playButton.style.color = 'white';
+          playButton.style.border = 'none';
+          playButton.style.borderRadius = '5px';
+          playButton.onclick = () => {
+            loadingVideo.play();
+            playButton.remove();
+          };
+          loadingScreen.appendChild(playButton);
+        });
+      }
+      
+      // Redireciona após 3 segundos
+      setTimeout(() => {
         window.location.href = page;
       }, 3000);
     }
 
-    // Pausar vídeo de fundo quando não está visível para economizar recursos
-    document.addEventListener('visibilitychange', function() {
-      if (document.hidden) {
-        document.querySelector('.background-gif').pause();
-      } else {
-        document.querySelector('.background-gif').play();
-      }
+    // Pré-carrega o vídeo de loading
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadingVideo = document.querySelector('.loading-video');
+      loadingVideo.load();
+      
+      // Força o autoplay em navegadores móveis (após interação)
+      document.body.addEventListener('click', () => {
+        loadingVideo.play().catch(e => console.log('Play failed:', e));
+      }, { once: true });
     });
   </script>
 </body>

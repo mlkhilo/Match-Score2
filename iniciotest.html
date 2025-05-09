@@ -196,29 +196,137 @@
     }
 
     /* Carrossel */
-    .carrossel {
-      width: 100vw;
-    }
-    .slides {
-      display: grid; 
-      grid-auto-flow: column;
-      gap: 1.2rem;
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      scroll-snap-type: x mandatory;
-    }
-
     .card {
-      width: 450px;
-      height: 350px;
-      border: black 10px solid;
-      scroll-snap-align: center;
-      border-radius: 15px;
-    }
-    .carrossel-img{
-      width: 450px;
-      height: 350px;
-    }
+  position: relative;
+  background: #fff;
+  border-radius: 20px;
+  margin: 20px 0;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+.card::before {
+  content: "";
+  position: absolute;
+  height: 40%;
+  width: 100%;
+  background: #7d2ae8;
+  border-radius: 20px 20px 0 0;
+}
+.card .card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  position: relative;
+  z-index: 100;
+}
+section .card .image {
+  height: 140px;
+  width: 140px;
+  border-radius: 50%;
+  padding: 3px;
+  background: #7d2ae8;
+}
+section .card .image img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff;
+}
+.card .media-icons {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card .media-icons i {
+  color: #fff;
+  opacity: 0.6;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.card .media-icons i:hover {
+  opacity: 1;
+}
+.card .name-profession {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  color: black;
+}
+.name-profession .name {
+  font-size: 20px;
+  font-weight: 600;
+}
+.name-profession .profession {
+  font-size: 15px;
+  font-weight: 500;
+}
+.card .rating {
+  display: flex;
+  align-items: center;
+  margin-top: 18px;
+}
+.card .rating i {
+  font-size: 18px;
+  margin: 0 2px;
+  color: #7d2ae8;
+}
+.card .button {
+  width: 100%;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+.card .button button {
+  background: #7d2ae8;
+  outline: none;
+  border: none;
+  color: #fff;
+  padding: 8px 22px;
+  border-radius: 20px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.button button:hover {
+  background: #6616d0;
+}
+.swiper-pagination {
+  position: absolute;
+}
+.swiper-pagination-bullet {
+  height: 7px;
+  width: 26px;
+  border-radius: 25px;
+  background: #7d2ae8;
+}
+.swiper-button-next,
+.swiper-button-prev {
+  opacity: 0.7;
+  color: #7d2ae8;
+  transition: all 0.3s ease;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  opacity: 1;
+  color: #7d2ae8;
+}
+/* Responsive media query code for small screens */
+@media (max-width: 768px) {
+  section {
+    padding: 15px;
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none;
+  }
+}
 
     /* Modal */
     .modal {
@@ -401,17 +509,246 @@
     </section>
     
     <section>
-      <h2 class="section-title">Criações Recentes</h2>
-      <div class="carrossel">
-        <div class="slides" id="slides">
-          <article class="card"><img src="https://upload.wikimedia.org/wikipedia/pt/thumb/4/43/FCBarcelona.svg/2020px-FCBarcelona.svg.png" alt="" class="carrossel-img"></article>
-          <article class="card"><img src="https://upload.wikimedia.org/wikipedia/pt/9/98/Real_Madrid.png" alt="" class="carrossel-img"></article>
-          <article class="card"><img src="https://upload.wikimedia.org/wikipedia/pt/thumb/0/0c/Liverpool_FC.svg/1200px-Liverpool_FC.svg.png" alt="" class="carrossel-img"></article>
-          <article class="card"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_of_AC_Milan.svg/640px-Logo_of_AC_Milan.svg.png" alt="" class="carrossel-img"></article>
-          <article class="card"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png" alt="" class="carrossel-img"></article>
+        <!-- Swiper container -->
+        <div class="swiper mySwiper container">
+          <div class="swiper-wrapper content">
+            
+            <!-- Swiper slide item 1 -->
+            <div class="swiper-slide card">
+              <div class="card-content">
+                <!-- Profile image -->
+                <div class="image">
+                  <img src="images/profile1.jpg" alt="Profile Image 1" />
+                </div>
+      
+                <!-- Social media icons -->
+                <div class="media-icons">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-twitter"></i>
+                  <i class="fab fa-github"></i>
+                </div>
+      
+                <!-- Name and profession -->
+                <div class="name-profession">
+                  <span class="name">Someone Name</span>
+                  <span class="profession">Web Developer</span>
+                </div>
+      
+                <!-- Rating -->
+                <div class="rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+      
+                <!-- Buttons -->
+                <div class="button">
+                  <button class="aboutMe">About Me</button>
+                  <button class="hireMe">Hire Me</button>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Swiper slide item 2 -->
+            <div class="swiper-slide card">
+              <div class="card-content">
+                <!-- Profile image -->
+                <div class="image">
+                  <img src="images/profile2.jpg" alt="Profile Image 2" />
+                </div>
+      
+                <!-- Social media icons -->
+                <div class="media-icons">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-twitter"></i>
+                  <i class="fab fa-github"></i>
+                </div>
+      
+                <!-- Name and profession -->
+                <div class="name-profession">
+                  <span class="name">Someone Name</span>
+                  <span class="profession">Web Developer</span>
+                </div>
+      
+                <!-- Rating -->
+                <div class="rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+      
+                <!-- Buttons -->
+                <div class="button">
+                  <button class="aboutMe">About Me</button>
+                  <button class="hireMe">Hire Me</button>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Swiper slide item 3 -->
+            <div class="swiper-slide card">
+              <div class="card-content">
+                <!-- Profile image -->
+                <div class="image">
+                  <img src="images/profile3.jpg" alt="Profile Image 3" />
+                </div>
+      
+                <!-- Social media icons -->
+                <div class="media-icons">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-twitter"></i>
+                  <i class="fab fa-github"></i>
+                </div>
+      
+                <!-- Name and profession -->
+                <div class="name-profession">
+                  <span class="name">Someone Name</span>
+                  <span class="profession">Web Developer</span>
+                </div>
+      
+                <!-- Rating -->
+                <div class="rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+      
+                <!-- Buttons -->
+                <div class="button">
+                  <button class="aboutMe">About Me</button>
+                  <button class="hireMe">Hire Me</button>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Swiper slide item 4 -->
+            <div class="swiper-slide card">
+              <div class="card-content">
+                <!-- Profile image -->
+                <div class="image">
+                  <img src="images/profile4.jpg" alt="Profile Image 4" />
+                </div>
+      
+                <!-- Social media icons -->
+                <div class="media-icons">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-twitter"></i>
+                  <i class="fab fa-github"></i>
+                </div>
+      
+                <!-- Name and profession -->
+                <div class="name-profession">
+                  <span class="name">Someone Name</span>
+                  <span class="profession">Web Developer</span>
+                </div>
+      
+                <!-- Rating -->
+                <div class="rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+      
+                <!-- Buttons -->
+                <div class="button">
+                  <button class="aboutMe">About Me</button>
+                  <button class="hireMe">Hire Me</button>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Swiper slide item 5 -->
+            <div class="swiper-slide card">
+              <div class="card-content">
+                <!-- Profile image -->
+                <div class="image">
+                  <img src="images/profile5.jpg" alt="Profile Image 5" />
+                </div>
+      
+                <!-- Social media icons -->
+                <div class="media-icons">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-twitter"></i>
+                  <i class="fab fa-github"></i>
+                </div>
+      
+                <!-- Name and profession -->
+                <div class="name-profession">
+                  <span class="name">Someone Name</span>
+                  <span class="profession">Web Developer</span>
+                </div>
+      
+                <!-- Rating -->
+                <div class="rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+      
+                <!-- Buttons -->
+                <div class="button">
+                  <button class="aboutMe">About Me</button>
+                  <button class="hireMe">Hire Me</button>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Swiper slide item 6 -->
+            <div class="swiper-slide card">
+              <div class="card-content">
+                <!-- Profile image -->
+                <div class="image">
+                  <img src="images/profile6.jpg" alt="Profile Image 6" />
+                </div>
+      
+                <!-- Social media icons -->
+                <div class="media-icons">
+                  <i class="fab fa-facebook"></i>
+                  <i class="fab fa-twitter"></i>
+                  <i class="fab fa-github"></i>
+                </div>
+      
+                <!-- Name and profession -->
+                <div class="name-profession">
+                  <span class="name">Someone Name</span>
+                  <span class="profession">Web Developer</span>
+                </div>
+      
+                <!-- Rating -->
+                <div class="rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+      
+                <!-- Buttons -->
+                <div class="button">
+                  <button class="aboutMe">About Me</button>
+                  <button class="hireMe">Hire Me</button>
+                </div>
+              </div>
+            </div>
+            
+          </div>
         </div>
-      </div>      
-    </section>
+      
+        <!-- Swiper navigation buttons -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+      </section>
   </main>
 
   <!-- Rodapé -->
@@ -561,6 +898,35 @@
         document.querySelector('.main-content').style.marginLeft = '0';
       }
     });
+
+    //carrosel script
+    var swiper = new Swiper(".mySwiper", {
+        spaceBetween: 30,
+        grabCursor: true,
+        loop: true,
+        // Pagination
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        // Next and previous navigation
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        // Responsive breakpoints
+        breakpoints: {
+          0: {
+            slidesPerView: 1
+          },
+          768: {
+            slidesPerView: 2
+          },
+          1024: {
+            slidesPerView: 3
+          }
+        }
+      });
   </script>
 </body>
 </html>

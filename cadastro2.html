@@ -203,7 +203,6 @@
             background-color: limegreen;
         }
 
-        /* NOVOS ESTILOS ADICIONADOS */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -409,16 +408,38 @@
 
             <!-- Posições ajustadas para quadra vertical -->
             <div class="posicao" style="top: 10%; left: 45%;" data-posicao="Goleiro">G</div>
-            <div class="posicao" style="top: 47%; left: 20%;" data-posicao="Ala">A</div>
-            <div class="posicao" style="top: 47%; left: 70%;" data-posicao="Ala">A</div>
+            <div class="posicao" style="top: 47%; left: 20%;" data-posicao="Ala Esq">AE</div>
+            <div class="posicao" style="top: 47%; left: 70%;" data-posicao="Ala Di">AD</div>
             <div class="posicao" style="top: 65%; left: 45%;" data-posicao="Pivô">P</div>
             <div class="posicao" style="top: 30%; left: 45%;" data-posicao="Fixo">F</div>
         </div>
         <div class="selected-positions" id="selectedPositions"></div>
     </div>
 
+<!-- Quadra de Futebol de Campo (vertical) -->
+<div id="campoQuadraContainer" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px;">
+    <div class="close-btn" onclick="document.getElementById('campoQuadraContainer').style.display = 'none'">X</div>
+    <div style="position: relative;">
+        <img src="imagens/campo.png" alt="Quadra de Futebol" style="width: 300px; height: 500px; object-fit: cover;">
+
+        <!-- Posições ajustadas para campo VERTICAL -->
+        <div class="posicao" style="top: 10%; left: 50%;" data-posicao="Goleiro">G</div>
+        <div class="posicao" style="top: 25%; left: 30%;" data-posicao="Zagueiro">Z</div>
+        <div class="posicao" style="top: 25%; left: 70%;" data-posicao="Lateral">L</div>
+        <div class="posicao" style="top: 40%; left: 50%;" data-posicao="Volante">V</div>
+        <div class="posicao" style="top: 55%; left: 40%;" data-posicao="Meia">M</div>
+        <div class="posicao" style="top: 55%; left: 60%;" data-posicao="Ponta">P</div>
+        <div class="posicao" style="top: 75%; left: 50%;" data-posicao="Atacante">A</div>
+    </div>
+    <div class="selected-positions" id="selectedPositionsCampo"></div>
+</div>
+
     <script>
-        const selectedPositions = new Set();
+       const selectedPositions = {
+    futebol: new Set(),
+    futsal: new Set()
+};
+let currentSport = null;
         
         function showLoadingScreen(event) {
             event.preventDefault();
@@ -452,85 +473,114 @@
         }
 
         function updatePosicoes(esporte) {
-            const posicaoSelect = document.getElementById('posicao');
-            posicaoSelect.innerHTML = '<option value="">Escolha a posição</option>';
-            let opcoesPosicao = [];
-            if (esporte === 'futebol') {
-                opcoesPosicao = ['Atacante', 'Meio-Campo', 'Zagueiro', 'Goleiro'];
-            } else if (esporte === 'futsal') {
-                opcoesPosicao = ['Goleiro', 'Pivô', 'Ala', 'Fixo'];
-            }
-            opcoesPosicao.forEach(function (posicao) {
-                const option = document.createElement('option');
-                option.value = posicao;
-                option.textContent = posicao;
-                posicaoSelect.appendChild(option);
-            });
-        }
+    const posicaoSelect = document.getElementById('posicao');
+    posicaoSelect.innerHTML = '<option value="">Escolha a posição</option>';
+    
+    let opcoesPosicao = [];
+    if (esporte === 'futebol') {
+        opcoesPosicao = ['Goleiro', 'Zagueiro', 'Lateral', 'Volante', 'Meia', 'Ponta', 'Atacante'];
+    } else if (esporte === 'futsal') {
+        opcoesPosicao = ['Goleiro', 'Pivô', 'Ala', 'Fixo'];
+    }
+    
+    opcoesPosicao.forEach(function (posicao) {
+        const option = document.createElement('option');
+        option.value = posicao;
+        option.textContent = posicao;
+        posicaoSelect.appendChild(option);
+    });
+    
+    // Mantém as seleções se já existirem
+    if (selectedPositions[esporte].size > 0) {
+        posicaoSelect.value = Array.from(selectedPositions[esporte]).join(', ');
+    }
+}
 
         function selectSport(esporte) {
-            updatePosicoes(esporte);
-            const quadra = document.getElementById('futsalQuadraContainer');
-            if (esporte === 'futsal') {
-                quadra.style.display = 'block';
-                selectedPositions.clear();
-                document.getElementById('selectedPositions').innerHTML = '';
-                document.getElementById('selectedPositionsForm').innerHTML = '';
-                document.querySelectorAll('.posicao').forEach(el => el.classList.remove('selected'));
-            } else {
-                quadra.style.display = 'none';
-            }
-        }
+    currentSport = esporte;
+    updatePosicoes(esporte);
+    
+    const quadraFutsal = document.getElementById('futsalQuadraContainer');
+    const quadraCampo = document.getElementById('campoQuadraContainer');
+    
+    if (esporte === 'futsal') {
+        quadraFutsal.style.display = 'block';
+        quadraCampo.style.display = 'none';
+    } else if (esporte === 'futebol') {
+        quadraFutsal.style.display = 'none';
+        quadraCampo.style.display = 'block';
+    }
+    
+    updateSelectedPositionsDisplay();
+}
 
-        function updateSelectedPositionsDisplay() {
-            const container = document.getElementById('selectedPositions');
-            const formContainer = document.getElementById('selectedPositionsForm');
-            container.innerHTML = '';
-            formContainer.innerHTML = '';
-            
-            selectedPositions.forEach(position => {
-                const tag = document.createElement('div');
-                tag.className = 'position-tag';
-                tag.innerHTML = `
-                    ${position}
-                    <span class="remove-tag" onclick="removePosition('${position}')">×</span>
-                `;
-                container.appendChild(tag);
-                formContainer.appendChild(tag.cloneNode(true));
-            });
-            
-            // Atualiza o select
-            const select = document.getElementById('posicao');
-            if (selectedPositions.size > 0) {
-                select.value = Array.from(selectedPositions).join(', ');
-            } else {
-                select.value = '';
-            }
-        }
+
+function updateSelectedPositionsDisplay() {
+    const containerFutsal = document.getElementById('selectedPositions');
+    const containerCampo = document.getElementById('selectedPositionsCampo');
+    const formContainer = document.getElementById('selectedPositionsForm');
+    
+    containerFutsal.innerHTML = '';
+    containerCampo.innerHTML = '';
+    formContainer.innerHTML = '';
+    
+    // Atualiza os marcadores visuais nas quadras
+    document.querySelectorAll('.posicao').forEach(el => {
+        const position = el.getAttribute('data-posicao');
+        el.classList.remove('selected');
         
-        function removePosition(position) {
-            selectedPositions.delete(position);
-            document.querySelector(`.posicao[data-posicao="${position}"]`).classList.remove('selected');
-            updateSelectedPositionsDisplay();
+        if (selectedPositions.futsal.has(position)) {
+            if (currentSport === 'futsal') el.classList.add('selected');
         }
+        if (selectedPositions.futebol.has(position)) {
+            if (currentSport === 'futebol') el.classList.add('selected');
+        }
+    });
+    
+    // Mostra as posições selecionadas para o esporte atual
+    const currentPositions = selectedPositions[currentSport];
+    currentPositions.forEach(position => {
+        const tag = document.createElement('div');
+        tag.className = 'position-tag';
+        tag.innerHTML = `
+            ${position}
+            <span class="remove-tag" onclick="removePosition('${position}')">×</span>
+        `;
+        formContainer.appendChild(tag);
+    });
+    
+    // Atualiza o select
+    const select = document.getElementById('posicao');
+    if (currentPositions.size > 0) {
+        select.value = Array.from(currentPositions).join(', ');
+    } else {
+        select.value = '';
+    }
+}
+        
+function removePosition(position) {
+    selectedPositions[currentSport].delete(position);
+    updateSelectedPositionsDisplay();
+}
 
         document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('.posicao').forEach(function (element) {
-                element.addEventListener('click', function () {
-                    const position = this.getAttribute('data-posicao');
-                    
-                    if (selectedPositions.has(position)) {
-                        selectedPositions.delete(position);
-                        this.classList.remove('selected');
-                    } else {
-                        selectedPositions.add(position);
-                        this.classList.add('selected');
-                    }
-                    
-                    updateSelectedPositionsDisplay();
-                });
-            });
+    document.querySelectorAll('.posicao').forEach(function (element) {
+        element.addEventListener('click', function () {
+            const position = this.getAttribute('data-posicao');
+            const positionsSet = selectedPositions[currentSport];
+            
+            if (positionsSet.has(position)) {
+                positionsSet.delete(position);
+                this.classList.remove('selected');
+            } else {
+                positionsSet.add(position);
+                this.classList.add('selected');
+            }
+            
+            updateSelectedPositionsDisplay();
         });
+    });
+}); 
     </script>
 </body>
 </html>
