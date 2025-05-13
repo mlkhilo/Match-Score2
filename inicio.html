@@ -193,6 +193,9 @@
     .section-title {
       margin-bottom: 12px;
       font-size: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     /* Carrossel */
@@ -321,6 +324,97 @@
       --btn-primary: var(--success);
     }
 
+    /* Estilos da tela de Amigos */
+    .friends-list {
+      list-style: none;
+    }
+
+    .friend-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.05);
+      transition: all 0.2s;
+    }
+
+    .friend-item:hover {
+      background: rgba(232, 28, 255, 0.1);
+    }
+
+    .friend-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 12px;
+      object-fit: cover;
+      border: 2px solid var(--btn-primary);
+    }
+
+    .friend-info {
+      flex: 1;
+    }
+
+    .friend-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .friend-status {
+      font-size: 12px;
+      color: var(--light-gray);
+    }
+
+    .friend-status.online {
+      color: var(--success);
+    }
+
+    .friend-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .friend-action-btn {
+      background: none;
+      border: none;
+      color: var(--btn-primary);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .search-bar::placeholder {
+      color: var(--light-gray);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--medium-gray);
+      margin-bottom: 16px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab.active {
+      border-bottom: 2px solid var(--btn-primary);
+      color: var(--btn-primary);
+    }
+
     /* Media Queries */
     @media (max-width: 768px) {
       .btn-menu {
@@ -380,20 +474,20 @@
     </div>
     
     <ul class="nav-menu">
-      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Amistosos')">Amistosos</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('home')">Amistosos</a></li>
       <li class="nav-item"><a href="#" class="nav-link" onclick="openModal('profileModal')">Perfil</a></li>
       <li class="nav-item"><a href="#" class="nav-link" onclick="openModal('settingsModal')">Configurações</a></li>
-      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Amigos')">Amigos</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('friends')">Amigos</a></li>
       <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Avaliação')">Avaliação</a></li>
-      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Cassino')">Cassino/Apostas</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="window.location.href='cassino.html'">Cassino/Apostas</a></li>
     </ul>
   </aside>
 
   <!-- Overlay -->
   <div class="overlay" id="overlay"></div>
 
-  <!-- Conteúdo Principal -->
-  <main class="main-content">
+  <!-- Conteúdo Principal - Home -->
+  <main class="main-content" id="home-content">
     <section class="section">
       <h2 class="section-title">Destaque</h2>
       <p>Confira a criação mais popular da semana.</p>
@@ -411,6 +505,25 @@
           <article class="card"><img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png" alt="" class="carrossel-img"></article>
         </div>
       </div>      
+    </section>
+  </main>
+
+  <!-- Conteúdo Principal - Amigos (inicialmente oculto) -->
+  <main class="main-content" id="friends-content" style="display:none;">
+    <section class="section">
+      <h2 class="section-title">Amigos</h2>
+      
+      <input type="text" class="search-bar" placeholder="Buscar amigos...">
+      
+      <div class="tabs">
+        <div class="tab active" onclick="changeFriendsTab('all')">Todos</div>
+        <div class="tab" onclick="changeFriendsTab('online')">Online</div>
+        <div class="tab" onclick="changeFriendsTab('pending')">Solicitações</div>
+      </div>
+      
+      <ul class="friends-list" id="friends-list">
+        <!-- Amigos serão carregados aqui via JavaScript -->
+      </ul>
     </section>
   </main>
 
@@ -489,6 +602,20 @@
   </div>
 
   <script>
+    // Dados de exemplo para amigos
+    const friendsData = {
+      all: [
+        { id: 1, name: "Carlos Santos", avatar: "imagens/avatar1.jpg", status: "online", lastSeen: "" },
+        { id: 2, name: "Ana Oliveira", avatar: "imagens/avatar2.jpg", status: "online", lastSeen: "" },
+        { id: 3, name: "Pedro Costa", avatar: "imagens/avatar3.jpg", status: "offline", lastSeen: "2h atrás" },
+        { id: 4, name: "Mariana Souza", avatar: "imagens/avatar4.jpg", status: "online", lastSeen: "" },
+        { id: 5, name: "Lucas Pereira", avatar: "imagens/avatar5.jpg", status: "offline", lastSeen: "5d atrás" }
+      ],
+      pending: [
+        { id: 6, name: "Rafael Lima", avatar: "imagens/avatar6.jpg", status: "pending", lastSeen: "" }
+      ]
+    };
+
     // Verifica se é um dispositivo móvel
     function isMobile() {
       return window.innerWidth <= 768;
@@ -538,6 +665,109 @@
       }
     }
 
+    // Mostrar seção específica
+    function showSection(sectionId) {
+      // Esconde todas as seções de conteúdo
+      document.querySelectorAll('.main-content').forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      // Mostra a seção solicitada
+      document.getElementById(`${sectionId}-content`).style.display = 'block';
+      
+      // Fecha o menu se estiver em mobile
+      if (isMobile()) {
+        toggleSidebar();
+      }
+      
+      // Se for a tela de amigos, carrega os amigos
+      if (sectionId === 'friends') {
+        loadFriends('all');
+      }
+    }
+
+    // Carregar lista de amigos
+    function loadFriends(tab) {
+      const friendsList = document.getElementById('friends-list');
+      friendsList.innerHTML = '';
+      
+      // Atualiza tabs ativas
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.tab[onclick="changeFriendsTab('${tab}')"]`).classList.add('active');
+      
+      // Filtra amigos conforme a tab
+      const friends = tab === 'online' 
+        ? friendsData.all.filter(f => f.status === 'online')
+        : friendsData[tab] || friendsData.all;
+      
+      // Adiciona amigos à lista
+      friends.forEach(friend => {
+        const friendItem = document.createElement('li');
+        friendItem.className = 'friend-item';
+        
+        friendItem.innerHTML = `
+          <img src="${friend.avatar}" alt="${friend.name}" class="friend-avatar">
+          <div class="friend-info">
+            <div class="friend-name">${friend.name}</div>
+            <div class="friend-status ${friend.status === 'online' ? 'online' : ''}">
+              ${friend.status === 'online' ? 'Online' : friend.lastSeen || 'Offline'}
+            </div>
+          </div>
+          <div class="friend-actions">
+            ${friend.status === 'pending' 
+              ? `<button class="friend-action-btn" onclick="acceptFriend(${friend.id})">✓</button>
+                 <button class="friend-action-btn" onclick="rejectFriend(${friend.id})">✕</button>`
+              : `<button class="friend-action-btn" onclick="messageFriend(${friend.id})">💬</button>
+                 <button class="friend-action-btn" onclick="removeFriend(${friend.id})">🗑️</button>`}
+          </div>
+        `;
+        
+        friendsList.appendChild(friendItem);
+      });
+    }
+
+    // Mudar tab de amigos
+    function changeFriendsTab(tab) {
+      loadFriends(tab);
+    }
+
+    // Ações de amigos
+    function acceptFriend(id) {
+      const friend = friendsData.pending.find(f => f.id === id);
+      if (friend) {
+        friendsData.pending = friendsData.pending.filter(f => f.id !== id);
+        friend.status = 'online';
+        friendsData.all.push(friend);
+        loadFriends('all');
+        alert(`${friend.name} foi adicionado aos seus amigos!`);
+      }
+    }
+
+    function rejectFriend(id) {
+      const friend = friendsData.pending.find(f => f.id === id);
+      if (friend) {
+        friendsData.pending = friendsData.pending.filter(f => f.id !== id);
+        loadFriends('pending');
+        alert(`Solicitação de ${friend.name} foi recusada.`);
+      }
+    }
+
+    function messageFriend(id) {
+      const friend = friendsData.all.find(f => f.id === id);
+      if (friend) {
+        alert(`Enviando mensagem para ${friend.name}...`);
+      }
+    }
+
+    function removeFriend(id) {
+      const friend = friendsData.all.find(f => f.id === id);
+      if (friend && confirm(`Tem certeza que deseja remover ${friend.name} dos seus amigos?`)) {
+        friendsData.all = friendsData.all.filter(f => f.id !== id);
+        loadFriends('all');
+        alert(`${friend.name} foi removido dos seus amigos.`);
+      }
+    }
+
     // Fechar ao clicar no overlay
     document.getElementById('overlay').addEventListener('click', closeModal);
 
@@ -549,6 +779,9 @@
       if (window.innerWidth > 768) {
         document.querySelector('.main-content').style.marginLeft = '280px';
       }
+      
+      // Mostra a seção home por padrão
+      showSection('home');
     });
 
     // Atualiza quando a janela é redimensionada
