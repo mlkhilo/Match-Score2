@@ -400,6 +400,8 @@
     
     <div style="width: 60px;"> <!-- Espaço para alinhar -->
     </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   </header>
 
   <!-- Conteúdo Principal -->
@@ -566,6 +568,7 @@
       <button class="btn" style="background: var(--success); width: 100%;" onclick="depositFunds()">
         Confirmar Depósito
       </button>
+      
     </div>
   </div>
 
@@ -598,6 +601,8 @@
 
   <!-- Overlay -->
   <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999;"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
     // Variáveis do jogo
@@ -1198,12 +1203,44 @@
     }
     
     // Deposita fundos
-    function depositFunds() {
-      const amount = parseFloat(document.getElementById('deposit-amount').value);
-      if (isNaN(amount)) {
-        alert('Por favor, insira um valor válido!');
-        return;
-      }
+function depositFunds() {
+  const amount = parseFloat(document.getElementById('deposit-amount').value);
+  
+  if (isNaN(amount)) {
+    Swal.fire({
+      title: "Valor inválido",
+      text: "Por favor, insira um valor válido!",
+      icon: "error",
+      draggable: true
+    });
+    return;
+  }
+  
+  if (amount && amount > 0) {
+    userBalance += amount;
+    updateBalance();
+    closeModal();
+    
+    // Mostra o alerta de sucesso
+    Swal.fire({
+      title: "Depositado com sucesso",
+      text: `R$ ${amount.toFixed(2).replace('.', ',')} foram adicionados ao seu saldo!`,
+      icon: "success",
+      draggable: true,
+      timer: 3000, // Fecha automaticamente após 3 segundos
+      timerProgressBar: true,
+      showConfirmButton: false
+    });
+  } else {
+    Swal.fire({
+      title: "Valor inválido",
+      text: "Por favor, insira um valor maior que zero.",
+      icon: "error",
+      draggable: true
+    });
+  }
+}
+
       
       if (amount && amount > 0) {
         userBalance += amount;
@@ -1213,29 +1250,51 @@
       } else {
         alert('Por favor, insira um valor válido.');
       }
-    }
+    
     
     // Saca fundos
-    function withdrawFunds() {
-      const amount = parseFloat(document.getElementById('withdraw-amount').value);
-      if (isNaN(amount)) {
-        alert('Por favor, insira um valor válido!');
-        return;
-      }
+function withdrawFunds() {
+  const amount = parseFloat(document.getElementById('withdraw-amount').value);
+  
+  if (isNaN(amount)) {
+    Swal.fire({
+      title: "Valor inválido",
+      text: "Por favor, insira um valor válido!",
+      icon: "error",
+      draggable: true
+    });
+    return;
+  }
+  
+  if (amount && amount > 0) {
+    if (amount <= userBalance) {
+      userBalance -= amount;
+      updateBalance();
+      closeModal();
       
-      if (amount && amount > 0) {
-        if (amount <= userBalance) {
-          userBalance -= amount;
-          updateBalance();
-          closeModal();
-          alert(`Saque de R$ ${amount.toFixed(2).replace('.', ',')} solicitado com sucesso!`);
-        } else {
-          alert('Saldo insuficiente para realizar o saque.');
-        }
-      } else {
-        alert('Por favor, insira um valor válido.');
-      }
+      Swal.fire({
+        title: "Saque realizado!",
+        text: `R$ ${amount.toFixed(2).replace('.', ',')} serão enviados para você.`,
+        icon: "success",
+        draggable: true
+      });
+    } else {
+      Swal.fire({
+        title: "Saldo insuficiente",
+        text: "Você não tem saldo suficiente para este saque.",
+        icon: "warning",
+        draggable: true
+      });
     }
+  } else {
+    Swal.fire({
+      title: "Valor inválido",
+      text: "Por favor, insira um valor maior que zero.",
+      icon: "error",
+      draggable: true
+    });
+  }
+}
     
     // Fechar ao clicar no overlay
     document.getElementById('overlay').addEventListener('click', closeModal);
