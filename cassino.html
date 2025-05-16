@@ -291,15 +291,23 @@
     }
 
     .card {
-      width: 60px;
-      height: 80px;
-      background: white;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: black;
-      font-weight: bold;
+        width: 80px;  /* Aumentei de 60px */
+        height: 120px; /* Aumentei de 80px */
+        background: transparent; /* Fundo transparente */
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1); /* Borda sutil */
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 7px;
     }
 
     .total {
@@ -946,7 +954,7 @@
       }
     }
     
-    // Puxa uma carta
+    // Puxa uma carta - MODIFICADA para identificar a carta K
     function drawCard(hidden = false) {
       const suits = ['♠', '♥', '♦', '♣'];
       const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -957,11 +965,11 @@
       return {
         suit,
         value,
-        hidden
+        hidden,
+        isKing: value === 'K' // Identifica se é uma carta K
       };
     }
-    
-    // Atualiza a UI do Blackjack
+
     function updateBlackjackUI() {
       const dealerCardsEl = document.getElementById('dealer-cards');
       const playerCardsEl = document.getElementById('player-cards');
@@ -972,28 +980,48 @@
       dealerCardsEl.innerHTML = '';
       playerCardsEl.innerHTML = '';
       
-      // Mostra cartas do dealer
-      dealerHand.forEach(card => {
+     // Função atualizada para criar cartas
+    const createCardElement = (card) => {
         const cardEl = document.createElement('div');
         cardEl.className = 'card';
+        
         if (card.hidden) {
-          cardEl.textContent = '🂠';
-          cardEl.style.background = 'var(--primary)';
+            cardEl.innerHTML = `
+                <div style="width:100%; height:100%; background:var(--primary); display:flex; align-items:center; justify-content:center; border-radius:7px;">
+                    <span style="font-size:24px;">🂠</span>
+                </div>
+            `;
         } else {
-          cardEl.textContent = card.value + card.suit;
-          cardEl.style.color = (card.suit === '♥' || card.suit === '♦') ? 'red' : 'black';
+            if (card.isKing) {
+                // Carta K personalizada sem fundo branco
+                cardEl.innerHTML = `
+                    <img src="imagens/K_match.png" alt="Rei" style="width:100%; height:100%;">
+                `;
+            } else {
+                // Cartas normais maiores
+                cardEl.innerHTML = `
+                    <div style="position:relative; width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between; padding:8px;">
+                        <div style="font-size:18px; line-height:1.2">${card.value}${card.suit}</div>
+                        <div style="font-size:32px; align-self:center; line-height:1">${card.value}</div>
+                        <div style="font-size:18px; transform:rotate(180deg); line-height:1.2">${card.value}${card.suit}</div>
+                    </div>
+                `;
+                cardEl.style.color = (card.suit === '♥' || card.suit === '♦') ? 'red' : 'black';
+            }
         }
-        dealerCardsEl.appendChild(cardEl);
+        return cardEl;
+    };
+
+      // Mostra cartas do dealer
+      dealerHand.forEach(card => {
+        dealerCardsEl.appendChild(createCardElement(card));
       });
       
       // Mostra cartas do jogador
       playerHand.forEach(card => {
-        const cardEl = document.createElement('div');
-        cardEl.className = 'card';
-        cardEl.textContent = card.value + card.suit;
-        cardEl.style.color = (card.suit === '♥' || card.suit === '♦') ? 'red' : 'black';
-        playerCardsEl.appendChild(cardEl);
+        playerCardsEl.appendChild(createCardElement(card));
       });
+
       
       // Calcula e mostra totais
       const dealerValue = calculateHandValue(dealerHand.filter(card => !card.hidden));
