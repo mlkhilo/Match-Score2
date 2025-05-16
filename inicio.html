@@ -415,6 +415,41 @@
       color: var(--btn-primary);
     }
 
+    /* Configurações */
+    .settings-section {
+      margin-bottom: 20px;
+    }
+
+    .settings-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: var(--btn-primary);
+    }
+
+    .settings-options {
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .setting-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .setting-option:last-child {
+      border-bottom: none;
+    }
+
+    .language-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     /* Media Queries */
     @media (max-width: 768px) {
       .btn-menu {
@@ -542,11 +577,88 @@
     <div>
       <p>Personalize sua experiência no app.</p>
       
-      <div style="margin-top:16px;">
-        <label style="display:flex; align-items:center; gap:8px;">
-          <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
-          <span>Modo Claro</span>
-        </label>
+      <div class="settings-section">
+        <h4 class="settings-title">Tema</h4>
+        <div class="settings-options">
+          <div class="setting-option">
+            <span>Modo escuro</span>
+            <label class="switch">
+              <input type="checkbox" id="themeToggle" onchange="toggleTheme()" checked>
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4 class="settings-title">Idioma</h4>
+        <div class="settings-options">
+          <div class="setting-option">
+            <div class="language-option">
+              <input type="radio" id="langEnglish" name="language" value="en" onchange="changeLanguage('en')">
+              <label for="langEnglish">Inglês</label>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="language-option">
+              <input type="radio" id="langSpanish" name="language" value="es" onchange="changeLanguage('es')">
+              <label for="langSpanish">Espanhol</label>
+            </div>
+          </div>
+          <div class="setting-option">
+            <div class="language-option">
+              <input type="radio" id="langPortuguese" name="language" value="pt-br" onchange="changeLanguage('pt-br')" checked>
+              <label for="langPortuguese">Português (BR)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4 class="settings-title">Privacidade</h4>
+        <div class="settings-options">
+          <div class="setting-option">
+            <span>Localização</span>
+            <label class="switch">
+              <input type="checkbox" id="locationToggle" onchange="toggleLocation()">
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="setting-option">
+            <span>Dados Pessoais</span>
+            <button class="btn" style="padding: 4px 8px; font-size: 12px;" onclick="openPrivacySettings()">Gerenciar</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4 class="settings-title">Acessibilidade</h4>
+        <div class="settings-options">
+          <div class="setting-option">
+            <span>Narrador</span>
+            <label class="switch">
+              <input type="checkbox" id="narratorToggle" onchange="toggleNarrator()">
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="setting-option">
+            <span>Lupa</span>
+            <label class="switch">
+              <input type="checkbox" id="magnifierToggle" onchange="toggleMagnifier()">
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4 class="settings-title">Fale Conosco</h4>
+        <div class="settings-options">
+          <div class="setting-option">
+            <span>Suporte Remoto</span>
+            <button class="btn" style="padding: 4px 8px; font-size: 12px;" onclick="openSupport()">Acessar</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -651,7 +763,7 @@
 
     // Alternar Tema
     function toggleTheme() {
-      const isLight = document.getElementById('themeToggle').checked;
+      const isLight = !document.getElementById('themeToggle').checked;
       document.body.classList.toggle('light-mode', isLight);
       localStorage.setItem('theme', isLight ? 'light' : 'dark');
     }
@@ -661,8 +773,49 @@
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'light') {
         document.body.classList.add('light-mode');
+        document.getElementById('themeToggle').checked = false;
+      } else {
         document.getElementById('themeToggle').checked = true;
       }
+    }
+
+    // Mudar idioma
+    function changeLanguage(lang) {
+      localStorage.setItem('language', lang);
+      alert(`Idioma alterado para ${lang === 'en' ? 'Inglês' : lang === 'es' ? 'Espanhol' : 'Português (BR)'}`);
+      // Aqui você pode adicionar lógica para atualizar o conteúdo da página conforme o idioma
+    }
+
+    // Carregar idioma salvo
+    function loadLanguage() {
+      const savedLang = localStorage.getItem('language') || 'pt-br';
+      document.getElementById(`lang${savedLang === 'en' ? 'English' : savedLang === 'es' ? 'Spanish' : 'Portuguese'}`).checked = true;
+    }
+
+    // Configurações de privacidade
+    function toggleLocation() {
+      const enabled = document.getElementById('locationToggle').checked;
+      alert(`Localização ${enabled ? 'ativada' : 'desativada'}`);
+    }
+
+    function openPrivacySettings() {
+      alert('Abrindo configurações de dados pessoais...');
+    }
+
+    // Configurações de acessibilidade
+    function toggleNarrator() {
+      const enabled = document.getElementById('narratorToggle').checked;
+      alert(`Narrador ${enabled ? 'ativado' : 'desativado'}`);
+    }
+
+    function toggleMagnifier() {
+      const enabled = document.getElementById('magnifierToggle').checked;
+      alert(`Lupa ${enabled ? 'ativada' : 'desativada'}`);
+    }
+
+    // Suporte
+    function openSupport() {
+      alert('Abrindo suporte remoto...');
     }
 
     // Mostrar seção específica
@@ -774,6 +927,7 @@
     // Inicialização
     window.addEventListener('DOMContentLoaded', () => {
       loadTheme();
+      loadLanguage();
       
       // Ajusta a margem do conteúdo principal para desktop
       if (window.innerWidth > 768) {
