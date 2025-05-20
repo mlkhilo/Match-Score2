@@ -395,6 +395,20 @@
         flex-wrap: wrap;
       }
     }
+    .truco-container {
+  background: var(--dark-gray);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.truco-container img {
+  transition: transform 0.2s;
+}
+
+.truco-container img:hover {
+  transform: scale(1.05);
+}
   </style>
 </head>
 <body>
@@ -450,6 +464,12 @@
           <div class="game-icon">🎲</div>
           <div class="game-name">Dados</div>
           <div class="game-description">Aposte no resultado dos dados</div>
+        </div>
+
+        <div class="game-card" onclick="window.open('jogos/truco.html', '_blank')">
+          <div class="game-icon"></div>
+          <div class="game-name">Truco</div>
+          <div class="game-description">Jogue offline</div>
         </div>
       </div>
       
@@ -539,6 +559,20 @@
         <div class="dice-results">
           <div class="dice" id="dice1">🎲</div>
           <div class="dice" id="dice2">🎲</div>
+        </div>
+
+        <!-- Truco -->
+        <div id="truco-container" class="truco-container" style="display: none; margin-top: 20px;">
+          <h3>Truco</h3>
+          <div style="text-align: center; margin: 20px 0;">
+            <button onclick="window.open('/jogos/truco.html', '_blank')" 
+                    style="background: none; border: none; cursor: pointer;">
+              <img src="imagens/truco.png" alt="Jogar Truco" style="width: 200px;">
+            </button>
+          </div>
+          <div id="truco-status">
+            <p>Clique na imagem para abrir o jogo de Truco em uma nova janela</p>
+          </div>
         </div>
         
         <div class="dice-buttons">
@@ -654,15 +688,18 @@
         case 'dice':
           document.getElementById('dice-container').style.display = 'block';
           break;
+        case 'truco':
+          document.getElementById('truco-container').style.display = 'block';
+          break;
       }
     }
     
     // Esconde todos os jogos
     function hideAllGames() {
-      document.querySelectorAll('.roulette-container, .slots-container, .blackjack-container, .dice-container').forEach(el => {
-        el.style.display = 'none';
-      });
-    }
+    document.querySelectorAll('.roulette-container, .slots-container, .blackjack-container, .dice-container, .truco-container').forEach(el => {
+      el.style.display = 'none';
+    });
+  }
     
     // Configura a roleta
     function setupRoulette() {
