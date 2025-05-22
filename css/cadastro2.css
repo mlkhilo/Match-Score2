@@ -1,0 +1,393 @@
+ /* Reset e estilos base */
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Container principal */
+.main-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Formulário */
+.form-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-container {
+    background: linear-gradient(#212121, #212121) padding-box,
+                linear-gradient(145deg, transparent 35%,#e81cff, #40c9ff) border-box;
+    border: 2px solid transparent;
+    padding: 40px 30px 30px;
+    color: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: relative;
+}
+
+/* Foto de perfil */
+.photo-upload-container {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    z-index: 10;
+}
+
+.photo-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #333;
+    border: 2px dashed #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.photo-circle:hover {
+    border-color: #e81cff;
+    transform: scale(1.05);
+}
+
+.plus-sign {
+    color: #666;
+    font-size: 30px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.photo-circle:hover .plus-sign {
+    color: #e81cff;
+}
+
+.photo-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+#photoInput {
+    display: none;
+}
+
+/* Estilos do formulário */
+.form-container .form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.logo img {
+    width: 80px;
+    height: auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    color: #717171;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: #fff;
+    background-color: transparent;
+    border: 1px solid #414141;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #e81cff;
+}
+
+.form-group input::placeholder {
+    opacity: 0.5;
+}
+
+/* Grupo Pix */
+.pix-group {
+    position: relative;
+}
+
+.pix-group input {
+    padding-left: 40px;
+}
+
+.pix-group img {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: auto;
+}
+
+/* Seleção de esportes */
+.sports-selection {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.sports-selection img {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+}
+
+.sports-selection img:hover {
+    transform: scale(1.1);
+}
+
+/* Imagens de campo */
+.campo-image {
+    display: none;
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Botão de submit */
+.form-submit-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: #111;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 16px;
+    cursor: pointer;
+    margin: 10px auto 0;
+    width: 220px;
+    height: 50px;
+    transition: all 0.3s ease;
+}
+
+.form-submit-btn:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Quadras de posição */
+.quadra-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: rgba(0,0,0,0.9);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow: auto;
+}
+
+.quadra-image-container {
+    position: relative;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+.quadra-image-container img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+.posicao {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.posicao:hover {
+    transform: scale(1.2);
+}
+
+.posicao.selected {
+    background-color: limegreen;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 11;
+    border: 2px solid white;
+}
+
+/* Posições selecionadas */
+.selected-positions {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.position-tag {
+    background: limegreen;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.remove-tag {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Loading screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.loading-video {
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 30px 20px;
+    }
+    
+    .sports-selection {
+        gap: 15px;
+    }
+    
+    .sports-selection img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .quadra-container {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .form-container {
+        padding: 30px 15px;
+    }
+    
+    .photo-upload-container {
+        top: -30px;
+        width: 60px;
+        height: 60px;
+    }
+    
+    .plus-sign {
+        font-size: 24px;
+    }
+    
+    .sports-selection {
+        gap: 10px;
+    }
+    
+    .sports-selection img {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .form-submit-btn {
+        width: 100%;
+        max-width: 220px;
+    }
+    
+    .quadra-container {
+        padding: 15px;
+    }
+}

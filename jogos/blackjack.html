@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Multiplayer</title>
+    <title>Truco</title>
+  <link rel="icon" href="/imagens/loguinho.png" type="image/png">
+  <link rel="stylesheet" href="cssjogos/blackjack.css">
+</head>
+<body>
+    <div class="setup-screen" id="setupScreen">
+        <div class="setup-container">
+            <h2>Configuração do Jogo</h2>
+            <div id="playerInputs">
+                <div>
+                    <label for="player1">Jogador 1:</label>
+                    <input type="text" id="player1" placeholder="Nome do Jogador 1" value="Jogador 1">
+                </div>
+                <div>
+                    <label for="player2">Jogador 2 (opcional):</label>
+                    <input type="text" id="player2" placeholder="Nome do Jogador 2">
+                </div>
+            </div>
+            <label for="aiDifficulty">Dificuldade da IA:</label>
+            <select id="aiDifficulty">
+                <option value="easy">Fácil</option>
+                <option value="medium" selected>Médio</option>
+                <option value="hard">Difícil</option>
+            </select>
+            <button id="startGame">Iniciar Jogo</button>
+        </div>
+    </div>
+
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <h1>Blackjack Match Score</h1>
+        
+        <div class="player-info" id="playerInfo"></div>
+        
+        <div class="dealer-area">
+            <div class="player-name">Dealer</div>
+            <div class="score" id="dealerScore"></div>
+            <div class="hand" id="dealerHand"></div>
+            <div class="status" id="dealerStatus"></div>
+        </div>
+        
+        <div class="betting-area" id="bettingArea">
+            <h3>Faça sua aposta</h3>
+            <div class="bet-options">
+                <div class="bet-option chip red" data-value="5">5</div>
+                <div class="bet-option chip blue" data-value="10">10</div>
+                <div class="bet-option chip green" data-value="25">25</div>
+                <div class="bet-option chip black" data-value="100">100</div>
+            </div>
+            <div class="current-bet" id="currentBet">Aposta atual: 0</div>
+            <button id="confirmBet">Confirmar Aposta</button>
+        </div>
+        
+        <div class="player-area" id="currentPlayerArea">
+            <div class="player-name" id="currentPlayerName"></div>
+            <div class="score" id="currentPlayerScore"></div>
+            <div class="hand" id="currentPlayerHand"></div>
+            <div class="status" id="currentPlayerStatus"></div>
+            <div class="buttons">
+                <button id="hitButton">Pedir Carta</button>
+                <button id="standButton">Parar</button>
+                <button id="doubleButton">Dobrar</button>
+                <button id="splitButton" disabled>Dividir</button>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button id="nextRound">Próxima Rodada</button>
+            <button id="newGame">Novo Jogo</button>
+        </div>
+    </div>
+
+    <script>
+        // Constantes do jogo
+        const SUITS = {
+            'H': { symbol: '♥', color: 'red' },
+            'D': { symbol: '♦', color: 'red' },
+            'C': { symbol: '♣', color: 'black' },
+            'S': { symbol: '♠', color: 'black' }
+        };
+        
+        const VALUES = {
+            '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, 
+            '9': 9, '10': 10, 'J': 10, 'Q': 10, 'K': 10, 'A': 11
+        };
+        
+        // Estado do jogo
+        let gameState = {
+            deck: [],
+            dealer: { hand: [], score: 0, status: '' },
+            players: [],
+            currentPlayerIndex: 0,
+            roundInProgress: false,
+            bettingInProgress: true,
+            aiDifficulty: 'medium'
+        };
+        
+        // Elementos do DOM
+        const setupScreen = document.getElementById('setupScreen');
+        const gameContainer = document.getElementById('gameContainer');
+        const playerInfo = document.getElementById('playerInfo');
+        const dealerHand = document.getElementById('dealerHand');
+        const dealerScore = document.getElementById('dealerScore');
+        const dealerStatus = document.getElementById('dealerStatus');
+        const currentPlayerArea = document.getElementById('currentPlayerArea');
+        const currentPlayerName = document.getElementById('currentPlayerName');
+        const currentPlayerScore = document.getElementById('currentPlayerScore');
+        const currentPlayerHand = document.getElementById('currentPlayerHand');
+        const currentPlayerStatus = document.getElementById('currentPlayerStatus');
+        const hitButton = document.getElementById('hitButton');
+        const standButton = document.getElementById('standButton');
+        const doubleButton = document.getElementById('doubleButton');
+        const splitButton = document.getElementById('splitButton');
+        const nextRoundButton = document.getElementById('nextRound');
+        const newGameButton = document.getElementById('newGame');
+        const bettingArea = document.getElementById('bettingArea');
+        const currentBetDisplay = document.getElementById('currentBet');
+        const confirmBetButton = document.getElementById('confirmBet');
+        
+        // Inicialização do jogo
+        document.getElementById('startGame').addEventListener('click', startGame);
+        newGameButton.addEventListener('click', resetGame);
+        nextRoundButton.addEventListener('click', startNewRound);
+        hitButton.addEventListener('click', () => playerAction('hit'));
+        standButton.addEventListener('click', () => playerAction('stand'));
+        doubleButton.addEventListener('click', () => playerAction('double'));
+        splitButton.addEventListener('click', () => playerAction('split'));
+        
+        // Apostas
+        let currentBet = 0;
+        document.querySelectorAll('.bet-option').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const value = parseInt(chip.getAttribute('data-value'));
+                currentBet += value;
+                currentBetDisplay.textContent = `Aposta atual: ${currentBet}`;
+            });
+        });
+        
+        confirmBetButton.addEventListener('click', confirmBet);
+        
+        function confirmBet() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            if (currentBet <= 0) {
+                alert('Por favor, faça uma aposta válida.');
+                return;
+            }
+            
+            if (currentBet > currentPlayer.chips) {
+                alert('Você não tem fichas suficientes para essa aposta.');
+                return;
+            }
+            
+            currentPlayer.bet = currentBet;
+            currentPlayer.chips -= currentBet;
+            currentBet = 0;
+            currentBetDisplay.textContent = 'Aposta atual: 0';
+            
+            // Próximo jogador ou começa o jogo
+            if (gameState.currentPlayerIndex < gameState.players.length - 1) {
+                gameState.currentPlayerIndex++;
+                updatePlayerDisplay();
+            } else {
+                gameState.bettingInProgress = false;
+                gameState.currentPlayerIndex = 0;
+                bettingArea.style.display = 'none';
+                dealInitialCards();
+                updatePlayerDisplay();
+            }
+        }
+        
+        function startGame() {
+            const player1Name = document.getElementById('player1').value || 'Jogador 1';
+            const player2Name = document.getElementById('player2').value;
+            gameState.aiDifficulty = document.getElementById('aiDifficulty').value;
+            
+            // Criar jogadores
+            gameState.players = [
+                { name: player1Name, hand: [], score: 0, status: '', chips: 1000, bet: 0 }
+            ];
+            
+            if (player2Name) {
+                gameState.players.push({ name: player2Name, hand: [], score: 0, status: '', chips: 1000, bet: 0 });
+            }
+            
+            setupScreen.style.display = 'none';
+            gameContainer.style.display = 'block';
+            
+            initializeGame();
+        }
+        
+        function resetGame() {
+            gameContainer.style.display = 'none';
+            setupScreen.style.display = 'flex';
+            
+            // Resetar inputs
+            document.getElementById('player1').value = 'Jogador 1';
+            document.getElementById('player2').value = '';
+            document.getElementById('aiDifficulty').value = 'medium';
+        }
+        
+        function initializeGame() {
+            createDeck();
+            shuffleDeck();
+            startNewRound();
+        }
+        
+        function startNewRound() {
+            // Resetar estado
+            gameState.dealer = { hand: [], score: 0, status: '' };
+            gameState.players.forEach(player => {
+                player.hand = [];
+                player.score = 0;
+                player.status = '';
+                player.bet = 0;
+            });
+            
+            gameState.currentPlayerIndex = 0;
+            gameState.roundInProgress = true;
+            gameState.bettingInProgress = true;
+            
+            // Resetar apostas
+            currentBet = 0;
+            currentBetDisplay.textContent = 'Aposta atual: 0';
+            bettingArea.style.display = 'block';
+            
+            // Atualizar display
+            updatePlayerInfo();
+            updateDealerDisplay();
+            updatePlayerDisplay();
+            
+            // Esconder botões de jogo
+            hitButton.style.display = 'none';
+            standButton.style.display = 'none';
+            doubleButton.style.display = 'none';
+            splitButton.style.display = 'none';
+            nextRoundButton.style.display = 'none';
+        }
+        
+        function createDeck() {
+            gameState.deck = [];
+            for (const suit in SUITS) {
+                for (const value in VALUES) {
+                    gameState.deck.push({ suit, value });
+                }
+            }
+        }
+        
+        function shuffleDeck() {
+            for (let i = gameState.deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [gameState.deck[i], gameState.deck[j]] = [gameState.deck[j], gameState.deck[i]];
+            }
+        }
+        
+        function dealInitialCards() {
+            // Dar 2 cartas para cada jogador e para o dealer
+            for (let i = 0; i < 2; i++) {
+                gameState.players.forEach(player => {
+                    dealCard(player);
+                });
+                dealCard(gameState.dealer);
+            }
+            
+            // Verificar se o dealer tem blackjack
+            calculateScore(gameState.dealer);
+            if (gameState.dealer.score === 21) {
+                gameState.dealer.status = 'blackjack';
+                endRound();
+                return;
+            }
+            
+            // Ativar botões para o primeiro jogador
+            updatePlayerButtons();
+        }
+        
+        function dealCard(target) {
+            if (gameState.deck.length === 0) {
+                createDeck();
+                shuffleDeck();
+            }
+            
+            const card = gameState.deck.pop();
+            target.hand.push(card);
+            calculateScore(target);
+            
+            // Verificar se o jogador estourou
+            if (target !== gameState.dealer && target.score > 21) {
+                target.status = 'bust';
+                nextPlayer();
+            }
+            
+            return card;
+        }
+        
+        function calculateScore(target) {
+            let score = 0;
+            let aces = 0;
+            
+            target.hand.forEach(card => {
+                score += VALUES[card.value];
+                if (card.value === 'A') aces++;
+            });
+            
+            // Ajustar para Áses valendo 1 se necessário
+            while (score > 21 && aces > 0) {
+                score -= 10;
+                aces--;
+            }
+            
+            target.score = score;
+        }
+        
+        function playerAction(action) {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            switch (action) {
+                case 'hit':
+                    dealCard(currentPlayer);
+                    break;
+                    
+                case 'stand':
+                    currentPlayer.status = 'stand';
+                    nextPlayer();
+                    break;
+                    
+                case 'double':
+                    if (currentPlayer.chips >= currentPlayer.bet) {
+                        currentPlayer.chips -= currentPlayer.bet;
+                        currentPlayer.bet *= 2;
+                        dealCard(currentPlayer);
+                        if (currentPlayer.status !== 'bust') {
+                            currentPlayer.status = 'stand';
+                            nextPlayer();
+                        }
+                    }
+                    break;
+                    
+                case 'split':
+                    // Implementação básica de split (pode ser expandida)
+                    if (currentPlayer.hand.length === 2 && 
+                        currentPlayer.hand[0].value === currentPlayer.hand[1].value &&
+                        currentPlayer.chips >= currentPlayer.bet) {
+                        
+                        currentPlayer.chips -= currentPlayer.bet;
+                        const newHand = [currentPlayer.hand.pop()];
+                        currentPlayer.splitHand = newHand;
+                        currentPlayer.splitBet = currentPlayer.bet;
+                        
+                        // Dar uma carta para cada mão
+                        dealCard(currentPlayer);
+                        dealCard({ hand: newHand });
+                        
+                        // Atualizar lógica para lidar com mãos divididas
+                        // (implementação simplificada)
+                    }
+                    break;
+            }
+            
+            updatePlayerDisplay();
+            updatePlayerButtons();
+        }
+        
+        function nextPlayer() {
+            // Verificar se todos os jogadores já jogaram
+            if (gameState.currentPlayerIndex < gameState.players.length - 1) {
+                gameState.currentPlayerIndex++;
+                updatePlayerDisplay();
+                updatePlayerButtons();
+                
+                // Se for IA, jogar automaticamente
+                if (gameState.players[gameState.currentPlayerIndex].name === 'IA') {
+                    setTimeout(playAI, 1000);
+                }
+            } else {
+                // Todas as jogadas humanas foram feitas, vez do dealer
+                dealerPlay();
+            }
+        }
+        
+        function playAI() {
+            const aiPlayer = gameState.players[gameState.currentPlayerIndex];
+            const dealerCard = gameState.dealer.hand[0].value;
+            const aiScore = aiPlayer.score;
+            
+            // Estratégia da IA baseada na dificuldade
+            let action;
+            
+            if (gameState.aiDifficulty === 'easy') {
+                // IA fácil: hit até 16, stand a partir de 17
+                action = aiScore < 17 ? 'hit' : 'stand';
+            } else if (gameState.aiDifficulty === 'medium') {
+                // IA média: estratégia básica simplificada
+                if (aiScore < 12) {
+                    action = 'hit';
+                } else if (aiScore < 17) {
+                    action = (dealerCard === '7' || dealerCard === '8' || dealerCard === '9' || dealerCard === '10' || dealerCard === 'J' || dealerCard === 'Q' || dealerCard === 'K' || dealerCard === 'A') ? 'hit' : 'stand';
+                } else {
+                    action = 'stand';
+                }
+            } else {
+                // IA difícil: estratégia básica mais avançada
+                if (aiPlayer.hand.length === 2 && aiPlayer.hand[0].value === aiPlayer.hand[1].value) {
+                    // Par para dividir
+                    const pairValue = aiPlayer.hand[0].value;
+                    if (pairValue === 'A' || pairValue === '8' || 
+                        (pairValue === '2' && ['2','3','4','5','6','7'].includes(dealerCard)) || 
+                        (pairValue === '3' && ['2','3','4','5','6','7'].includes(dealerCard)) || 
+                        (pairValue === '6' && ['2','3','4','5','6'].includes(dealerCard)) || 
+                        (pairValue === '7' && ['2','3','4','5','6','7'].includes(dealerCard)) || 
+                        (pairValue === '9' && !['7','10','J','Q','K','A'].includes(dealerCard))) {
+                        action = 'split';
+                    } else {
+                        action = aiScore < 17 ? 'hit' : 'stand';
+                    }
+                } else if (aiPlayer.hand.length === 2 && aiScore === 11) {
+                    action = 'double';
+                } else if (aiScore < 12) {
+                    action = 'hit';
+                } else if (aiScore < 17) {
+                    action = (['7','8','9','10','J','Q','K','A'].includes(dealerCard)) ? 'hit' : 'stand';
+                } else {
+                    action = 'stand';
+                }
+            }
+            
+            // Executar ação
+            if (action === 'hit' || action === 'stand' || action === 'double' || action === 'split') {
+                playerAction(action);
+            }
+        }
+        
+        function dealerPlay() {
+            gameState.roundInProgress = false;
+            
+            // Virar a carta escondida do dealer
+            updateDealerDisplay(true);
+            
+            // Dealer pega cartas até atingir pelo menos 17
+            while (gameState.dealer.score < 17) {
+                dealCard(gameState.dealer);
+                updateDealerDisplay(true);
+            }
+            
+            // Determinar o status do dealer
+            if (gameState.dealer.score > 21) {
+                gameState.dealer.status = 'bust';
+            } else if (gameState.dealer.score === 21 && gameState.dealer.hand.length === 2) {
+                gameState.dealer.status = 'blackjack';
+            } else {
+                gameState.dealer.status = 'stand';
+            }
+            
+            // Determinar resultados
+            endRound();
+        }
+        
+        function endRound() {
+            const dealerScore = gameState.dealer.score;
+            const dealerStatus = gameState.dealer.status;
+            
+            gameState.players.forEach(player => {
+                if (player.status === 'bust') {
+                    player.status = 'Perdeu (estourou)';
+                } else if (dealerStatus === 'blackjack') {
+                    player.status = player.score === 21 && player.hand.length === 2 ? 'Empate (Blackjack)' : 'Perdeu (Dealer Blackjack)';
+                } else if (dealerStatus === 'bust') {
+                    player.status = 'Ganhou (Dealer estourou)';
+                    player.chips += player.bet * 2;
+                } else if (player.score === dealerScore) {
+                    player.status = 'Empate';
+                    player.chips += player.bet;
+                } else if (player.score > dealerScore) {
+                    player.status = 'Ganhou';
+                    player.chips += player.bet * 2;
+                } else {
+                    player.status = 'Perdeu';
+                }
+                
+                // Verificar blackjack do jogador (paga 3:2)
+                if (player.score === 21 && player.hand.length === 2 && dealerStatus !== 'blackjack') {
+                    player.status = 'Blackjack! (3:2)';
+                    player.chips += Math.floor(player.bet * 2.5);
+                }
+            });
+            
+            // Mostrar botão para próxima rodada
+            nextRoundButton.style.display = 'inline-block';
+            
+            // Atualizar displays
+            updatePlayerDisplay();
+            updateDealerDisplay(true);
+            updatePlayerInfo();
+        }
+        
+        function updatePlayerInfo() {
+            playerInfo.innerHTML = '';
+            
+            gameState.players.forEach((player, index) => {
+                const playerBox = document.createElement('div');
+                playerBox.className = `player-box ${index === gameState.currentPlayerIndex && gameState.roundInProgress && !gameState.bettingInProgress ? 'active' : ''}`;
+                
+                const nameElement = document.createElement('div');
+                nameElement.className = 'player-name';
+                nameElement.textContent = player.name;
+                
+                const chipsElement = document.createElement('div');
+                chipsElement.textContent = `Fichas: ${player.chips}`;
+                
+                const betElement = document.createElement('div');
+                betElement.textContent = `Aposta: ${player.bet}`;
+                
+                const statusElement = document.createElement('div');
+                statusElement.textContent = player.status;
+                
+                playerBox.appendChild(nameElement);
+                playerBox.appendChild(chipsElement);
+                playerBox.appendChild(betElement);
+                playerBox.appendChild(statusElement);
+                
+                playerInfo.appendChild(playerBox);
+            });
+        }
+        
+        function updateDealerDisplay(showAll = false) {
+            dealerHand.innerHTML = '';
+            dealerScore.textContent = '';
+            dealerStatus.textContent = gameState.dealer.status;
+            
+            gameState.dealer.hand.forEach((card, index) => {
+                if (index === 0 && !showAll && gameState.roundInProgress) {
+                    // Mostrar carta escondida para a primeira carta do dealer durante o jogo
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'card hidden-card';
+                    cardElement.textContent = '?';
+                    dealerHand.appendChild(cardElement);
+                } else {
+                    dealerHand.appendChild(createCardElement(card));
+                }
+            });
+            
+            if (showAll || !gameState.roundInProgress) {
+                dealerScore.textContent = `Pontuação: ${gameState.dealer.score}`;
+            }
+        }
+        
+        function updatePlayerDisplay() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            currentPlayerName.textContent = currentPlayer.name;
+            currentPlayerScore.textContent = `Pontuação: ${currentPlayer.score}`;
+            currentPlayerStatus.textContent = currentPlayer.status;
+            
+            currentPlayerHand.innerHTML = '';
+            currentPlayer.hand.forEach(card => {
+                currentPlayerHand.appendChild(createCardElement(card));
+            });
+        }
+        
+        function updatePlayerButtons() {
+            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            if (!gameState.roundInProgress || gameState.bettingInProgress || currentPlayer.status || currentPlayer.name === 'IA') {
+                hitButton.style.display = 'none';
+                standButton.style.display = 'none';
+                doubleButton.style.display = 'none';
+                splitButton.style.display = 'none';
+            } else {
+                hitButton.style.display = 'inline-block';
+                standButton.style.display = 'inline-block';
+                
+                // Mostrar botão de dobrar apenas na primeira jogada
+                doubleButton.style.display = currentPlayer.hand.length === 2 && currentPlayer.chips >= currentPlayer.bet ? 'inline-block' : 'none';
+                
+                // Mostrar botão de dividir apenas se tiver um par
+                splitButton.style.display = currentPlayer.hand.length === 2 && 
+                                          currentPlayer.hand[0].value === currentPlayer.hand[1].value && 
+                                          currentPlayer.chips >= currentPlayer.bet ? 'inline-block' : 'none';
+                splitButton.disabled = !(currentPlayer.hand.length === 2 && 
+                                       currentPlayer.hand[0].value === currentPlayer.hand[1].value && 
+                                       currentPlayer.chips >= currentPlayer.bet);
+            }
+        }
+        
+        function createCardElement(card) {
+            const cardElement = document.createElement('div');
+            cardElement.className = `card ${SUITS[card.suit].color}`;
+            
+            const topLeft = document.createElement('div');
+            topLeft.className = 'card-corner top-left';
+            topLeft.textContent = card.value;
+            
+            const bottomRight = document.createElement('div');
+            bottomRight.className = 'card-corner bottom-right';
+            bottomRight.textContent = card.value;
+            
+            const suitElement = document.createElement('div');
+            suitElement.className = 'card-suit';
+            suitElement.textContent = SUITS[card.suit].symbol;
+            
+            const valueElement = document.createElement('div');
+            valueElement.className = 'card-value';
+            valueElement.textContent = card.value === '10' ? '10' : card.value;
+            
+            cardElement.appendChild(topLeft);
+            cardElement.appendChild(valueElement);
+            cardElement.appendChild(suitElement);
+            cardElement.appendChild(bottomRight);
+            
+            return cardElement;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0a5c36;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+.game-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #0d723b;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    color: gold;
+    margin-top: 0;
+}
+
+.dealer-area, .player-area {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.hand {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-height: 120px;
+    margin: 10px 0;
+}
+
+.card {
+    width: 80px;
+    height: 120px;
+    background-color: white;
+    border-radius: 5px;
+    margin: 0 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px;
+    color: black;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card.red {
+    color: red;
+}
+
+.card-value {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.card-suit {
+    font-size: 30px;
+    text-align: center;
+}
+
+.card-corner {
+    position: absolute;
+    font-size: 16px;
+}
+
+.top-left {
+    top: 5px;
+    left: 5px;
+}
+
+.bottom-right {
+    bottom: 5px;
+    right: 5px;
+    transform: rotate(180deg);
+}
+
+.hidden-card {
+    background: linear-gradient(135deg, #1a5e8c, #0d3a5c);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.buttons {
+    margin: 20px 0;
+}
+
+button {
+    background-color: gold;
+    color: #0a5c36;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ffd700;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.status {
+    font-size: 18px;
+    margin: 10px 0;
+    min-height: 27px;
+}
+
+.score {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: gold;
+}
+
+.player-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.player-box {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+    width: 30%;
+}
+
+.player-box.active {
+    background-color: rgba(255, 215, 0, 0.3);
+    border: 2px solid gold;
+}
+
+.setup-screen {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.setup-container {
+    background-color: #0d723b;
+    padding: 30px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+}
+
+.setup-container h2 {
+    margin-top: 0;
+    color: gold;
+}
+
+.setup-container input, .setup-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+}
+
+.setup-container button {
+    width: 100%;
+    margin: 10px 0 0;
+}
+
+.player-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.chip {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+    margin: 0 5px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.chip.red {
+    background: radial-gradient(circle at 30% 30%, #ff9999, #cc0000);
+    color: white;
+}
+
+.chip.blue {
+    background: radial-gradient(circle at 30% 30%, #99ccff, #0066cc);
+    color: white;
+}
+
+.chip.green {
+    background: radial-gradient(circle at 30% 30%, #99ff99, #009900);
+    color: white;
+}
+
+.chip.black {
+    background: radial-gradient(circle at 30% 30%, #cccccc, #000000);
+    color: white;
+}
+
+.betting-area {
+    margin: 20px 0;
+}
+
+.bet-options {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.bet-option {
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.current-bet {
+    margin-top: 10px;
+    font-size: 18px;
+}

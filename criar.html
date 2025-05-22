@@ -5,162 +5,154 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Partida</title>
   <link rel="icon" href="imagens/loguinho.png" type="image/png">
-  <link rel="stylesheet" href="estilo.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    :root {
-      --primary-color: #e81cff;
-      --bg-color: #111;
-      --text-color: #fff;
-      --button-color: #e81cff;
-      --button-hover: #ba1cb0;
-      --logo: url("imagens/loguinho.png");
-    }
-
-    body.light {
-      --primary-color: #00cc66;
-      --bg-color: #f5f5f5;
-      --text-color: #111;
-      --button-color: #00cc66;
-      --button-hover: #008c44;
-      --logo: url("imagens/loguinho2.png");
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      padding: 20px;
-      background-color: var(--bg-color);
-    }
-
-    header img {
-      height: 60px;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 50px auto;
-      background-color: rgba(255,255,255,0.05);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
-
-    h2 {
-      text-align: center;
-      color: var(--primary-color);
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: none;
-      border-radius: 5px;
-      background-color: #333;
-      color: white;
-    }
-
-    input[type="submit"] {
-      margin-top: 25px;
-      background-color: var(--button-color);
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      font-size: 16px;
-    }
-
-    input[type="submit"]:hover {
-      background-color: var(--button-hover);
-    }
-
-    .mode-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: transparent;
-      color: var(--primary-color);
-      border: 2px solid var(--primary-color);
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="css/criar.css">
 </head>
 <body>
-  <header>
-    <img src="imagens/loguinho.png" alt="Logo" id="logoImg">
-    <button class="mode-toggle" onclick="toggleMode()">🌓 Modo</button>
+  <header class="main-header">
+    <button class="mode-toggle" onclick="toggleMode()">
+      <span class="mode-icon">🌓</span>
+      <span class="mode-text">Modo Escuro</span>
+    </button>
   </header>
 
-  <div class="container">
-    <h2>Criar Partida</h2>
-    <form onsubmit="salvarPartida(event)">
-      <label for="nome">Nome da Partida:</label>
-      <input type="text" id="nome" name="nome" required>
+  <main class="create-match-container">
+    <div class="form-card">
+      <div class="form-header">
+        <img src="imagens/loguinho2.png" alt="Logo" id="logoImg" class="logo">
+        <h2>Criar Nova Partida</h2>
+        <p>Preencha os detalhes da partida abaixo</p>
+      </div>
+      
+      <form class="match-form" onsubmit="salvarPartida(event)">
+        <div class="form-group">
+          <label for="nome">Nome da Partida</label>
+          <input type="text" id="nome" name="nome" required placeholder="Ex: Clássico dos Amigos">
+        </div>
 
-      <label for="data">Data:</label>
-      <input type="date" id="data" name="data" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="data">Data</label>
+            <input type="date" id="data" name="data" required>
+          </div>
+          <div class="form-group">
+            <label for="hora">Hora</label>
+            <input type="time" id="hora" name="hora" required>
+          </div>
+        </div>
 
-      <label for="hora">Hora:</label>
-      <input type="time" id="hora" name="hora" required>
+        <div class="form-group">
+          <label for="local">Local</label>
+          <select id="local" required>
+            <option value="">Selecione o local</option>
+            <option value="br">Arena KF quadra</option>
+            <option value="us">Arena KS Society</option>
+            <option value="pt">QUADRA COM GRAMA SINTÉTICA</option>
+            <option value="es">Arena 22</option>
+            <option value="ar">Quadra do Cambuí</option>
+        </select>
+        </div>
 
-      <label for="local">Local:</label>
-      <input type="text" id="local" name="local" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipo">Tipo de Partida</label>
+            <select id="tipo" name="tipo" required>
+              <option value="" disabled selected>Selecione</option>
+              <option value="amistoso">Amistoso</option>
+              <option value="campeonato">Campeonato</option>
+              <option value="treino">Treino</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="jogadores">Jogadores por time</label>
+            <input type="number" id="jogadores" name="jogadores" min="1" max="11" required>
+          </div>
+        </div>
 
-      <label for="tipo">Tipo:</label>
-      <select id="tipo" name="tipo" required>
-        <option value="amistoso">Amistoso</option>
-        <option value="campeonato">Campeonato</option>
-        <option value="treino">Treino</option>
-      </select>
-
-      <label for="jogadores">Jogadores por time:</label>
-      <input type="number" id="jogadores" name="jogadores" min="1" max="11" required>
-
-      <input type="submit" value="Criar Partida">
-    </form>
-  </div>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">
+            <span class="btn-icon">⚽</span>
+            Criar Partida
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
 
   <script>
-    function toggleMode() {
-      const body = document.body;
-      body.classList.toggle('light');
-      const logo = document.getElementById('logoImg');
-      logo.src = body.classList.contains('light') ? 'imagens/loguinho2.png' : 'imagens/loguinho.png';
-    }
+   function salvarPartida(event) {
+  event.preventDefault();
 
-    function salvarPartida(event) {
-      event.preventDefault();
+  const partida = {
+    nome: document.getElementById('nome').value,
+    data: document.getElementById('data').value,
+    hora: document.getElementById('hora').value,
+    local: document.getElementById('local').value,
+    tipo: document.getElementById('tipo').value,
+    jogadores: document.getElementById('jogadores').value,
+    criadoEm: new Date().toISOString()
+  };
 
-      const partida = {
-        nome: document.getElementById('nome').value,
-        data: document.getElementById('data').value,
-        hora: document.getElementById('hora').value,
-        local: document.getElementById('local').value,
-        tipo: document.getElementById('tipo').value,
-        jogadores: document.getElementById('jogadores').value,
-      };
+  // Validação adicional
+  if (partida.jogadores < 1 || partida.jogadores > 11) {
+    alert("O número de jogadores por time deve ser entre 1 e 11");
+    return;
+  }
 
-      let partidas = JSON.parse(localStorage.getItem('partidas')) || [];
-      partidas.push(partida);
-      localStorage.setItem('partidas', JSON.stringify(partidas));
+  let partidas = JSON.parse(localStorage.getItem('partidas')) || [];
+  partidas.push(partida);
+  localStorage.setItem('partidas', JSON.stringify(partidas));
 
-      window.location.href = 'index.html';
-    }
+  // Feedback visual
+  const submitBtn = document.querySelector('.submit-btn');
+  submitBtn.textContent = 'Partida Criada!';
+  submitBtn.style.backgroundColor = '#4CAF50';
+  
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 1500);
+}
+
+// Configuração inicial do formulário
+document.addEventListener('DOMContentLoaded', () => {
+  // Define a data mínima como hoje
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('data').min = today;
+  
+  // Foco no primeiro campo
+  document.getElementById('nome').focus();
+});
+function toggleMode() {
+  const body = document.body;
+  body.classList.toggle('dark');
+  
+  const modeIcon = document.querySelector('.mode-icon');
+  const modeText = document.querySelector('.mode-text');
+  const logo = document.getElementById('logoImg');
+  
+  if (body.classList.contains('dark')) {
+    modeIcon.textContent = '🌞';
+    modeText.textContent = 'Modo Claro';
+    logo.src = 'imagens/loguinho.png';
+  } else {
+    modeIcon.textContent = '🌓';
+    modeText.textContent = 'Modo Escuro';
+    logo.src = 'imagens/loguinho2.png';
+  }
+  
+  // Salva preferência no localStorage
+  localStorage.setItem('darkMode', body.classList.contains('dark'));
+}
+
+// Verifica preferência salva ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+  const darkMode = localStorage.getItem('darkMode') === 'true';
+  if (darkMode) {
+    document.body.classList.add('dark');
+    document.querySelector('.mode-icon').textContent = '🌞';
+    document.querySelector('.mode-text').textContent = 'Modo Claro';
+    document.getElementById('logoImg').src = 'imagens/loguinho2.png';
+  }
+});
   </script>
 </body>
 </html>

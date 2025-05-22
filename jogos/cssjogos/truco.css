@@ -1,0 +1,98 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #00796b;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+header {
+  background: #004d40;
+  padding: 20px;
+  color: white;
+}
+
+main {
+  margin-top: 20px;
+}
+
+.placar, .manilha-info {
+  margin-bottom: 20px;
+}
+
+.placar-jogadores {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+
+.mesa {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  gap: 20px;
+}
+
+.cartas {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.carta, .carta-mesa {
+  width: 100px;
+  height: 145px;
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+  object-fit: cover;
+}
+
+.carta:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.vencedora {
+  border: 4px solid gold;
+  box-shadow: 0 0 10px 2px gold;
+}
+
+button {
+  padding: 12px 25px;
+  background: #ff9800;
+  color: black;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #ffc107;
+}
+
+.mensagem {
+  font-size: 1.2rem;
+  margin: 15px 0;
+  min-height: 30px;
+}
+
+footer {
+  margin-top: 30px;
+  padding: 10px;
+  background: #004d40;
+}
