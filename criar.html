@@ -4,31 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Partida</title>
+  <!-- Ícone da aba -->
   <link rel="icon" href="imagens/loguinho.png" type="image/png">
+  <!-- Link para o arquivo CSS externo -->
   <link rel="stylesheet" href="css/criar.css">
 </head>
 <body>
+
+  <!-- Cabeçalho com botão de alternância de modo (claro/escuro) -->
   <header class="main-header">
-    <button class="mode-toggle" onclick="toggleMode()">
-      <span class="mode-icon">🌓</span>
-      <span class="mode-text">Modo Escuro</span>
+    <button class="mode-toggle" onclick="window.location.href='inicio.html'">
+       Voltar
     </button>
   </header>
 
+  <!-- Conteúdo principal -->
   <main class="create-match-container">
     <div class="form-card">
       <div class="form-header">
+        <!-- Logo da página -->
         <img src="imagens/loguinho2.png" alt="Logo" id="logoImg" class="logo">
         <h2>Criar Nova Partida</h2>
         <p>Preencha os detalhes da partida abaixo</p>
       </div>
-      
+
+      <!-- Formulário de criação da partida -->
       <form class="match-form" onsubmit="salvarPartida(event)">
+
+        <!-- Campo: Nome da Partida -->
         <div class="form-group">
           <label for="nome">Nome da Partida</label>
           <input type="text" id="nome" name="nome" required placeholder="Ex: Clássico dos Amigos">
         </div>
 
+        <!-- Linha com campos Data e Hora -->
         <div class="form-row">
           <div class="form-group">
             <label for="data">Data</label>
@@ -40,6 +49,7 @@
           </div>
         </div>
 
+        <!-- Campo: Local da Partida -->
         <div class="form-group">
           <label for="local">Local</label>
           <select id="local" required>
@@ -49,9 +59,23 @@
             <option value="pt">QUADRA COM GRAMA SINTÉTICA</option>
             <option value="es">Arena 22</option>
             <option value="ar">Quadra do Cambuí</option>
-        </select>
+          </select>
         </div>
 
+        <!-- Upload de imagem da partida (opcional) -->
+        <div class="form-group image-upload-container">
+          <label for="imagemPartida">Imagem da Partida (Opcional)</label>
+          <!-- Input de arquivo escondido -->
+          <input type="file" id="imagemPartida" name="imagemPartida" accept="image/*" style="display: none;" onchange="previewImage(event)">
+          <!-- Botão estilizado que aciona o input -->
+          <label for="imagemPartida" class="upload-btn">
+            Selecionar Imagem
+          </label>
+          <!-- Pré-visualização da imagem -->
+          <img id="imagePreview" class="image-preview" alt="Pré-visualização da imagem">
+        </div>
+
+        <!-- Linha com Tipo de Partida e número de jogadores -->
         <div class="form-row">
           <div class="form-group">
             <label for="tipo">Tipo de Partida</label>
@@ -68,9 +92,9 @@
           </div>
         </div>
 
+        <!-- Botão de criar partida -->
         <div class="form-actions">
           <button type="submit" class="submit-btn">
-            <span class="btn-icon">⚽</span>
             Criar Partida
           </button>
         </div>
@@ -78,81 +102,99 @@
     </div>
   </main>
 
+  <!-- Script JavaScript para funcionalidades da página -->
   <script>
-   function salvarPartida(event) {
-  event.preventDefault();
+    // Função para salvar os dados da partida
+    function salvarPartida(event) {
+      event.preventDefault(); // Impede o envio padrão do formulário
 
-  const partida = {
-    nome: document.getElementById('nome').value,
-    data: document.getElementById('data').value,
-    hora: document.getElementById('hora').value,
-    local: document.getElementById('local').value,
-    tipo: document.getElementById('tipo').value,
-    jogadores: document.getElementById('jogadores').value,
-    criadoEm: new Date().toISOString()
-  };
+      const partida = {
+        nome: document.getElementById('nome').value,
+        data: document.getElementById('data').value,
+        hora: document.getElementById('hora').value,
+        local: document.getElementById('local').value,
+        tipo: document.getElementById('tipo').value,
+        jogadores: document.getElementById('jogadores').value,
+        criadoEm: new Date().toISOString() // Data de criação automática
+      };
 
-  // Validação adicional
-  if (partida.jogadores < 1 || partida.jogadores > 11) {
-    alert("O número de jogadores por time deve ser entre 1 e 11");
-    return;
-  }
+      // Se uma imagem for selecionada, lê como base64
+      const inputImagem = document.getElementById('imagemPartida');
+      if (inputImagem.files && inputImagem.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          partida.imagem = e.target.result;
+          salvarPartidaNoStorage(partida); // Salva com a imagem
+        };
+        reader.readAsDataURL(inputImagem.files[0]);
+      } else {
+        salvarPartidaNoStorage(partida); // Salva sem imagem
+      }
+    }
 
-  let partidas = JSON.parse(localStorage.getItem('partidas')) || [];
-  partidas.push(partida);
-  localStorage.setItem('partidas', JSON.stringify(partidas));
+    // Função que salva a partida no localStorage
+    function salvarPartidaNoStorage(partida) {
+      // Validação de quantidade de jogadores
+      if (partida.jogadores < 1 || partida.jogadores > 11) {
+        alert("O número de jogadores por time deve ser entre 1 e 11");
+        return;
+      }
 
-  // Feedback visual
-  const submitBtn = document.querySelector('.submit-btn');
-  submitBtn.textContent = 'Partida Criada!';
-  submitBtn.style.backgroundColor = '#4CAF50';
-  
-  setTimeout(() => {
-    window.location.href = 'index.html';
-  }, 1500);
-}
+      // Recupera o array de partidas, se existir
+      let partidas = JSON.parse(localStorage.getItem('partidas')) || [];
+      partidas.push(partida);
+      localStorage.setItem('partidas', JSON.stringify(partidas));
 
-// Configuração inicial do formulário
-document.addEventListener('DOMContentLoaded', () => {
-  // Define a data mínima como hoje
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('data').min = today;
-  
-  // Foco no primeiro campo
-  document.getElementById('nome').focus();
-});
-function toggleMode() {
-  const body = document.body;
-  body.classList.toggle('dark');
-  
-  const modeIcon = document.querySelector('.mode-icon');
-  const modeText = document.querySelector('.mode-text');
-  const logo = document.getElementById('logoImg');
-  
-  if (body.classList.contains('dark')) {
-    modeIcon.textContent = '🌞';
-    modeText.textContent = 'Modo Claro';
-    logo.src = 'imagens/loguinho.png';
-  } else {
-    modeIcon.textContent = '🌓';
-    modeText.textContent = 'Modo Escuro';
-    logo.src = 'imagens/loguinho2.png';
-  }
-  
-  // Salva preferência no localStorage
-  localStorage.setItem('darkMode', body.classList.contains('dark'));
-}
+      // Feedback visual ao usuário
+      const submitBtn = document.querySelector('.submit-btn');
+      submitBtn.textContent = 'Partida Criada!';
+      submitBtn.style.backgroundColor = '#4CAF50';
 
-// Verifica preferência salva ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-  const darkMode = localStorage.getItem('darkMode') === 'true';
-  if (darkMode) {
-    document.body.classList.add('dark');
-    document.querySelector('.mode-icon').textContent = '🌞';
-    document.querySelector('.mode-text').textContent = 'Modo Claro';
-    document.getElementById('logoImg').src = 'imagens/loguinho2.png';
-  }
-});
+      // Redireciona após 1,5 segundos
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+    }
+
+    // Função para pré-visualizar a imagem selecionada
+    function previewImage(event) {
+      const input = event.target;
+      const preview = document.getElementById('imagePreview');
+
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block'; // Mostra a imagem
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // Configurações iniciais quando a página carrega
+    document.addEventListener('DOMContentLoaded', () => {
+      // Define a data mínima como hoje no input de data
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('data').min = today;
+
+      // Foco no campo Nome ao carregar
+      document.getElementById('nome').focus();
+    });
+    
+      // Salva preferência no localStorage
+      localStorage.setItem('darkMode', body.classList.contains('dark'));
+
+    // Verifica se o usuário tem preferência de tema salva
+    document.addEventListener('DOMContentLoaded', () => {
+      const darkMode = localStorage.getItem('darkMode') === 'true';
+      if (darkMode) {
+        document.body.classList.add('dark');
+        document.querySelector('.mode-text').textContent = 'Modo Claro';
+        document.getElementById('logoImg').src = 'imagens/loguinho.png';
+      }
+    });
   </script>
 </body>
 </html>

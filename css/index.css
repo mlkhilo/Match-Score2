@@ -27,64 +27,46 @@
     width: 100%;
     height: 100%;
     z-index: -1;
-    background-image: url(videos/Design\ sem\ nome.gif);
-  }
-
-  .field-pattern {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      /* Linhas do campo */
-      linear-gradient(to bottom, 
-        transparent 48%, 
-        rgba(255, 255, 255, 0.05) 48%, 
-        rgba(255, 255, 255, 0.05) 52%, 
-        transparent 52%),
-      linear-gradient(to right, 
-        transparent 48%, 
-        rgba(255, 255, 255, 0.05) 48%, 
-        rgba(255, 255, 255, 0.05) 52%, 
-        transparent 52%),
-      /* Círculo central */
-      radial-gradient(circle at center, 
-        transparent 70%, 
-        rgba(255, 255, 255, 0.03) 70.5%, 
-        transparent 71%);
-    opacity: 0.5;
+    background-image: url('../videos/Design\ sem\ nome.gif');  
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
   /* Header */
   header {
     width: 100%;
-    padding: 20px;
+    height: 100px;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    padding: 0 40px;
+    background-color: transparent;
+    position: relative;
+    z-index: 10;
   }
-
+  
+  /* Container da logo e nome */
   .logo-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 25px;
   }
-
+  
+  /* Logo principal (círculo vermelho) */
   #logo {
-    height: 100px;
-    width: 100px;
-    margin-bottom: 15px;
+    height: 90px; /* quase a altura total do header */
+    width: auto;
     filter: drop-shadow(0 0 8px rgba(147, 112, 219, 0.7));
   }
-
+  
+  /* Nome da marca (linha laranja) */
   #nomel {
-    height: auto;
-    width: 80%;
-    max-width: 350px;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
-  }
+    height: 55px; /* altura mais visível e proporcional */
+    width: auto;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
+  } 
+  
 
   /* Conteúdo principal */
   .main-content {

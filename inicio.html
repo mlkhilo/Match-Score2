@@ -34,7 +34,7 @@
       <li class="nav-item"><a href="#" class="nav-link" onclick="openModal('profileModal')">Perfil</a></li>
       <li class="nav-item"><a href="#" class="nav-link" onclick="openModal('settingsModal')">Configurações</a></li>
       <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('friends')">Amigos</a></li>
-      <li class="nav-item"><a href="#" class="nav-link" onclick="alert('Avaliação')">Avaliação</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" onclick="showSection('avaliacao')">Avaliação</a></li>
       <li class="nav-item"><a href="#" class="nav-link" onclick="window.location.href='cassino.html'">Cassino/Apostas</a></li>
     </ul>
   </aside>
@@ -256,6 +256,66 @@
     </div>
   </div>
 
+    <!-- Conteúdo Principal - Avaliação (inicialmente oculto) -->
+<main class="main-content" id="avaliacao-content" style="display:none;">
+  <section class="section">
+    <h2 class="section-title">Avaliações</h2>
+    
+    <div class="search-box">
+      <input type="text" placeholder="Avaliar Jogador por Nome" id="searchInput">
+      <span class="search-icon">🔍</span>
+    </div>
+  
+    <div class="lista-jogadores">
+      <div class="jogador">
+        <div class="jogador-info">
+          <img src="imagens/icone-perfil.png" alt="Perfil">
+          <span class="nome">Hilo_On</span>
+        </div>
+        <div class="avaliacao">
+          <span class="estrela">★</span>
+          <span class="nota">3,7</span>
+        </div>
+      </div>
+  
+      <div class="jogador">
+        <div class="jogador-info">
+          <img src="imagens/icone-perfil.png" alt="Perfil">
+          <span class="nome">Julio</span>
+        </div>
+        <div class="avaliacao">
+          <span class="estrela">★</span>
+          <span class="nota">4,9</span>
+        </div>
+      </div>
+  
+      <div class="jogador">
+        <div class="jogador-info">
+          <img src="imagens/icone-perfil.png" alt="Perfil">
+          <span class="nome">Ever3sti</span>
+        </div>
+        <div class="avaliacao">
+          <span class="estrela">★</span>
+          <span class="nota">4,8</span>
+        </div>
+      </div>
+  
+      <div class="jogador">
+        <div class="jogador-info">
+          <img src="imagens/icone-perfil.png" alt="Perfil">
+          <span class="nome">Cauã</span>
+        </div>
+        <div class="avaliacao">
+          <span class="estrela">★</span>
+          <span class="nota">4,5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+    
+  
+
   <script>
     // Dados de exemplo para amigos
     const friendsData = {
@@ -290,20 +350,32 @@
     }
 
     // Controle dos Modais
-    function openModal(modalId) {
-      document.getElementById(modalId).classList.add('active');
-      document.getElementById('overlay').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+let currentModal = null;
 
-    function closeModal() {
-      document.querySelectorAll('.modal').forEach(modal => {
-        modal.classList.remove('active');
-      });
-      document.getElementById('overlay').classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
+function openModal(modalId) {
+  // Fecha o modal atual se existir
+  if (currentModal) {
+    closeModal();
+  }
+  
+  const modal = document.getElementById(modalId);
+  modal.classList.add('active');
+  document.getElementById('overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  currentModal = modalId;
+}
 
+function closeModal() {
+  if (currentModal) {
+    document.getElementById(currentModal).classList.remove('active');
+    currentModal = null;
+  }
+  document.getElementById('overlay').classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// Fechar ao clicar no overlay
+document.getElementById('overlay').addEventListener('click', closeModal);
     // Alternar Tema
     function toggleTheme() {
       const isLight = !document.getElementById('themeToggle').checked;
@@ -448,6 +520,11 @@
       // [Adicionar mais traduções conforme necessário]
     }
 
+    const avaliacaoTitle = document.querySelector('#avaliacao-content .section-title');
+  if (avaliacaoTitle) {
+    avaliacaoTitle.textContent = t.rating;
+  }
+
     function loadLanguage() {
       const savedLang = localStorage.getItem('language') || 'pt-br';
       document.querySelector(`input[name="language"][value="${savedLang}"]`).checked = true;
@@ -489,26 +566,30 @@
       alert('Abrindo suporte remoto...');
     }
 
-    // Mostrar seção específica
     function showSection(sectionId) {
-      // Esconde todas as seções de conteúdo
-      document.querySelectorAll('.main-content').forEach(section => {
-        section.style.display = 'none';
-      });
-      
-      // Mostra a seção solicitada
-      document.getElementById(`${sectionId}-content`).style.display = 'block';
-      
-      // Fecha o menu se estiver em mobile
-      if (isMobile()) {
-        toggleSidebar();
-      }
-      
-      // Se for a tela de amigos, carrega os amigos
-      if (sectionId === 'friends') {
-        loadFriends('all');
-      }
-    }
+  // Esconde todas as seções de conteúdo
+  document.querySelectorAll('.main-content').forEach(section => {
+    section.style.display = 'none';
+  });
+  
+  // Mostra a seção solicitada
+  document.getElementById(`${sectionId}-content`).style.display = 'block';
+  
+  // Fecha o menu se estiver em mobile
+  if (isMobile()) {
+    toggleSidebar();
+  }
+  
+  // Se for a tela de amigos, carrega os amigos
+  if (sectionId === 'friends') {
+    loadFriends('all');
+  }
+  
+  // Se for a tela de avaliação, pode adicionar lógica específica aqui
+  if (sectionId === 'avaliacao') {
+    // Lógica para carregar avaliações, se necessário
+  }
+}
 
     // Carregar lista de amigos
     function loadFriends(tab) {
@@ -740,6 +821,22 @@
             mover(1);
         }
     });
+
+ // Função para buscar jogadores
+document.getElementById('searchInput')?.addEventListener('input', function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const jogadores = document.querySelectorAll('.jogador');
+  
+  jogadores.forEach(jogador => {
+    const nome = jogador.querySelector('.nome').textContent.toLowerCase();
+    if (nome.includes(searchTerm)) {
+      jogador.style.display = 'flex';
+    } else {
+      jogador.style.display = 'none';
+    }
+  });
+});
+
   </script>
 </body>
 </html>

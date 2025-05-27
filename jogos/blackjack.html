@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Multiplayer</title>
-    <title>Truco</title>
-  <link rel="icon" href="/imagens/loguinho.png" type="image/png">
-  <link rel="stylesheet" href="cssjogos/blackjack.css">
+    <title>Blackjack Premium</title>
+    <link rel="icon" href="/imagens/loguinho.png" type="image/png">
+    <link rel="stylesheet" href="cssjogos/blackjack.css">
 </head>
 <body>
     <div class="setup-screen" id="setupScreen">
         <div class="setup-container">
-            <h2>Configuração do Jogo</h2>
+            <img src="/imagens/blackjack.png" alt="Blackjack Logo" class="game-logo">
+            <h2>Blackjack Premium</h2>
             <div id="playerInputs">
                 <div>
                     <label for="player1">Jogador 1:</label>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="game-container" id="gameContainer" style="display: none;">
-        <h1>Blackjack Match Score</h1>
+        <h1>Blackjack Premium</h1>
         
         <div class="player-info" id="playerInfo"></div>
         
@@ -186,6 +186,9 @@
             
             if (player2Name) {
                 gameState.players.push({ name: player2Name, hand: [], score: 0, status: '', chips: 1000, bet: 0 });
+            } else {
+                // Adicionar IA se não houver segundo jogador
+                gameState.players.push({ name: 'IA', hand: [], score: 0, status: '', chips: 1000, bet: 0 });
             }
             
             setupScreen.style.display = 'none';
@@ -316,55 +319,124 @@
             target.score = score;
         }
         
-        function playerAction(action) {
-            const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+        function playAI() {
+    const aiPlayer = gameState.players[gameState.currentPlayerIndex];
+    const dealerCard = gameState.dealer.hand[0].value;
+    const aiScore = aiPlayer.score;
+    
+    // Estratégia da IA baseada na dificuldade
+    let action;
+    
+    if (gameState.aiDifficulty === 'easy') {
+        action = aiScore < 17 ? 'hit' : 'stand';
+    } else if (gameState.aiDifficulty === 'medium') {
+        if (aiScore < 12) {
+            action = 'hit';
+        } else if (aiScore < 17) {
+            action = (['7','8','9','10','J','Q','K','A'].includes(dealerCard)) ? 'hit' : 'stand';
+        } else {
+            action = 'stand';
+        }
+    } else {
+        // IA difícil: estratégia mais avançada
+        if (aiPlayer.hand.length === 2 && aiPlayer.hand[0].value === aiPlayer.hand[1].value) {
+            // Lógica para split
+            const pairValue = aiPlayer.hand[0].value;
+            if (pairValue === 'A' || pairValue === '8') {
+                action = 'split';
+            } else if ((pairValue === '2' || pairValue === '3' || pairValue === '7') && 
+                      ['2','3','4','5','6','7'].includes(dealerCard)) {
+                action = 'split';
+            } else if (pairValue === '6' && ['2','3','4','5','6'].includes(dealerCard)) {
+                action = 'split';
+            } else if (pairValue === '9' && !['7','10','J','Q','K','A'].includes(dealerCard)) {
+                action = 'split';
+            } else {
+                action = aiScore < 17 ? 'hit' : 'stand';
+            }
+        } else if (aiPlayer.hand.length === 2 && aiScore === 11) {
+            action = 'double';
+        } else if (aiScore < 12) {
+            action = 'hit';
+        } else if (aiScore < 17) {
+            action = (['7','8','9','10','J','Q','K','A'].includes(dealerCard)) ? 'hit' : 'stand';
+        } else {
+            action = 'stand';
+        }
+    }
+    
+    // Executar ação
+    if (action === 'hit' || action === 'stand' || action === 'double' || action === 'split') {
+        playerAction(action);
+    } else {
+        // Fallback - não deveria acontecer
+        setTimeout(() => playerAction('stand'), 1000);
+    }
+}
+
+function playerAction(action) {
+    const currentPlayer = gameState.players[gameState.currentPlayerIndex];
+    
+    switch (action) {
+        case 'hit':
+            const newCard = dealCard(currentPlayer);
+            // Atualizar visualização da carta imediatamente
+            if (currentPlayer.name === 'IA') {
+                const cardElement = createCardElement(newCard);
+                currentPlayerHand.appendChild(cardElement);
+            }
+            break;
             
-            switch (action) {
-                case 'hit':
-                    dealCard(currentPlayer);
-                    break;
-                    
-                case 'stand':
+        case 'stand':
+            currentPlayer.status = 'stand';
+            nextPlayer();
+            break;
+            
+        case 'double':
+            if (currentPlayer.chips >= currentPlayer.bet) {
+                currentPlayer.chips -= currentPlayer.bet;
+                currentPlayer.bet *= 2;
+                const newCard = dealCard(currentPlayer);
+                // Atualizar visualização da carta imediatamente
+                if (currentPlayer.name === 'IA') {
+                    const cardElement = createCardElement(newCard);
+                    currentPlayerHand.appendChild(cardElement);
+                }
+                if (currentPlayer.status !== 'bust') {
                     currentPlayer.status = 'stand';
                     nextPlayer();
-                    break;
-                    
-                case 'double':
-                    if (currentPlayer.chips >= currentPlayer.bet) {
-                        currentPlayer.chips -= currentPlayer.bet;
-                        currentPlayer.bet *= 2;
-                        dealCard(currentPlayer);
-                        if (currentPlayer.status !== 'bust') {
-                            currentPlayer.status = 'stand';
-                            nextPlayer();
-                        }
-                    }
-                    break;
-                    
-                case 'split':
-                    // Implementação básica de split (pode ser expandida)
-                    if (currentPlayer.hand.length === 2 && 
-                        currentPlayer.hand[0].value === currentPlayer.hand[1].value &&
-                        currentPlayer.chips >= currentPlayer.bet) {
-                        
-                        currentPlayer.chips -= currentPlayer.bet;
-                        const newHand = [currentPlayer.hand.pop()];
-                        currentPlayer.splitHand = newHand;
-                        currentPlayer.splitBet = currentPlayer.bet;
-                        
-                        // Dar uma carta para cada mão
-                        dealCard(currentPlayer);
-                        dealCard({ hand: newHand });
-                        
-                        // Atualizar lógica para lidar com mãos divididas
-                        // (implementação simplificada)
-                    }
-                    break;
+                }
             }
+            break;
             
-            updatePlayerDisplay();
-            updatePlayerButtons();
-        }
+        case 'split':
+            if (currentPlayer.hand.length === 2 && 
+                currentPlayer.hand[0].value === currentPlayer.hand[1].value &&
+                currentPlayer.chips >= currentPlayer.bet) {
+                
+                currentPlayer.chips -= currentPlayer.bet;
+                const newHand = [currentPlayer.hand.pop()];
+                currentPlayer.splitHand = newHand;
+                currentPlayer.splitBet = currentPlayer.bet;
+                
+                dealCard(currentPlayer);
+                const splitCard = dealCard({ hand: newHand });
+                
+                // Atualizar visualização para a IA
+                if (currentPlayer.name === 'IA') {
+                    currentPlayerHand.innerHTML = '';
+                    currentPlayer.hand.forEach(card => {
+                        currentPlayerHand.appendChild(createCardElement(card));
+                    });
+                }
+            }
+            break;
+    }
+    
+    // Atualizar display após ação
+    updatePlayerDisplay();
+    updatePlayerButtons();
+}
         
         function nextPlayer() {
             // Verificar se todos os jogadores já jogaram

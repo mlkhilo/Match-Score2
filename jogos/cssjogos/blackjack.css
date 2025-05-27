@@ -1,6 +1,13 @@
+/* ===== ESTILOS GERAIS ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #0a5c36;
+    background: linear-gradient(135deg, #000000, #2d0a3a, #000000);
     color: white;
     text-align: center;
     margin: 0;
@@ -10,22 +17,25 @@ body {
 .game-container {
     max-width: 1000px;
     margin: 0 auto;
-    background-color: #0d723b;
+    background-color: rgba(30, 30, 30, 0.8);
     border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    border: 1px solid #4a148c;
 }
 
 h1 {
-    color: gold;
+    color: white;
     margin-top: 0;
+    text-shadow: 0 0 10px rgba(106, 27, 154, 0.7);
 }
 
 .dealer-area, .player-area {
     margin: 20px 0;
     padding: 15px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(40, 0, 60, 0.5);
     border-radius: 8px;
+    border: 1px solid #4a148c;
 }
 
 .hand {
@@ -48,13 +58,14 @@ h1 {
     padding: 5px;
     color: black;
     font-weight: bold;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
     position: relative;
     transition: transform 0.3s;
 }
 
 .card:hover {
     transform: translateY(-10px);
+    box-shadow: 0 0 15px rgba(106, 27, 154, 0.5);
 }
 
 .card.red {
@@ -89,12 +100,13 @@ h1 {
 }
 
 .hidden-card {
-    background: linear-gradient(135deg, #1a5e8c, #0d3a5c);
+    background: linear-gradient(135deg, #2d0a3a, #4a148c);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
+    border: 1px solid #6a1b9a;
 }
 
 .buttons {
@@ -102,36 +114,44 @@ h1 {
 }
 
 button {
-    background-color: gold;
-    color: #0a5c36;
+    background: linear-gradient(to bottom, #6a1b9a, #4a148c);
+    color: white;
     border: none;
     padding: 10px 20px;
     margin: 0 10px;
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    border: 1px solid #6a1b9a;
 }
 
 button:hover {
-    background-color: #ffd700;
+    background: linear-gradient(to bottom, #9c27b0, #6a1b9a);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(106, 27, 154, 0.5);
 }
 
 button:disabled {
-    background-color: #cccccc;
+    background: linear-gradient(to bottom, #333, #222);
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 .status {
     font-size: 18px;
     margin: 10px 0;
     min-height: 27px;
+    color: white;
 }
 
 .score {
     font-size: 20px;
     margin-bottom: 10px;
-    color: gold;
+    color: white;
+    text-shadow: 0 0 5px rgba(106, 27, 154, 0.7);
 }
 
 .player-info {
@@ -141,19 +161,21 @@ button:disabled {
 }
 
 .player-box {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(40, 0, 60, 0.5);
     padding: 10px;
     border-radius: 5px;
     width: 30%;
+    border: 1px solid #333;
 }
 
 .player-box.active {
-    background-color: rgba(255, 215, 0, 0.3);
-    border: 2px solid gold;
+    background-color: rgba(106, 27, 154, 0.3);
+    border: 2px solid #6a1b9a;
+    box-shadow: 0 0 15px rgba(106, 27, 154, 0.3);
 }
 
 .setup-screen {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.9);
     position: fixed;
     top: 0;
     left: 0;
@@ -166,16 +188,25 @@ button:disabled {
 }
 
 .setup-container {
-    background-color: #0d723b;
+    background-color: rgba(30, 30, 30, 0.9);
     padding: 30px;
     border-radius: 10px;
     width: 80%;
     max-width: 500px;
+    border: 1px solid #6a1b9a;
+    box-shadow: 0 0 20px rgba(106, 27, 154, 0.5);
+}
+
+.game-logo {
+    width: 200px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px rgba(106, 27, 154, 0.7));
 }
 
 .setup-container h2 {
     margin-top: 0;
-    color: gold;
+    color: white;
+    text-shadow: 0 0 5px rgba(106, 27, 154, 0.7);
 }
 
 .setup-container input, .setup-container select {
@@ -183,7 +214,9 @@ button:disabled {
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #333;
+    background-color: rgba(20, 20, 20, 0.8);
+    color: white;
 }
 
 .setup-container button {
@@ -195,6 +228,7 @@ button:disabled {
     font-weight: bold;
     margin-bottom: 10px;
     font-size: 18px;
+    color: white;
 }
 
 .chip {
@@ -202,12 +236,17 @@ button:disabled {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #fff, #ccc);
     text-align: center;
     line-height: 30px;
     font-weight: bold;
     margin: 0 5px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.chip:hover {
+    transform: scale(1.1);
 }
 
 .chip.red {
@@ -221,17 +260,21 @@ button:disabled {
 }
 
 .chip.green {
-    background: radial-gradient(circle at 30% 30%, #99ff99, #009900);
+    background: radial-gradient(circle at 30% 30%, #cccccc, #006600);
     color: white;
 }
 
 .chip.black {
-    background: radial-gradient(circle at 30% 30%, #cccccc, #000000);
+    background: radial-gradient(circle at 30% 30%, #999999, #000000);
     color: white;
 }
 
 .betting-area {
     margin: 20px 0;
+    background-color: rgba(40, 0, 60, 0.5);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #4a148c;
 }
 
 .bet-options {
@@ -243,9 +286,68 @@ button:disabled {
 .bet-option {
     margin: 0 5px;
     cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.bet-option:hover {
+    transform: scale(1.1);
 }
 
 .current-bet {
     margin-top: 10px;
     font-size: 18px;
+    color: white;
+}
+
+/* Efeitos especiais */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.winner {
+    animation: pulse 1.5s infinite;
+    border: 2px solid white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .card {
+        width: 60px;
+        height: 90px;
+    }
+    
+    .card-value {
+        font-size: 18px;
+        margin-top: 20px;
+    }
+    
+    .card-suit {
+        font-size: 22px;
+    }
+    
+    .player-info {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .player-box {
+        width: 80%;
+        margin-bottom: 10px;
+    }
+    
+    .buttons {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    button {
+        margin: 5px 0;
+    }
+    
+    .game-logo {
+        width: 150px;
+    }
 }

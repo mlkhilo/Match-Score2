@@ -2,231 +2,392 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Truco - Multiplayer Local</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truco - Menu</title>
   <link rel="stylesheet" href="cssjogos/truco.css">
   <link rel="icon" href="/imagens/loguinho.png" type="image/png">
 </head>
 <body>
-  <header>
-    <h1>Truco - Match Score</h1>
-  </header>
-
-  <main>
-    <section class="placar">
-      <div class="placar-jogadores">
-        <p>Jogador 1: <span id="placar1">0</span></p>
-        <p>Jogador 2: <span id="placar2">0</span></p>
+  <div id="menu" class="menu-container">
+    <div class="menu-content">
+      <img src="/imagens/truco.png" alt="Truco Logo" class="logo">
+      <h1>Truco</h1>
+      <div class="menu-options">
+        <button onclick="iniciarJogo('multiplayer')">Multiplayer Local</button>
+        <button onclick="iniciarJogo('ia')">Jogar contra IA</button>
       </div>
-      <p>Rodada: <span id="rodada">1</span></p>
-    </section>
+    </div>
+  </div>
 
-    <section class="manilha-info">
-      <div class="vira">
-        <h3>Vira</h3>
-        <img id="cartaVira" class="carta" src="" alt="Vira">
+  <div id="jogo" class="game-container">
+    <header>
+      <h1>Truco - <span id="modo-jogo">Multiplayer Local</span></h1>
+    </header>
+
+    <main>
+      <section class="placar">
+        <div class="placar-jogadores">
+          <p>Jogador 1: <span id="placar1">0</span></p>
+          <p id="jogador2-label">Jogador 2: <span id="placar2">0</span></p>
+        </div>
+        <p>Rodada: <span id="rodada">1</span></p>
+      </section>
+
+      <section class="manilha-info">
+        <div class="vira">
+          <h3>Vira</h3>
+          <img id="cartaVira" class="carta" src="" alt="Vira">
+        </div>
+        <p><strong>Manilha:</strong> <span id="manilhaTexto"></span></p>
+      </section>
+
+      <section class="mao jogador2">
+        <h2 id="nome-jogador2">Jogador 2</h2>
+        <div class="cartas" id="mao2"></div>
+      </section>
+
+      <section class="mesa">
+        <img id="cartaJog2" class="carta-mesa" src="" alt="" style="display: none;">
+        <img id="cartaJog1" class="carta-mesa" src="" alt="">
+      </section>
+
+      <section class="mao jogador1">
+        <h2>Jogador 1</h2>
+        <div class="cartas" id="mao1"></div>
+      </section>
+
+      <div class="mensagem-container">
+        <p id="mensagem" class="mensagem"></p>
       </div>
-      <p><strong>Manilha:</strong> <span id="manilhaTexto"></span></p>
-    </section>
 
-    <section class="mao jogador2">
-      <h2>Jogador 2</h2>
-      <div class="cartas" id="mao2"></div>
-    </section>
+      <div class="button-container">
+        <button onclick="pedirTruco()" id="truco-button" class="btn-truco">Truco!</button>
+        <button onclick="novaRodada()" class="btn-secondary">🔄 Nova Rodada</button>
+        <button onclick="voltarMenu()" class="btn-danger">← Menu</button>
+      </div>
 
-    <section class="mesa">
-      <img id="cartaJog2" class="carta-mesa" src="" alt="">
-      <img id="cartaJog1" class="carta-mesa" src="" alt="">
-    </section>
+      <div id="truco-resultado" class="truco-resultado" style="display: none;">
+        <h3 id="resultado-texto"></h3>
+      </div>
+    </main>
 
-    <section class="mao jogador1">
-      <h2>Jogador 1</h2>
-      <div class="cartas" id="mao1"></div>
-    </section>
-
-    <p id="mensagem" class="mensagem"></p>
-    <button onclick="novaRodada()">🔄 Nova Rodada</button>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Match Score</p>
-  </footer>
+    <footer>
+      <p>&copy; 2025 Truco</p>
+    </footer>
+  </div>
 
   <script>
+    // Variáveis globais
     const cartasOrdem = ["4", "5", "6", "7", "Q", "J", "K", "A", "2", "3"];
-const naipes = ["C", "D", "H", "S"]; // Clubs, Diamonds, Hearts, Spades
-let baralho = [], mao1 = [], mao2 = [], cartasJogadas = [];
-let jogadorAtual = 1, placar = [0, 0], vitoriasRodada = [0, 0];
-let manilhas = [], vira = "", rodadaAtual = 1;
+    const naipes = ["C", "D", "H", "S"];
+    let baralho = [], mao1 = [], mao2 = [], cartasJogadas = [];
+    let jogadorAtual = 1, placar = [0, 0], vitoriasRodada = [0, 0];
+    let manilhas = [], vira = "", rodadaAtual = 1;
+    let modoJogo = "multiplayer";
+    let pontosRodada = 1;
+    let trucoAtivo = false;
 
-// Novo mapeamento para as imagens locais
-const mapeamentoCartas = {
-  "4": "4", "5": "5", "6": "6", "7": "7",
-  "Q": "Q", "J": "J", "K": "K", "A": "A",
-  "2": "2", "3": "3"
-};
-
-function gerarBaralho() {
-  baralho = [];
-  for (let valor of cartasOrdem) {
-    for (let naipe of naipes) {
-      baralho.push({ 
-        id: `${mapeamentoCartas[valor]}${naipe}`, 
-        valor,
-        naipe
-      });
+    // Funções do menu
+    function iniciarJogo(modo) {
+      modoJogo = modo;
+      document.getElementById("menu").style.display = "none";
+      document.getElementById("jogo").style.display = "block";
+      
+      if (modo === "ia") {
+        document.getElementById("nome-jogador2").textContent = "Computador";
+        document.getElementById("modo-jogo").textContent = "Contra IA";
+      } else {
+        document.getElementById("nome-jogador2").textContent = "Jogador 2";
+        document.getElementById("modo-jogo").textContent = "Multiplayer";
+      }
+      
+      distribuirCartas();
     }
-  }
-  baralho = baralho.sort(() => Math.random() - 0.5);
-}
 
-function getUrl(id) {
-  // Usando imagens de um repositório público confiável
-  return `https://deckofcardsapi.com/static/img/${id}.png`;
-  
-  // Alternativa: Se quiser usar imagens locais, coloque na pasta /img/
-  // return `img/${id}.png`;
-}
+    function voltarMenu() {
+      document.getElementById("menu").style.display = "flex";
+      document.getElementById("jogo").style.display = "none";
+      resetarJogo();
+    }
 
-function definirManilhas(viraValor) {
-  const index = cartasOrdem.indexOf(viraValor);
-  manilhas = [cartasOrdem[(index + 1) % cartasOrdem.length]];
-}
+    function resetarJogo() {
+      placar = [0, 0];
+      rodadaAtual = 1;
+      atualizarPlacar();
+    }
 
-function distribuirCartas() {
-  gerarBaralho();
-  mao1 = baralho.slice(0, 3);
-  mao2 = baralho.slice(3, 6);
-  vira = baralho[6];
-  definirManilhas(vira.valor);
-  document.getElementById("cartaVira").src = getUrl(vira.id);
-  document.getElementById("manilhaTexto").textContent = manilhas.join(", ");
-  atualizarMaos();
-  limparMesa();
-  jogadorAtual = 1;
-  cartasJogadas = [];
-  vitoriasRodada = [0, 0];
-  atualizarMensagem("Rodada iniciada. Jogador 1 começa.");
-}
+    // Funções do jogo
+    function gerarBaralho() {
+      baralho = [];
+      for (let valor of cartasOrdem) {
+        for (let naipe of naipes) {
+          baralho.push({ 
+            id: `${valor}${naipe}`, 
+            valor,
+            naipe
+          });
+        }
+      }
+      baralho = baralho.sort(() => Math.random() - 0.5);
+    }
 
-function atualizarMaos() {
-  const div1 = document.getElementById("mao1");
-  const div2 = document.getElementById("mao2");
-  div1.innerHTML = "";
-  div2.innerHTML = "";
+    function getUrl(id) {
+      return `https://deckofcardsapi.com/static/img/${id}.png`;
+    }
 
-  mao1.forEach((carta, i) => {
-    const img = document.createElement("img");
-    img.src = getUrl(carta.id);
-    img.className = "carta";
-    img.onclick = () => jogarCarta(1, i);
-    div1.appendChild(img);
-  });
+    function definirManilhas(viraValor) {
+      const index = cartasOrdem.indexOf(viraValor);
+      manilhas = [cartasOrdem[(index + 1) % cartasOrdem.length]];
+    }
 
-  mao2.forEach((carta, i) => {
-    const img = document.createElement("img");
-    img.src = getUrl(carta.id);
-    img.className = "carta";
-    img.onclick = () => jogarCarta(2, i);
-    div2.appendChild(img);
-  });
-}
+    function distribuirCartas() {
+      gerarBaralho();
+      mao1 = baralho.slice(0, 3);
+      mao2 = baralho.slice(3, 6);
+      vira = baralho[6];
+      definirManilhas(vira.valor);
+      
+      document.getElementById("cartaVira").src = getUrl(vira.id);
+      document.getElementById("manilhaTexto").textContent = manilhas.join(", ");
+      
+      jogadorAtual = 1;
+      
+      atualizarMaos();
+      limparMesa();
+      cartasJogadas = [];
+      vitoriasRodada = [0, 0];
+      pontosRodada = 1;
+      trucoAtivo = false;
+      
+      document.getElementById("truco-resultado").style.display = "none";
+      atualizarMensagem(modoJogo === "ia" ? "Sua vez. Escolha uma carta." : "Rodada iniciada. Jogador 1 começa.");
+    }
 
-function jogarCarta(jogador, index) {
-  if (jogador !== jogadorAtual) {
-    atualizarMensagem(`É a vez do Jogador ${jogadorAtual}`);
-    return;
-  }
+    function atualizarMaos() {
+      const div1 = document.getElementById("mao1");
+      const div2 = document.getElementById("mao2");
+      div1.innerHTML = "";
+      div2.innerHTML = "";
 
-  const carta = jogador === 1 ? mao1.splice(index, 1)[0] : mao2.splice(index, 1)[0];
-  cartasJogadas[jogador - 1] = carta;
+      // Cartas do Jogador 1
+      mao1.forEach((carta, i) => {
+        const img = document.createElement("img");
+        img.src = getUrl(carta.id);
+        img.className = "carta";
+        img.onclick = () => jogarCarta(1, i);
+        div1.appendChild(img);
+      });
 
-  document.getElementById(jogador === 1 ? "cartaJog1" : "cartaJog2").src = getUrl(carta.id);
-  atualizarMaos();
-  jogadorAtual = jogadorAtual === 1 ? 2 : 1;
+      // Cartas do Jogador 2 (multiplayer) ou Computador (IA)
+      if (modoJogo === "multiplayer") {
+        mao2.forEach((carta, i) => {
+          const img = document.createElement("img");
+          img.src = jogadorAtual === 2 ? getUrl(carta.id) : "https://deckofcardsapi.com/static/img/back.png";
+          img.className = "carta";
+          img.onclick = jogadorAtual === 2 ? () => jogarCarta(2, i) : null;
+          img.style.cursor = jogadorAtual === 2 ? "pointer" : "not-allowed";
+          div2.appendChild(img);
+        });
+      } else {
+        // Modo IA - mostra as cartas do computador viradas
+        mao2.forEach(() => {
+          const img = document.createElement("img");
+          img.src = "https://deckofcardsapi.com/static/img/back.png";
+          img.className = "carta";
+          div2.appendChild(img);
+        });
+      }
+    }
 
-  if (cartasJogadas[0] && cartasJogadas[1]) {
-    setTimeout(avaliarRodada, 500); // Pequeno delay para melhor UX
-  } else {
-    atualizarMensagem(`É a vez do Jogador ${jogadorAtual}`);
-  }
-}
+    function jogarCarta(jogador, index) {
+      if (jogador !== jogadorAtual) return;
 
-function avaliarRodada() {
-  const v1 = avaliarValor(cartasJogadas[0]);
-  const v2 = avaliarValor(cartasJogadas[1]);
-  const img1 = document.getElementById("cartaJog1");
-  const img2 = document.getElementById("cartaJog2");
+      const carta = jogador === 1 ? mao1.splice(index, 1)[0] : mao2.splice(index, 1)[0];
+      cartasJogadas[jogador - 1] = carta;
+      document.getElementById(jogador === 1 ? "cartaJog1" : "cartaJog2").src = getUrl(carta.id);
+      
+      if (modoJogo === "ia") {
+        // Modo IA - jogador humano jogou, agora é a vez da IA
+        jogadorAtual = 2;
+        atualizarMaos();
+        setTimeout(jogarIA, 1000);
+      } else {
+        // Modo multiplayer - alterna para o outro jogador
+        jogadorAtual = jogadorAtual === 1 ? 2 : 1;
+        atualizarMaos();
+        atualizarMensagem(`É a vez do Jogador ${jogadorAtual}`);
+      }
 
-  img1.classList.remove("vencedora");
-  img2.classList.remove("vencedora");
+      if (cartasJogadas[0] && cartasJogadas[1]) {
+        setTimeout(avaliarRodada, 1000);
+      }
+    }
 
-  if (v1 > v2) {
-    vitoriasRodada[0]++;
-    img1.classList.add("vencedora");
-    atualizarMensagem("Jogador 1 venceu a mão!");
-  } else if (v2 > v1) {
-    vitoriasRodada[1]++;
-    img2.classList.add("vencedora");
-    atualizarMensagem("Jogador 2 venceu a mão!");
-  } else {
-    atualizarMensagem("Empate! Mão anulada.");
-  }
+    function jogarIA() {
+      if (mao2.length === 0 || !cartasJogadas[0]) return;
 
-  cartasJogadas = [];
+      // Lógica da IA - escolhe a carta mais forte
+      let melhorCartaIndex = 0;
+      let maiorValor = -1;
 
-  if (vitoriasRodada[0] === 2) {
-    placar[0]++;
-    atualizarMensagem("🏆 Jogador 1 venceu a rodada!");
-    atualizarPlacar();
-  } else if (vitoriasRodada[1] === 2) {
-    placar[1]++;
-    atualizarMensagem("🏆 Jogador 2 venceu a rodada!");
-    atualizarPlacar();
-  }
-}
+      mao2.forEach((carta, index) => {
+        const valor = avaliarValor(carta);
+        if (valor > maiorValor) {
+          maiorValor = valor;
+          melhorCartaIndex = index;
+        }
+      });
 
-function avaliarValor(carta) {
-  const base = cartasOrdem.indexOf(carta.valor);
-  return manilhas.includes(carta.valor) ? 100 + base : base;
-}
+      // Joga a carta
+      const carta = mao2.splice(melhorCartaIndex, 1)[0];
+      cartasJogadas[1] = carta;
+      document.getElementById("cartaJog2").src = getUrl(carta.id);
+      document.getElementById("cartaJog2").style.display = "block";
+      
+      // Volta para o jogador humano
+      jogadorAtual = 1;
+      atualizarMaos();
 
-function limparMesa() {
-  document.getElementById("cartaJog1").src = "";
-  document.getElementById("cartaJog2").src = "";
-  document.getElementById("cartaJog1").classList.remove("vencedora");
-  document.getElementById("cartaJog2").classList.remove("vencedora");
-}
+      // Avalia o resultado se ambas as cartas foram jogadas
+      if (cartasJogadas[0] && cartasJogadas[1]) {
+        setTimeout(avaliarRodada, 1000);
+      }
+    }
 
-function atualizarMensagem(msg) {
-  document.getElementById("mensagem").textContent = msg;
-}
+    function avaliarRodada() {
+      const v1 = avaliarValor(cartasJogadas[0]);
+      const v2 = avaliarValor(cartasJogadas[1]);
+      const img1 = document.getElementById("cartaJog1");
+      const img2 = document.getElementById("cartaJog2");
 
-function atualizarPlacar() {
-  document.getElementById("placar1").textContent = placar[0];
-  document.getElementById("placar2").textContent = placar[1];
-  document.getElementById("rodada").textContent = ++rodadaAtual;
+      img1.classList.remove("vencedora");
+      img2.classList.remove("vencedora");
 
-  if (placar[0] >= 12) {
-    atualizarMensagem("🎉 Jogador 1 venceu o jogo!");
-  } else if (placar[1] >= 12) {
-    atualizarMensagem("🎉 Jogador 2 venceu o jogo!");
-  }
-}
+      if (v1 > v2) {
+        vitoriasRodada[0]++;
+        img1.classList.add("vencedora");
+        atualizarMensagem("Jogador 1 venceu a mão!");
+      } else if (v2 > v1) {
+        vitoriasRodada[1]++;
+        img2.classList.add("vencedora");
+        atualizarMensagem(`${modoJogo === "ia" ? "Computador" : "Jogador 2"} venceu a mão!`);
+      } else {
+        atualizarMensagem("Empate! Mão anulada.");
+      }
 
-function novaRodada() {
-  if (placar[0] >= 12 || placar[1] >= 12) {
-    // Resetar o jogo se alguém já ganhou
-    placar = [0, 0];
-    rodadaAtual = 1;
-    atualizarPlacar();
-  }
-  distribuirCartas();
-}
+      cartasJogadas = [];
 
-// Inicialização
-window.onload = function() {
-  distribuirCartas();
-};
+      // Verifica se alguém ganhou a rodada
+      if (vitoriasRodada[0] === 2) {
+        placar[0] += pontosRodada;
+        mostrarResultado(`🏆 Jogador 1 venceu a rodada e ganhou ${pontosRodada} pontos!`);
+        atualizarPlacar();
+        setTimeout(distribuirCartas, 3000);
+      } else if (vitoriasRodada[1] === 2) {
+        placar[1] += pontosRodada;
+        mostrarResultado(`🏆 ${modoJogo === "ia" ? "Computador" : "Jogador 2"} venceu a rodada e ganhou ${pontosRodada} pontos!`);
+        atualizarPlacar();
+        setTimeout(distribuirCartas, 3000);
+      }
+    }
+
+    function avaliarValor(carta) {
+      const base = cartasOrdem.indexOf(carta.valor);
+      return manilhas.includes(carta.valor) ? 100 + base : base;
+    }
+
+    function limparMesa() {
+      document.getElementById("cartaJog1").src = "";
+      document.getElementById("cartaJog2").src = "";
+      document.getElementById("cartaJog1").classList.remove("vencedora");
+      document.getElementById("cartaJog2").classList.remove("vencedora");
+    }
+
+    function atualizarMensagem(msg) {
+      document.getElementById("mensagem").textContent = msg;
+    }
+
+    function mostrarResultado(msg) {
+      const resultadoDiv = document.getElementById("truco-resultado");
+      document.getElementById("resultado-texto").textContent = msg;
+      resultadoDiv.style.display = "block";
+    }
+
+    function atualizarPlacar() {
+      document.getElementById("placar1").textContent = placar[0];
+      document.getElementById("placar2").textContent = placar[1];
+      document.getElementById("rodada").textContent = rodadaAtual;
+
+      if (placar[0] >= 12) {
+        mostrarResultado("🎉 Jogador 1 venceu o jogo!");
+        setTimeout(resetarJogo, 3000);
+      } else if (placar[1] >= 12) {
+        mostrarResultado(`🎉 ${modoJogo === "ia" ? "Computador" : "Jogador 2"} venceu o jogo!`);
+        setTimeout(resetarJogo, 3000);
+      }
+    }
+
+    function novaRodada() {
+      if (placar[0] >= 12 || placar[1] >= 12) {
+        resetarJogo();
+      }
+      rodadaAtual++;
+      distribuirCartas();
+    }
+
+    function pedirTruco() {
+      if (jogadorAtual !== 1 || cartasJogadas.length > 0 || trucoAtivo) return;
+      
+      trucoAtivo = true;
+      pontosRodada = 3;
+      atualizarMensagem("Truco pedido! Aguardando resposta...");
+      
+      if (modoJogo === "ia") {
+        setTimeout(() => {
+          // IA decide se aceita ou não (70% de chance de aceitar)
+          const aceitar = Math.random() > 0.3;
+          
+          if (aceitar) {
+            atualizarMensagem("IA aceitou o truco! Rodada vale 3 pontos.");
+          } else {
+            placar[0] += 1;
+            atualizarPlacar();
+            mostrarResultado("IA fugiu! Jogador 1 ganhou 1 ponto.");
+            setTimeout(distribuirCartas, 3000);
+          }
+        }, 1500);
+      } else {
+        // Modo multiplayer - jogador 2 precisa aceitar/recusar
+        atualizarMensagem("Jogador 2 deve aceitar ou recusar o truco");
+      }
+    }
+
+    // Inicialização
+    window.onload = function() {
+      document.getElementById("menu").style.display = "flex";
+      document.getElementById("jogo").style.display = "none";
+    };
+
+    // Responsividade
+    function ajustarLayout() {
+      const isMobile = window.innerWidth <= 768;
+      const cartas = document.querySelectorAll('.carta, .carta-mesa');
+      
+      if (isMobile) {
+        cartas.forEach(carta => {
+          carta.style.width = '70px';
+          carta.style.height = '100px';
+        });
+      } else {
+        cartas.forEach(carta => {
+          carta.style.width = '100px';
+          carta.style.height = '145px';
+        });
+      }
+    }
+
+    window.addEventListener('resize', ajustarLayout);
+    window.addEventListener('load', ajustarLayout);
   </script>
 </body>
 </html>

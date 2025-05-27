@@ -22,6 +22,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   </header>
 
+  <div id="notification">
+    <img id="cover" src="" alt="Capa">
+    <div class="info">
+      <strong id="title">Festa no Cassino - MC PH</strong>
+    </div>
+  </div>
+  
+  <audio id="player" controls autoplay></audio>
+
   <!-- Conteúdo Principal -->
   <main class="main-content">
     <section class="section">
@@ -694,6 +703,55 @@ function withdrawFunds() {
     
     // Fechar ao clicar no overlay
     document.getElementById('overlay').addEventListener('click', closeModal);
+
+
+    const musicas = [
+    {
+      titulo: "Festa no Cassino - MC PH",
+      src: "sons/musica1.mp3",
+      capa: "capa1.jpg"
+    },
+    {
+      titulo: "Música 2",
+      src: "musica2.mp3",
+      capa: "capa2.jpg"
+    },
+    {
+      titulo: "Música 3",
+      src: "musica3.mp3",
+      capa: "capa3.jpg"
+    }
+  ];
+
+    let indiceAtual = 0;
+  const player = document.getElementById('player');
+  const notificacao = document.getElementById('notification');
+  const titulo = document.getElementById('title');
+  const capa = document.getElementById('cover');
+
+  function mostrarNotificacao(musica) {
+    titulo.textContent = musica.titulo;
+    capa.src = musica.capa;
+    notificacao.classList.add('show');
+    setTimeout(() => {
+      notificacao.classList.remove('show');
+    }, 4000);
+  }
+
+  function tocarMusica(indice) {
+    const musica = musicas[indice];
+    player.src = musica.src;
+    player.play();
+    mostrarNotificacao(musica);
+  }
+
+  player.addEventListener('ended', () => {
+    indiceAtual = (indiceAtual + 1) % musicas.length;
+    tocarMusica(indiceAtual);
+  });
+
+  // Inicia a primeira música
+  tocarMusica(indiceAtual);
   </script>
 </body>
 </html>

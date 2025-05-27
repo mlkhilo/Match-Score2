@@ -1,3 +1,4 @@
+/* ===== ESTILOS GERAIS ===== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,24 +7,103 @@
 
 body {
   font-family: "Segoe UI", sans-serif;
-  background: #00796b;
+  background: linear-gradient(135deg, #000000, #2d0a3a, #000000);
   color: white;
   text-align: center;
+  min-height: 100vh;
   padding: 20px;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===== MENU ===== */
+.menu-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 40px);
+  width: 100%;
+}
+
+.menu-content {
+  background: rgba(40, 0, 60, 0.9);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid #4a148c;
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 20px;
+  max-width: 100%;
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
+
+.menu-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.menu-options button {
+  padding: 15px;
+  font-size: 1.1rem;
+  background: linear-gradient(to bottom, #4a148c, #2d0a3a);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3), 
+              inset 0 1px 0 rgba(255,255,255,0.1);
+  border: 1px solid #6a1b9a;
+}
+
+.menu-options button:hover {
+  background: linear-gradient(to bottom, #6a1b9a, #4a148c);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+/* ===== JOGO ===== */
+.game-container {
+  display: none;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(30, 30, 30, 0.8);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  border: 1px solid #4a148c;
 }
 
 header {
-  background: #004d40;
-  padding: 20px;
-  color: white;
-}
-
-main {
-  margin-top: 20px;
-}
-
-.placar, .manilha-info {
+  background: linear-gradient(to right, #2d0a3a, #4a148c, #2d0a3a);
+  padding: 15px;
+  border-radius: 10px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  border: 1px solid #6a1b9a;
+}
+
+/* ===== PLACAR ===== */
+.placar {
+  background: rgba(40, 0, 60, 0.7);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+  border: 1px solid #4a148c;
 }
 
 .placar-jogadores {
@@ -32,67 +112,231 @@ main {
   margin-bottom: 10px;
 }
 
+/* ===== MESA ===== */
 .mesa {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
-  gap: 20px;
+  gap: 30px;
+  margin: 25px 0;
+  padding: 20px;
+  background: rgba(20, 20, 20, 0.6);
+  border-radius: 15px;
+  min-height: 180px;
+  position: relative;
+  border: 1px solid #333;
 }
 
-.cartas {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 10px 0;
+.mesa::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(106, 27, 154, 0.1) 0%, rgba(74, 20, 140, 0) 100%);
+  pointer-events: none;
 }
 
+/* ===== CARTAS ===== */
 .carta, .carta-mesa {
   width: 100px;
   height: 145px;
   background: white;
-  border-radius: 10px;
-  padding: 5px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  transition: all 0.2s ease;
   object-fit: cover;
+  position: relative;
 }
 
 .carta:hover {
   transform: scale(1.05);
   cursor: pointer;
+  box-shadow: 0 6px 15px rgba(106, 27, 154, 0.5);
 }
 
 .vencedora {
-  border: 4px solid gold;
-  box-shadow: 0 0 10px 2px gold;
+  border: 3px solid white;
+  box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.7);
+  animation: pulse 1.5s infinite;
 }
 
-button {
+/* ===== BOTÕES ===== */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.button-container button {
   padding: 12px 25px;
-  background: #ff9800;
-  color: black;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
-  margin-top: 20px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  min-width: 120px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3), 
+              inset 0 1px 0 rgba(255,255,255,0.1);
+  border: 1px solid #333;
 }
 
-button:hover {
-  background: #ffc107;
+.btn-truco {
+  background: linear-gradient(to bottom, #6a1b9a, #4a148c);
+  color: white;
+}
+
+.btn-truco:hover {
+  background: linear-gradient(to bottom, #9c27b0, #6a1b9a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(106, 27, 154, 0.5);
+}
+
+.btn-secondary {
+  background: linear-gradient(to bottom, #333, #222);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(to bottom, #444, #333);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.btn-danger {
+  background: linear-gradient(to bottom, #222, #111);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(to bottom, #333, #222);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+/* ===== MENSAGENS ===== */
+.mensagem-container {
+  margin: 20px 0;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mensagem {
   font-size: 1.2rem;
-  margin: 15px 0;
-  min-height: 30px;
+  padding: 12px 20px;
+  background: rgba(40, 0, 60, 0.5);
+  border-radius: 8px;
+  border-left: 4px solid #6a1b9a;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
 }
 
+.truco-resultado {
+  background: rgba(40, 0, 60, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border: 2px solid white;
+  box-shadow: 0 0 20px rgba(106, 27, 154, 0.7);
+}
+
+.truco-resultado h3 {
+  color: white;
+  font-size: 1.3rem;
+  text-shadow: 0 0 5px rgba(106, 27, 154, 0.7);
+}
+
+/* ===== FOOTER ===== */
 footer {
   margin-top: 30px;
-  padding: 10px;
-  background: #004d40;
+  padding: 15px;
+  background: linear-gradient(to right, #2d0a3a, #4a148c);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  border: 1px solid #6a1b9a;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .game-container {
+    padding: 15px;
+    width: 95%;
+  }
+  
+  .carta, .carta-mesa {
+    width: 70px !important;
+    height: 100px !important;
+  }
+  
+  .mesa {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    min-height: 150px;
+  }
+  
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .button-container button {
+    width: 100%;
+    max-width: 250px;
+    margin-bottom: 10px;
+  }
+  
+  .menu-content {
+    padding: 30px 20px;
+  }
+  
+  .menu-options button {
+    padding: 12px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  
+  .menu-content {
+    padding: 25px 15px;
+  }
+  
+  .button-container button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .mensagem {
+    font-size: 1rem;
+    padding: 10px;
+  }
+  
+  header, footer {
+    padding: 10px;
+  }
+  
+  .placar {
+    padding: 10px;
+  }
 }
