@@ -1,0 +1,207 @@
+/* Estilos Gerais */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  color: #ffffff;
+  text-align: center;
+}
+
+/* Menu Inicial */
+.menu {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #1e1e1e;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.menu input {
+  display: block;
+  width: 80%;
+  margin: 15px auto;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+.menu button {
+  width: 80%;
+  padding: 12px;
+  font-size: 16px;
+}
+
+/* Container do Jogo */
+#gameContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Controles do Jogo */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+}
+
+.controls label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.controls input, .controls select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  background-color: #333;
+  color: white;
+}
+
+.controls button {
+  padding: 10px;
+  margin-top: auto;
+}
+
+/* Grid do Jogo */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 30px auto;
+  max-width: 500px;
+}
+
+.cell {
+  aspect-ratio: 1/1;
+  background-color: #0047ab;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cell::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url('loguinho2.png');
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: opacity 0.3s ease;
+}
+
+.cell.revealed::before {
+  opacity: 0;
+}
+
+/* Animações */
+@keyframes coinSpin {
+  0% { transform: rotateY(0deg) scale(1); }
+  50% { transform: rotateY(180deg) scale(1.2); }
+  100% { transform: rotateY(360deg) scale(1); }
+}
+
+@keyframes bombExplode {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.cell.coin {
+  background-color: #28a745;
+  animation: coinSpin 0.6s ease-out;
+}
+
+.cell.bomb {
+  background-color: #dc3545;
+  animation: bombExplode 0.5s ease-out;
+}
+
+/* Botões */
+button {
+  padding: 10px 15px;
+  background-color: #6a0dad;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: #8e3fd3;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+/* Painel de Estatísticas */
+#statsPanel {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+#statsList li {
+  padding: 5px 0;
+  border-bottom: 1px solid #333;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  
+  .controls {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .menu, #gameContainer {
+    padding: 15px;
+    margin: 20px auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+  }
+  
+  .controls {
+    grid-template-columns: 1fr;
+  }
+  
+  button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}

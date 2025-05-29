@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo de Mines</title>
+  <link rel="stylesheet" href="cssjogos/mines.css">
+</head>
+<body>
+  <div id="menu" class="menu">
+    <h1>🎮 Bem-vindo ao Jogo de Mines</h1>
+    <label for="playerName">Digite seu nome:</label>
+    <input type="text" id="playerName" placeholder="Seu nome">
+    <button onclick="enterGame()">Entrar no Jogo</button>
+  </div>
+
+  <div id="gameContainer" style="display: none;">
+    <h1>💣 Jogo de Mines 💰</h1>
+
+    <div class="controls">
+      <label for="bombCount">Quantas bombas?</label>
+      <input type="number" id="bombCount" min="1" max="24" value="3">
+
+      <label for="betValue">Valor da aposta</label>
+      <input type="number" id="betValue" min="1" value="10">
+
+      <label for="multiplier">Multiplicador</label>
+      <select id="multiplier">
+        <option value="1">x1</option>
+        <option value="1.5">x1.5</option>
+        <option value="2">x2</option>
+        <option value="3">x3</option>
+      </select>
+
+      <button onclick="startGame()">Iniciar Jogo</button>
+      <button onclick="cashOut()">Retirar Lucro</button>
+      <button onclick="toggleStatsPanel()">Mostrar Estatísticas</button>
+    </div>
+
+    <h2>Pontuação: <span id="score">0</span></h2>
+    <h2>Saldo: R$ <span id="balance">100.00</span></h2>
+
+    <h3>Histórico:</h3>
+    <ul id="history"></ul>
+
+    <div id="grid" class="grid"></div>
+
+    <div id="statsPanel" style="display:none; text-align:left; margin: 20px auto; max-width: 500px; background-color: #1e1e1e; padding: 20px; border-radius: 10px;">
+      <h3>📈 Estatísticas de Jogo</h3>
+      <ul id="statsList" style="list-style:none; padding-left:0;"></ul>
+    </div>
+  </div>
+
+  <audio id="sound-coin" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_510313f27d.mp3?filename=coin-c-19369.mp3"></audio>
+  <audio id="sound-bomb" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_f89c7ff5e1.mp3?filename=explosion-6055.mp3"></audio>
+  <audio id="sound-cashout" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_209b2d421f.mp3?filename=collect-coins-20306.mp3"></audio>
+
+  <script>
+    const gridSize = 25;
+    let bombPositions = [];
+    let revealed = [];
+    let score = 0;
+    let gameActive = true;
+    let currentBet = 0;
+    let multiplier = 1;
+    let playerName = "";
+    let balance = 100;
+
+    function enterGame() {
+      const nameInput = document.getElementById("playerName").value.trim();
+      if (!nameInput) return alert("Digite um nome para continuar.");
+
+      playerName = nameInput;
+      document.getElementById("menu").style.display = "none";
+      document.getElementById("gameContainer").style.display = "block";
+      updateBalance();
+      loadHistory();
+      loadStats();
+    }
+
+    function calculateMultiplier(bombCount) {
+      // Fórmula que aumenta o multiplicador com o número de bombas
+      return 1 + (bombCount * 0.3);
+    }
+
+    function startGame() {
+      const bombCount = parseInt(document.getElementById("bombCount").value);
+      currentBet = parseFloat(document.getElementById("betValue").value);
+      
+      // Calcula o multiplicador automaticamente
+      multiplier = calculateMultiplier(bombCount);
+      document.getElementById("multiplier").value = multiplier.toFixed(1);
+
+      if (currentBet > balance) return alert("Saldo insuficiente para essa aposta.");
+
+      score = 0;
+      updateScore();
+      gameActive = true;
+      bombPositions = [];
+      revealed = [];
+
+      balance -= currentBet;
+      updateBalance();
+
+      saveStat(`-${currentBet.toFixed(2)}`);
+
+      while (bombPositions.length < bombCount) {
+        const rand = Math.floor(Math.random() * gridSize);
+        if (!bombPositions.includes(rand)) bombPositions.push(rand);
+      }
+
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      for (let i = 0; i < gridSize; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.dataset.index = i;
+        cell.addEventListener("click", handleClick);
+        grid.appendChild(cell);
+      }
+    }
+
+    function handleClick(e) {
+      const index = parseInt(e.target.dataset.index);
+      if (!gameActive || revealed.includes(index)) return;
+
+      revealed.push(index);
+      e.target.classList.add("revealed");
+
+      if (bombPositions.includes(index)) {
+        playSound("bomb");
+        e.target.classList.add("bomb");
+        e.target.innerHTML = "💣";
+        e.target.style.animation = "bombExplode 0.5s ease-out";
+        revealAllBombs();
+        gameActive = false;
+        setTimeout(() => {
+          alert("💥 Você clicou em uma bomba! Jogo encerrado.");
+        }, 500);
+      } else {
+        playSound("coin");
+        e.target.classList.add("coin");
+        e.target.innerHTML = "🪙";
+        e.target.style.animation = "coinSpin 0.6s ease-out";
+        updatePoints();
+      }
+    }
+
+    function updatePoints() {
+      score += currentBet * multiplier;
+      updateScore();
+    }
+
+    function updateScore() {
+      document.getElementById("score").textContent = score.toFixed(2);
+    }
+
+    function updateBalance() {
+      document.getElementById("balance").textContent = balance.toFixed(2);
+    }
+
+    function cashOut() {
+      if (!gameActive || score === 0) return;
+      playSound("cashout");
+      const history = document.getElementById("history");
+      const li = document.createElement("li");
+      li.textContent = `${playerName} retirou: R$ ${score.toFixed(2)}`;
+      history.prepend(li);
+
+      saveToLocalStorage(`${playerName} - R$ ${score.toFixed(2)}`);
+      saveStat(`+${score.toFixed(2)}`);
+
+      balance += score;
+      updateBalance();
+
+      alert(`✅ Você retirou R$ ${score.toFixed(2)}!`);
+      gameActive = false;
+      revealAllBombs();
+    }
+
+    function saveToLocalStorage(entry) {
+      let data = JSON.parse(localStorage.getItem("minesHistory")) || [];
+      data.unshift(entry);
+      localStorage.setItem("minesHistory", JSON.stringify(data));
+    }
+
+    function saveStat(entry) {
+      let stats = JSON.parse(localStorage.getItem("minesStats")) || [];
+      stats.unshift(entry);
+      localStorage.setItem("minesStats", JSON.stringify(stats));
+      loadStats();
+    }
+
+    function loadStats() {
+      const list = document.getElementById("statsList");
+      list.innerHTML = "";
+      let stats = JSON.parse(localStorage.getItem("minesStats")) || [];
+      stats.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        li.style.color = item.startsWith("+") ? "#00e676" : "#ff5252";
+        list.appendChild(li);
+      });
+    }
+
+    function toggleStatsPanel() {
+      const panel = document.getElementById("statsPanel");
+      panel.style.display = panel.style.display === "none" ? "block" : "none";
+    }
+
+    function loadHistory() {
+      const history = document.getElementById("history");
+      history.innerHTML = "";
+      let data = JSON.parse(localStorage.getItem("minesHistory")) || [];
+      data.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        history.appendChild(li);
+      });
+    }
+
+    function revealAllBombs() {
+      document.querySelectorAll(".cell").forEach((cell, i) => {
+        if (bombPositions.includes(i)) {
+          cell.classList.add("bomb");
+          cell.innerHTML = "💣";
+          cell.style.animation = "bombExplode 0.5s ease-out";
+        }
+        cell.removeEventListener("click", handleClick);
+      });
+    }
+
+    function playSound(type) {
+      const audio = document.getElementById(`sound-${type}`);
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play();
+      }
+    }
+
+    // Configura o evento para atualizar o multiplicador automaticamente
+    document.getElementById("bombCount").addEventListener("input", function() {
+      const bombCount = parseInt(this.value);
+      const multiplier = calculateMultiplier(bombCount);
+      document.getElementById("multiplier").value = multiplier.toFixed(1);
+    });
+
+   
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
