@@ -34,6 +34,7 @@
 
       <button onclick="startGame()">Iniciar Jogo</button>
       <button onclick="cashOut()">Retirar Lucro</button>
+      <button id="turboBtn" onclick="toggleTurboMode()">Modo Turbo: OFF</button>
       <button onclick="toggleStatsPanel()">Mostrar Estatísticas</button>
     </div>
 
@@ -45,17 +46,18 @@
 
     <div id="grid" class="grid"></div>
 
-    <div id="statsPanel" style="display:none; text-align:left; margin: 20px auto; max-width: 500px; background-color: #1e1e1e; padding: 20px; border-radius: 10px;">
+    <div id="statsPanel">
       <h3>📈 Estatísticas de Jogo</h3>
       <ul id="statsList" style="list-style:none; padding-left:0;"></ul>
     </div>
   </div>
 
-  <audio id="sound-coin" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_510313f27d.mp3?filename=coin-c-19369.mp3"></audio>
-  <audio id="sound-bomb" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_f89c7ff5e1.mp3?filename=explosion-6055.mp3"></audio>
+  <audio id="sound-coin" src="/sons/moeda.mp3"></audio>
+  <audio id="sound-bomb" src="/sons/bomba.mp3"></audio>
   <audio id="sound-cashout" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_209b2d421f.mp3?filename=collect-coins-20306.mp3"></audio>
 
   <script>
+    // Configurações do jogo
     const gridSize = 25;
     let bombPositions = [];
     let revealed = [];
@@ -65,7 +67,9 @@
     let multiplier = 1;
     let playerName = "";
     let balance = 100;
+    let turboMode = false;
 
+    // Funções do jogo
     function enterGame() {
       const nameInput = document.getElementById("playerName").value.trim();
       if (!nameInput) return alert("Digite um nome para continuar.");
@@ -79,15 +83,21 @@
     }
 
     function calculateMultiplier(bombCount) {
-      // Fórmula que aumenta o multiplicador com o número de bombas
       return 1 + (bombCount * 0.3);
+    }
+
+    function toggleTurboMode() {
+      turboMode = !turboMode;
+      const btn = document.getElementById("turboBtn");
+      btn.textContent = `Modo Turbo: ${turboMode ? 'ON' : 'OFF'}`;
+      btn.classList.toggle("turbo-active");
+      document.getElementById("sound-bomb").volume = turboMode ? 0.8 : 0.5;
     }
 
     function startGame() {
       const bombCount = parseInt(document.getElementById("bombCount").value);
       currentBet = parseFloat(document.getElementById("betValue").value);
       
-      // Calcula o multiplicador automaticamente
       multiplier = calculateMultiplier(bombCount);
       document.getElementById("multiplier").value = multiplier.toFixed(1);
 
@@ -122,28 +132,69 @@
     }
 
     function handleClick(e) {
-      const index = parseInt(e.target.dataset.index);
-      if (!gameActive || revealed.includes(index)) return;
+    const index = parseInt(e.target.dataset.index);
+    if (!gameActive || revealed.includes(index)) return;
 
-      revealed.push(index);
-      e.target.classList.add("revealed");
+    revealed.push(index);
+    e.target.classList.add("revealed");
 
-      if (bombPositions.includes(index)) {
-        playSound("bomb");
-        e.target.classList.add("bomb");
-        e.target.innerHTML = "💣";
-        e.target.style.animation = "bombExplode 0.5s ease-out";
-        revealAllBombs();
-        gameActive = false;
+    if (bombPositions.includes(index)) {
+      playSound("bomb");
+      e.target.classList.add("bomb");
+      e.target.innerHTML = ""; // Remove qualquer conteúdo interno
+      
+      if (turboMode) {
+        document.body.classList.add("screen-shake");
+        createParticles(e.target);
         setTimeout(() => {
-          alert("💥 Você clicou em uma bomba! Jogo encerrado.");
-        }, 500);
-      } else {
-        playSound("coin");
-        e.target.classList.add("coin");
-        e.target.innerHTML = "🪙";
-        e.target.style.animation = "coinSpin 0.6s ease-out";
-        updatePoints();
+          document.body.classList.remove("screen-shake");
+        }, 400);
+      }
+      
+      revealAllBombs();
+      gameActive = false;
+      setTimeout(() => {
+        alert("💥 Você clicou em uma bomba! Jogo encerrado.");
+      }, turboMode ? 100 : 500);
+    } else {
+      playSound("coin");
+      e.target.classList.add("coin");
+      e.target.innerHTML = ""; // Remove qualquer conteúdo interno
+      updatePoints();
+    }
+  }
+
+    function createParticles(element) {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        
+        const size = Math.random() * 10 + 5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 50 + 30;
+        const duration = Math.random() * 1 + 0.5;
+        
+        particle.style.left = `${centerX}px`;
+        particle.style.top = `${centerY}px`;
+        particle.style.opacity = "1";
+        
+        document.body.appendChild(particle);
+        
+        setTimeout(() => {
+          particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+          particle.style.opacity = "0";
+          
+          setTimeout(() => {
+            particle.remove();
+          }, duration * 1000);
+        }, 10);
       }
     }
 
@@ -221,15 +272,18 @@
     }
 
     function revealAllBombs() {
-      document.querySelectorAll(".cell").forEach((cell, i) => {
-        if (bombPositions.includes(i)) {
-          cell.classList.add("bomb");
-          cell.innerHTML = "💣";
-          cell.style.animation = "bombExplode 0.5s ease-out";
+    document.querySelectorAll(".cell").forEach((cell, i) => {
+      if (bombPositions.includes(i)) {
+        cell.classList.add("bomb");
+        cell.innerHTML = ""; // Remove qualquer conteúdo interno
+        if (turboMode) {
+          cell.style.animation = "bombExplode 0.3s ease-out";
         }
-        cell.removeEventListener("click", handleClick);
-      });
-    }
+      }
+      cell.removeEventListener("click", handleClick);
+    });
+  }
+
 
     function playSound(type) {
       const audio = document.getElementById(`sound-${type}`);
@@ -239,15 +293,14 @@
       }
     }
 
-    // Configura o evento para atualizar o multiplicador automaticamente
+    // Event Listeners
     document.getElementById("bombCount").addEventListener("input", function() {
       const bombCount = parseInt(this.value);
       const multiplier = calculateMultiplier(bombCount);
       document.getElementById("multiplier").value = multiplier.toFixed(1);
     });
 
-   
-    document.head.appendChild(style);
+    
   </script>
 </body>
 </html>
